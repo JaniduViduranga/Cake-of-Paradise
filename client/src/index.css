@@ -1,3 +1,183 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #fff8f6;
+    color: #2b1613;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#715954] text-white font-montserrat font-semibold text-sm tracking-widest px-8 py-4 rounded transition-all duration-200 hover:bg-[#5d4a46] active:scale-95 shadow-sm hover:shadow-md;
+  }
+
+  .btn-secondary {
+    @apply border border-[#7d562d] text-[#7d562d] font-montserrat font-semibold text-sm tracking-widest px-8 py-4 rounded transition-all duration-200 hover:bg-[#7d562d] hover:text-white active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply text-[#7d562d] font-montserrat font-semibold text-sm tracking-widest px-4 py-2 rounded transition-all duration-200 hover:bg-cream-100;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden;
+  }
+
+  .input-field {
+    @apply w-full border border-gray-200 rounded-lg px-4 py-3 text-sm font-montserrat text-chocolate-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-caramel-600/30 focus:border-caramel-600 transition-all duration-200 bg-white;
+  }
+
+  .section-heading {
+    @apply font-playfair text-4xl font-bold text-chocolate-900;
+  }
+
+  .section-subheading {
+    @apply font-montserrat text-base text-chocolate-800/70 mt-3 leading-relaxed;
+  }
+
+  .tag-pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-montserrat font-semibold tracking-wide;
+  }
+
+  .category-pill {
+    @apply px-4 py-2 rounded-full border font-montserrat font-semibold text-sm tracking-wide transition-all duration-200 cursor-pointer;
+  }
+
+  .category-pill-active {
+    @apply bg-chocolate-900 text-white border-chocolate-900;
+  }
+
+  .category-pill-inactive {
+    @apply bg-white text-chocolate-800 border-gray-200 hover:border-caramel-600 hover:text-caramel-600;
+  }
+
+  .nav-link {
+    @apply font-montserrat font-semibold text-sm tracking-widest text-chocolate-800/70 hover:text-caramel-600 transition-colors duration-200 relative;
+  }
+
+  .nav-link-active {
+    @apply text-caramel-600 font-bold;
+  }
+
+  .star-rating {
+    @apply text-amber-400 text-sm;
+  }
+
+  .badge {
+    @apply absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] rounded-full bg-caramel-600 text-white text-[10px] font-bold flex items-center justify-center;
+  }
+}
+
+@layer utilities {
+  .font-playfair {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+
+  .font-montserrat {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fff8f6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffc4bb;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7d562d;
+}
+
+/* Masonry layout */
+.masonry-grid {
+  columns: 3;
+  column-gap: 16px;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 1024px) {
+  .masonry-grid {
+    columns: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .masonry-grid {
+    columns: 1;
+  }
+}
+
+/* Image hover zoom */
+.img-zoom {
+  transition: transform 0.5s ease;
+}
+
+.img-zoom:hover {
+  transform: scale(1.05);
+}
+
+/* Glassmorphism navbar */
+.navbar-glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(255, 248, 246, 0.85);
+  border-bottom: 1px solid rgba(125, 86, 45, 0.15);
+}
+
+/* Toast animation */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.toast-enter {
+  animation: slideInRight 0.3s ease-out;
+}
