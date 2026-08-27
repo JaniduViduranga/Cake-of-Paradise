@@ -8,7 +8,6 @@ import heroLogo from '../../../assets/HeroLogo.jpg';
 
 const NAV_LINKS = [
   { label: 'Home', path: '/' },
-  { label: 'Menu', path: '/menu' },
   { label: 'Gallery', path: '/gallery' },
   { label: 'Custom Order', path: '/custom-order' },
   { label: 'About Us', path: '/about' },

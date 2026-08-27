@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { CAKES } from '../models/cakes';
 import { useCart } from '../context/CartContext';
+import { createOrder, calculateEstimatedPrice, ORDER_TYPES, CUPCAKE_QUANTITIES } from '../models/order';
 
 export const TIME_SLOTS = [
   '10:00 AM - 12:00 PM',
@@ -11,77 +12,112 @@ export const TIME_SLOTS = [
   '6:00 PM - 8:00 PM',
 ];
 
-/**
- * Controller managing Custom Order customization options, pricing calculations, and cart submission
- */
+export const STANDARD_FLAVORS = [
+  { label: 'Butter Cake', value: 'butter' },
+  { label: 'Chocolate Cake', value: 'chocolate' },
+  { label: 'Ribbon Cake', value: 'ribbon' },
+  { label: 'Date Cake', value: 'date' },
+  { label: 'Coconut Cake', value: 'coconut' },
+];
+
+export const PREMIUM_FLAVORS = [
+  { label: 'Red Velvet Cream Cheese', value: 'red-velvet', modifier: 0 },
+  { label: 'Midnight Dark Chocolate', value: 'dark-chocolate', modifier: 0 },
+  { label: 'Classic Vanilla Bean', value: 'vanilla-bean', modifier: 0 },
+  { label: 'Lemon & Raspberry', value: 'lemon-raspberry', modifier: 5 },
+  { label: 'Salted Caramel Praline', value: 'salted-caramel', modifier: 5 },
+  { label: 'Pistachio Rose', value: 'pistachio-rose', modifier: 10 },
+];
+
 export function useCustomOrderController() {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const { addToCart } = useCart();
 
+  const locationState = location.state || {};
   const cakeId = searchParams.get('cake');
-  const selectedCake = CAKES.find((c) => c.id === cakeId) || CAKES[3]; // Defaults to Red Velvet Dream
+  const fallbackCake = CAKES.find((c) => c.id === cakeId) || CAKES[3];
 
-  const [activeImage, setActiveImage] = useState(0);
+  const initialOrderType = locationState.orderType || 'Standard Cakes';
+  const [orderType, setOrderType] = useState(initialOrderType);
+  
+  const [basePrice, setBasePrice] = useState(locationState.basePrice || 45);
+
   const [selectedSize, setSelectedSize] = useState('1kg');
-  const [sizeModifier, setSizeModifier] = useState(10);
-  const [selectedFlavor, setSelectedFlavor] = useState('red-velvet');
-  const [flavorModifier, setFlavorModifier] = useState(0);
-  const [isEggless, setIsEggless] = useState(false);
+  const [cupcakeQuantity, setCupcakeQuantity] = useState(12);
+  
+  const [selectedFlavor, setSelectedFlavor] = useState(
+    initialOrderType === 'Standard Cakes' ? STANDARD_FLAVORS[0].value : PREMIUM_FLAVORS[0].value
+  );
+
   const [message, setMessage] = useState('');
   const [designPreview, setDesignPreview] = useState(null);
   const [pickupDate, setPickupDate] = useState('');
   const [timeSlot, setTimeSlot] = useState(TIME_SLOTS[0]);
   const [added, setAdded] = useState(false);
 
-  const egglessModifier = isEggless ? 5 : 0;
-  const totalPrice = useMemo(
-    () => selectedCake.basePrice + sizeModifier + flavorModifier + egglessModifier,
-    [selectedCake.basePrice, sizeModifier, flavorModifier, egglessModifier]
-  );
+  // Handle order type changes
+  useEffect(() => {
+    if (orderType === 'Cupcakes') {
+      setMessage('');
+      setDesignPreview(null);
+      setSelectedFlavor(PREMIUM_FLAVORS[0].value);
+    } else if (orderType === 'Standard Cakes') {
+      setMessage('');
+      setDesignPreview(null);
+      setSelectedFlavor(STANDARD_FLAVORS[0].value);
+    } else {
+      setSelectedFlavor(PREMIUM_FLAVORS[0].value);
+    }
+  }, [orderType]);
 
-  const handleSizeChange = (size, modifier) => {
-    setSelectedSize(size);
-    setSizeModifier(modifier);
-  };
+  const activeFlavors = orderType === 'Standard Cakes' ? STANDARD_FLAVORS : PREMIUM_FLAVORS;
+  
+  const currentFlavorObj = useMemo(() => {
+    return activeFlavors.find(f => f.value === selectedFlavor) || activeFlavors[0];
+  }, [selectedFlavor, activeFlavors]);
 
-  const handleFlavorChange = (flavor, modifier) => {
-    setSelectedFlavor(flavor);
-    setFlavorModifier(modifier);
-  };
+  const totalPrice = useMemo(() => {
+    const base = calculateEstimatedPrice(basePrice, orderType, selectedSize, cupcakeQuantity);
+    const modifier = currentFlavorObj.modifier || 0;
+    return base + modifier;
+  }, [basePrice, orderType, selectedSize, cupcakeQuantity, currentFlavorObj]);
 
-  const submitCustomOrder = (flavorLabel) => {
-    addToCart({
-      cartItemId: `${selectedCake.id}-${Date.now()}`,
-      id: selectedCake.id,
-      name: selectedCake.name,
-      image: selectedCake.image,
-      price: totalPrice,
-      size: selectedSize,
-      flavor: flavorLabel,
-      message,
-      pickupDate,
+  const submitCustomOrder = () => {
+    const order = createOrder({
+      id: locationState.id || `custom-${Date.now()}`,
+      name: `${orderType} - ${currentFlavorObj.label}`,
+      image: locationState.image || null,
+      basePrice,
+      orderType,
+      flavor: currentFlavorObj.label,
+      weight: selectedSize,
+      cupcakeQuantity,
+      customMessage: message,
+      referenceImage: designPreview,
+      deliveryDate: pickupDate,
       timeSlot,
-      isEggless,
       quantity: 1,
     });
+    
+    addToCart(order);
+    
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const cakeImages = [selectedCake.image, ...CAKES.slice(0, 3).map((c) => c.image)].slice(0, 4);
-  const relatedCakes = CAKES.filter((c) => c.id !== selectedCake.id).slice(0, 4);
-
   return {
-    selectedCake,
-    activeImage,
-    setActiveImage,
-    cakeImages,
+    orderType,
+    setOrderType,
+    orderTypes: ORDER_TYPES,
     selectedSize,
-    handleSizeChange,
+    setSelectedSize,
+    cupcakeQuantity,
+    setCupcakeQuantity,
+    cupcakeQuantities: CUPCAKE_QUANTITIES,
     selectedFlavor,
-    handleFlavorChange,
-    isEggless,
-    setIsEggless,
+    setSelectedFlavor,
+    activeFlavors,
     message,
     setMessage,
     designPreview,
@@ -92,11 +128,7 @@ export function useCustomOrderController() {
     setTimeSlot,
     timeSlots: TIME_SLOTS,
     totalPrice,
-    sizeModifier,
-    flavorModifier,
-    egglessModifier,
     submitCustomOrder,
     added,
-    relatedCakes,
   };
 }

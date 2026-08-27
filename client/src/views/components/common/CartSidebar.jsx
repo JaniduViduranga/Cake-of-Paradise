@@ -67,13 +67,13 @@ export default function CartSidebar() {
               </div>
               <div>
                 <p className="font-playfair text-lg font-semibold text-chocolate-900">Your cart is empty</p>
-                <p className="font-montserrat text-sm text-chocolate-800/50 mt-1">Add some delicious cakes to get started!</p>
+                <p className="font-montserrat text-sm text-chocolate-800/50 mt-1">Start a custom order to get started!</p>
               </div>
               <button
-                onClick={() => { setIsCartOpen(false); navigate('/menu'); }}
+                onClick={() => { setIsCartOpen(false); navigate('/custom-order'); }}
                 className="btn-primary mt-2"
               >
-                Browse Menu
+                Start Custom Order
               </button>
             </div>
           ) : (
@@ -89,8 +89,8 @@ export default function CartSidebar() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-playfair font-semibold text-sm text-chocolate-900 truncate">{item.name}</p>
-                    <p className="font-montserrat text-xs text-chocolate-800/50 mt-0.5">
-                      {item.size} · {item.flavor}
+                    <p className="font-montserrat text-xs text-chocolate-800/50 mt-0.5 truncate">
+                      {item.orderType} · {item.orderType === 'Cupcakes' ? `${item.cupcakeQuantity} Pack` : item.weight} · {item.flavor}
                     </p>
                     <div className="flex items-center justify-between mt-2">
                       {/* Quantity */}

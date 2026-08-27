@@ -1,23 +1,23 @@
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, CalendarDays, Clock4, ChevronRight } from 'lucide-react';
+import { ShieldCheck, CalendarDays, Clock4, ChevronRight, ChevronDown } from 'lucide-react';
 import WeightSelector from '../components/customizer/WeightSelector';
-import FlavorDropdown, { FLAVORS } from '../components/customizer/FlavorDropdown';
 import ImageUploader from '../components/customizer/ImageUploader';
 import { useCustomOrderController } from '../../controllers/useCustomOrderController';
 
 export default function CustomOrder() {
   const navigate = useNavigate();
   const {
-    selectedCake,
-    activeImage,
-    setActiveImage,
-    cakeImages,
+    orderType,
+    setOrderType,
+    orderTypes,
     selectedSize,
-    handleSizeChange,
+    setSelectedSize,
+    cupcakeQuantity,
+    setCupcakeQuantity,
+    cupcakeQuantities,
     selectedFlavor,
-    handleFlavorChange,
-    isEggless,
-    setIsEggless,
+    setSelectedFlavor,
+    activeFlavors,
     message,
     setMessage,
     designPreview,
@@ -28,232 +28,212 @@ export default function CustomOrder() {
     setTimeSlot,
     timeSlots,
     totalPrice,
-    sizeModifier,
-    flavorModifier,
-    egglessModifier,
     submitCustomOrder,
     added,
-    relatedCakes,
   } = useCustomOrderController();
 
   const handleAddToCart = () => {
-    const flavorLabel = FLAVORS.find((f) => f.value === selectedFlavor)?.label || selectedFlavor;
-    submitCustomOrder(flavorLabel);
+    submitCustomOrder();
   };
 
   const today = new Date().toISOString().split('T')[0];
+  const isCakeWithDesign = orderType === 'Birthday Cakes' || orderType === 'Wedding Cakes';
 
   return (
     <div className="min-h-screen bg-cream-50 pt-16">
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 py-10">
+      <div className="max-w-3xl mx-auto px-6 lg:px-8 py-10">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 font-montserrat text-xs text-chocolate-800/50 mb-8">
-          <button onClick={() => navigate('/menu')} className="hover:text-caramel-600 transition-colors">Menu</button>
+          <button onClick={() => navigate('/gallery')} className="hover:text-caramel-600 transition-colors">Gallery</button>
           <ChevronRight size={12} />
-          <span>Signature Cakes</span>
-          <ChevronRight size={12} />
-          <span className="text-chocolate-900 font-semibold">{selectedCake.name}</span>
+          <span className="text-chocolate-900 font-semibold">Custom Order</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-          {/* ── Left: Image Gallery ── */}
-          <div className="space-y-4">
-            {/* Main Image */}
-            <div className="relative rounded-2xl overflow-hidden bg-cream-100 aspect-[4/3]">
-              {selectedCake.badge && (
-                <span className="absolute top-4 left-4 z-10 bg-chocolate-900 text-white font-montserrat font-semibold text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-full">
-                  {selectedCake.badge}
-                </span>
-              )}
-              <img
-                src={cakeImages[activeImage]}
-                alt={selectedCake.name}
-                className="w-full h-full object-cover transition-all duration-500"
-              />
+        {/* Customizer Form */}
+        <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-sm border border-gray-50 space-y-8">
+          {/* Header */}
+          <div className="text-center pb-6 border-b border-gray-100">
+            <h1 className="font-playfair font-bold text-3xl md:text-4xl text-chocolate-900">Custom Order</h1>
+            <p className="font-montserrat text-sm text-chocolate-800/60 leading-relaxed mt-3 max-w-lg mx-auto">
+              Configure your perfect cake step by step. We'll bake it fresh and have it ready for your special occasion.
+            </p>
+          </div>
+
+          {/* Step 1: Order Type */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">1</div>
+              <label className="font-playfair font-bold text-lg text-chocolate-900">
+                Select Order Type
+              </label>
             </div>
-            {/* Thumbnails */}
-            <div className="grid grid-cols-4 gap-3">
-              {cakeImages.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveImage(i)}
-                  className={`aspect-square rounded-xl overflow-hidden border-2 transition-all duration-200 ${
-                    activeImage === i ? 'border-caramel-600 shadow-md' : 'border-transparent hover:border-caramel-600/30'
-                  }`}
-                  aria-label={`View image ${i + 1}`}
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
+            <div className="relative">
+              <select
+                value={orderType}
+                onChange={(e) => setOrderType(e.target.value)}
+                className="input-field w-full appearance-none pr-10 bg-white"
+              >
+                {orderTypes.map((type) => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+              <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-chocolate-800/50 pointer-events-none" />
             </div>
           </div>
 
-          {/* ── Right: Customizer ── */}
-          <div className="bg-white rounded-2xl p-7 shadow-sm border border-gray-50 space-y-6">
-            {/* Title */}
-            <div>
-              <h1 className="font-playfair font-bold text-3xl text-chocolate-900">{selectedCake.name}</h1>
-              <p className="font-montserrat text-sm text-chocolate-800/60 leading-relaxed mt-3">
-                {selectedCake.description}
-              </p>
-            </div>
-
-            {/* Price */}
-            <div>
-              <span className="font-playfair font-bold text-3xl text-chocolate-900">${totalPrice.toFixed(2)}</span>
-              {(sizeModifier > 0 || flavorModifier > 0 || egglessModifier > 0) && (
-                <span className="font-montserrat text-xs text-chocolate-800/40 ml-2">
-                  (Base ${selectedCake.basePrice}{sizeModifier > 0 ? ` + $${sizeModifier} size` : ''}{flavorModifier > 0 ? ` + $${flavorModifier} flavor` : ''}{egglessModifier > 0 ? ` + $${egglessModifier} eggless` : ''})
-                </span>
-              )}
-            </div>
-
-            <hr className="border-gray-100" />
-
-            {/* Cake Size */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <label className="font-montserrat font-semibold text-sm text-chocolate-900">Cake Size</label>
-                <button className="font-montserrat text-xs text-caramel-600 hover:underline">Size Guide</button>
-              </div>
-              <WeightSelector selected={selectedSize} onChange={handleSizeChange} />
-            </div>
-
-            {/* Flavor */}
-            <div>
-              <label className="block font-montserrat font-semibold text-sm text-chocolate-900 mb-3">
-                Flavor Profile
+          {/* Step 2: Flavor */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">2</div>
+              <label className="font-playfair font-bold text-lg text-chocolate-900">
+                Choose Flavor
               </label>
-              <FlavorDropdown selected={selectedFlavor} onChange={handleFlavorChange} />
             </div>
-
-            {/* Eggless Toggle */}
-            <div className="bg-cream-50 rounded-xl p-4 flex items-start justify-between gap-4">
-              <div>
-                <p className="font-montserrat font-semibold text-sm text-chocolate-900">Eggless Preparation</p>
-                <p className="font-montserrat text-xs text-chocolate-800/50 mt-0.5">
-                  Suitable for vegetarians {isEggless ? '(+$5)' : ''}
-                </p>
-              </div>
-              <button
-                id="eggless-toggle"
-                onClick={() => setIsEggless((v) => !v)}
-                className={`relative w-11 h-6 rounded-full transition-colors duration-300 shrink-0 ${
-                  isEggless ? 'bg-caramel-600' : 'bg-gray-200'
-                }`}
-                role="switch"
-                aria-checked={isEggless}
+            <div className="relative">
+              <select
+                value={selectedFlavor}
+                onChange={(e) => setSelectedFlavor(e.target.value)}
+                className="input-field w-full appearance-none pr-10 bg-white"
               >
-                <div
-                  className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-300 ${
-                    isEggless ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
+                {activeFlavors.map((flavor) => (
+                  <option key={flavor.value} value={flavor.value}>
+                    {flavor.label}{flavor.modifier > 0 ? ` (+$${flavor.modifier})` : ''}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-chocolate-800/50 pointer-events-none" />
             </div>
+          </div>
 
-            {/* Message on Cake */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="font-montserrat font-semibold text-sm text-chocolate-900">
-                  Message on Cake
-                </label>
-                <span className="font-montserrat text-xs text-chocolate-800/40">{message.length}/30</span>
-              </div>
-              <input
-                type="text"
-                id="cake-message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value.slice(0, 30))}
-                placeholder="e.g. Happy Birthday Sarah!"
-                className="input-field"
-              />
-            </div>
-
-            {/* Design Reference */}
-            <div>
-              <label className="block font-montserrat font-semibold text-sm text-chocolate-900 mb-2">
-                Design Reference{' '}
-                <span className="text-chocolate-800/40 font-normal">(Optional)</span>
+          {/* Step 3: Size / Quantity */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">3</div>
+              <label className="font-playfair font-bold text-lg text-chocolate-900">
+                {orderType === 'Cupcakes' ? 'Select Quantity' : 'Select Cake Size'}
               </label>
-              <ImageUploader
-                preview={designPreview}
-                onUpload={(src) => setDesignPreview(src)}
-                onClear={() => setDesignPreview(null)}
-              />
             </div>
+            
+            {orderType === 'Cupcakes' ? (
+              <div className="relative">
+                <select
+                  value={cupcakeQuantity}
+                  onChange={(e) => setCupcakeQuantity(Number(e.target.value))}
+                  className="input-field w-full appearance-none pr-10 bg-white"
+                >
+                  {cupcakeQuantities.map((qty) => (
+                    <option key={qty} value={qty}>{qty} Pack</option>
+                  ))}
+                </select>
+                <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-chocolate-800/50 pointer-events-none" />
+              </div>
+            ) : (
+              <WeightSelector selected={selectedSize} onChange={(size) => setSelectedSize(size)} />
+            )}
+          </div>
 
-            {/* Date + Time */}
+          {/* Conditional Steps: Message & Image */}
+          {isCakeWithDesign && (
+            <div className="space-y-8 pt-4 border-t border-gray-100">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">A</div>
+                  <label className="font-playfair font-bold text-lg text-chocolate-900">
+                    Custom Message <span className="font-montserrat font-normal text-sm text-chocolate-800/40 ml-2">(Optional)</span>
+                  </label>
+                </div>
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value.slice(0, 40))}
+                  placeholder="e.g. Happy Birthday Sarah!"
+                  className="input-field w-full"
+                />
+                <div className="text-right mt-1.5">
+                  <span className="font-montserrat text-xs text-chocolate-800/40">{message.length}/40 characters</span>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">B</div>
+                  <label className="font-playfair font-bold text-lg text-chocolate-900">
+                    Design Reference <span className="font-montserrat font-normal text-sm text-chocolate-800/40 ml-2">(Optional)</span>
+                  </label>
+                </div>
+                <ImageUploader
+                  preview={designPreview}
+                  onUpload={(src) => setDesignPreview(src)}
+                  onClear={() => setDesignPreview(null)}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Step 4: Delivery / Pickup */}
+          <div className="pt-4 border-t border-gray-100 mt-8">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">4</div>
+              <label className="font-playfair font-bold text-lg text-chocolate-900">
+                Delivery & Pickup Date
+              </label>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block font-montserrat font-semibold text-sm text-chocolate-900 mb-2 flex items-center gap-1.5">
+                <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
                   <CalendarDays size={14} />
-                  Pickup Date
+                  Date
                 </label>
                 <input
                   type="date"
-                  id="pickup-date"
                   value={pickupDate}
                   min={today}
                   onChange={(e) => setPickupDate(e.target.value)}
-                  className="input-field"
+                  className="input-field w-full bg-white"
                 />
               </div>
               <div>
-                <label className="block font-montserrat font-semibold text-sm text-chocolate-900 mb-2 flex items-center gap-1.5">
+                <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
                   <Clock4 size={14} />
                   Time Slot
                 </label>
-                <select
-                  id="time-slot"
-                  value={timeSlot}
-                  onChange={(e) => setTimeSlot(e.target.value)}
-                  className="input-field"
-                >
-                  {timeSlots.map((slot) => (
-                    <option key={slot} value={slot}>{slot}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={timeSlot}
+                    onChange={(e) => setTimeSlot(e.target.value)}
+                    className="input-field w-full appearance-none pr-10 bg-white"
+                  >
+                    {timeSlots.map((slot) => (
+                      <option key={slot} value={slot}>{slot}</option>
+                    ))}
+                  </select>
+                  <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-chocolate-800/50 pointer-events-none" />
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* Add to Cart */}
-            <button
-              id="add-to-cart-btn"
-              onClick={handleAddToCart}
-              className="w-full btn-primary py-4 flex items-center justify-center gap-2 text-base"
-            >
-              🛒 {added ? 'Added to Cart!' : 'Add to Cart'}
-            </button>
-
-            {/* Secure checkout note */}
-            <p className="text-center font-montserrat text-xs text-chocolate-800/40 flex items-center justify-center gap-1.5">
+          {/* Step 5: Summary & Checkout */}
+          <div className="pt-8 border-t-2 border-dashed border-gray-200 mt-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div>
+                <p className="font-montserrat font-semibold text-sm text-chocolate-800/60 uppercase tracking-wider mb-1">Estimated Total</p>
+                <p className="font-playfair font-bold text-4xl text-chocolate-900">${totalPrice.toFixed(2)}</p>
+              </div>
+              <button
+                onClick={handleAddToCart}
+                className="w-full sm:w-auto min-w-[240px] btn-primary py-4 flex items-center justify-center gap-2 text-base shadow-lg shadow-caramel-600/20"
+              >
+                🛒 {added ? 'Added to Cart!' : 'Add to Cart / Place Order'}
+              </button>
+            </div>
+            
+            <p className="text-center sm:text-right font-montserrat text-xs text-chocolate-800/40 mt-4 flex items-center justify-center sm:justify-end gap-1.5">
               <ShieldCheck size={13} />
-              Secure checkout
+              Secure configuration
             </p>
           </div>
-        </div>
 
-        {/* Related Cakes */}
-        <div className="mt-16">
-          <h2 className="font-playfair font-bold text-2xl text-chocolate-900 mb-6">You Might Also Love</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {relatedCakes.map((cake) => (
-              <button
-                key={cake.id}
-                onClick={() => navigate(`/custom-order?cake=${cake.id}`)}
-                className="group text-left bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-50"
-              >
-                <div className="h-36 overflow-hidden">
-                  <img src={cake.image} alt={cake.name} className="w-full h-full object-cover img-zoom" />
-                </div>
-                <div className="p-3">
-                  <p className="font-playfair font-semibold text-sm text-chocolate-900 group-hover:text-caramel-600 transition-colors">{cake.name}</p>
-                  <p className="font-montserrat text-xs text-caramel-600 font-bold mt-0.5">from ${cake.basePrice}</p>
-                </div>
-              </button>
-            ))}
-          </div>
         </div>
       </div>
     </div>

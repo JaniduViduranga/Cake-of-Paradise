@@ -116,15 +116,27 @@ export default function Gallery() {
             <div className="px-6 py-5">
               <h3 className="font-playfair font-bold text-xl text-chocolate-900">{lightboxItem.title}</h3>
               <p className="font-montserrat text-sm text-caramel-600 mt-1">{lightboxItem.category}</p>
-              <div className="flex gap-3 mt-5">
+              <div className="flex flex-col sm:flex-row gap-3 mt-5">
                 <button
-                  onClick={() => { setLightboxItem(null); setRequestModalOpen(true); }}
+                  onClick={() => {
+                    navigate('/custom-order', {
+                      state: {
+                        image: lightboxItem.image,
+                        title: lightboxItem.title,
+                        orderType: lightboxItem.category.includes('Wedding') ? 'Wedding Cake' : 'Standard Cake', // basic mapping
+                        basePrice: 55 // reasonable default for gallery items
+                      }
+                    });
+                  }}
                   className="btn-primary flex-1 text-center py-2.5"
                 >
-                  Request Similar Design
+                  Order This Cake
                 </button>
-                <button onClick={() => setLightboxItem(null)} className="btn-secondary px-5 py-2.5">
-                  Close
+                <button
+                  onClick={() => { setLightboxItem(null); setRequestModalOpen(true); }}
+                  className="btn-secondary flex-1 text-center py-2.5"
+                >
+                  Request Similar
                 </button>
               </div>
             </div>

@@ -5,7 +5,6 @@ import Navbar from './views/components/layout/Navbar';
 import Footer from './views/components/layout/Footer';
 import LoginModal from './views/components/common/LoginModal';
 import Home from './views/pages/Home';
-import Menu from './views/pages/Menu';
 import Gallery from './views/pages/Gallery';
 import CustomOrder from './views/pages/CustomOrder';
 import About from './views/pages/About';
@@ -20,7 +19,6 @@ function AppLayout() {
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/menu" element={<Menu />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/custom-order" element={<CustomOrder />} />
           <Route path="/about" element={<About />} />
