@@ -60,11 +60,11 @@ export default function Home() {
                 <ArrowRight size={15} />
               </Link>
               <Link
-                to="/menu"
-                id="hero-cta-menu"
+                to="/gallery"
+                id="hero-cta-gallery"
                 className="btn-secondary flex items-center gap-2 text-sm sm:text-base px-5 sm:px-8 py-3 sm:py-4"
               >
-                Explore Menu
+                Gallery
               </Link>
             </div>
 

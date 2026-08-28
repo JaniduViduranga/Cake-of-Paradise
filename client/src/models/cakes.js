@@ -192,73 +192,73 @@ export const GALLERY_ITEMS = [
     id: 'g-001',
     title: 'Floral Wedding Cascade',
     image: 'https://images.unsplash.com/photo-1535254973040-607b474cb50d?w=600&auto=format&fit=crop',
-    category: 'Tiered Wedding Setups',
+    category: 'Wedding Cakes',
   },
   {
     id: 'g-002',
     title: 'Celestial Moon & Stars',
     image: 'https://images.unsplash.com/photo-1562777717-dc6984f65a63?w=600&auto=format&fit=crop',
-    category: '3D Theme Cakes',
+    category: 'Birthday Cakes',
   },
   {
     id: 'g-003',
     title: 'Wonderland Book Stack',
     image: 'https://images.unsplash.com/photo-1587668178277-295251f900ce?w=600&auto=format&fit=crop',
-    category: '3D Theme Cakes',
+    category: 'Standard Cakes',
   },
   {
     id: 'g-004',
     title: 'Leather Satchel Illusion',
     image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=600&auto=format&fit=crop',
-    category: '3D Theme Cakes',
+    category: 'Standard Cakes',
   },
   {
     id: 'g-005',
     title: 'Dark Floral Bouquet',
     image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&auto=format&fit=crop',
-    category: 'Tiered Wedding Setups',
+    category: 'Wedding Cakes',
   },
   {
     id: 'g-006',
     title: 'Vintage Heart Lace',
     image: 'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=600&auto=format&fit=crop',
-    category: 'Vintage Heart Cakes',
+    category: 'Birthday Cakes',
   },
   {
     id: 'g-007',
     title: 'Cherry on Top Classic',
     image: 'https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=600&auto=format&fit=crop',
-    category: 'Baby Showers',
+    category: 'Cup Cakes',
   },
   {
     id: 'g-008',
     title: 'Elegant White Tiered',
     image: 'https://images.unsplash.com/photo-1549040132-3922d9d16562?w=600&auto=format&fit=crop',
-    category: 'Tiered Wedding Setups',
+    category: 'Wedding Cakes',
   },
   {
     id: 'g-009',
     title: 'Berry Chantilly Tower',
     image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&auto=format&fit=crop',
-    category: 'Baby Showers',
+    category: 'Standard Cakes',
   },
   {
     id: 'g-010',
     title: 'Pastel Macaroon Stack',
     image: 'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=600&auto=format&fit=crop',
-    category: 'Baby Showers',
+    category: 'Cup Cakes',
   },
   {
     id: 'g-011',
     title: 'Gold Leaf Marble Drip',
     image: 'https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=600&auto=format&fit=crop',
-    category: 'Vintage Heart Cakes',
+    category: 'Birthday Cakes',
   },
   {
     id: 'g-012',
     title: 'Midnight Chocolate Dream',
     image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&auto=format&fit=crop',
-    category: '3D Theme Cakes',
+    category: 'Standard Cakes',
   },
 ];
 
@@ -266,7 +266,7 @@ export const GALLERY_ITEMS = [
 export const CATEGORIES = ['All', 'Birthday Cakes', 'Tiered Wedding', 'Anniversary', 'Cupcakes', 'Desserts'];
 
 // ── Gallery Filter Categories ────────────────────────────────────────────────
-export const GALLERY_CATEGORIES = ['All', '3D Theme Cakes', 'Tiered Wedding Setups', 'Baby Showers', 'Vintage Heart Cakes'];
+export const GALLERY_CATEGORIES = ['All', 'Standard Cakes', 'Birthday Cakes', 'Wedding Cakes', 'Cup Cakes'];
 
 // ── Reviews ─────────────────────────────────────────────────────────────────
 export const REVIEWS = [

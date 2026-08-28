@@ -16,22 +16,22 @@ export const STANDARD_FLAVORS = [
   { label: 'Ribbon Cake', value: 'ribbon' },
   { label: 'Date Cake', value: 'date' },
   { label: 'Coconut Cake', value: 'coconut' },
+  { lable: 'Coffee Cake', value: 'coffee' },
 ];
 
 export const WEDDING_FLAVORS = [
   { label: 'Butter Cake', value: 'butter', modifier: 0 },
   { label: 'Ribbon Cake', value: 'ribbon', modifier: 0 },
-  { label: 'Rich Fruit Cake', value: 'rich-fruit', modifier: 10 },
-  { label: 'Chocolate Fudge', value: 'chocolate-fudge', modifier: 5 },
+  { label: 'Fruit Cake', value: 'fruit', modifier: 0 },
+  { label: 'Chocolate Fudge', value: 'chocolate-fudge', modifier: 0 },
 ];
 
 export const PREMIUM_FLAVORS = [
-  { label: 'Red Velvet Cream Cheese', value: 'red-velvet', modifier: 0 },
-  { label: 'Midnight Dark Chocolate', value: 'dark-chocolate', modifier: 0 },
-  { label: 'Classic Vanilla Bean', value: 'vanilla-bean', modifier: 0 },
-  { label: 'Lemon & Raspberry', value: 'lemon-raspberry', modifier: 5 },
-  { label: 'Salted Caramel Praline', value: 'salted-caramel', modifier: 5 },
-  { label: 'Pistachio Rose', value: 'pistachio-rose', modifier: 10 },
+  { label: 'Butter', value: 'red-velvet', modifier: 0 },
+  { label: 'Chocolate', value: 'dark-chocolate', modifier: 0 },
+  { label: 'Coffee', value: 'vanilla-bean', modifier: 0 },
+  { label: 'Fruit', value: 'lemon-raspberry', modifier: 0 },
+  { label: 'Ribbon', value: 'salted-caramel', modifier: 0 },
 ];
 
 export function useCustomOrderController() {
@@ -45,12 +45,12 @@ export function useCustomOrderController() {
 
   const initialOrderType = locationState.orderType || 'Standard Cakes';
   const [orderType, setOrderType] = useState(initialOrderType);
-  
+
   const [basePrice, setBasePrice] = useState(locationState.basePrice || 45);
 
   const [selectedSize, setSelectedSize] = useState('1kg');
   const [cupcakeQuantity, setCupcakeQuantity] = useState(12);
-  
+
   const [selectedFlavor, setSelectedFlavor] = useState(
     initialOrderType === 'Standard Cakes' ? STANDARD_FLAVORS[0].value : PREMIUM_FLAVORS[0].value
   );
@@ -85,9 +85,9 @@ export function useCustomOrderController() {
     }
   }, [orderType]);
 
-  const activeFlavors = orderType === 'Standard Cakes' ? STANDARD_FLAVORS : 
-                        orderType === 'Wedding Cakes' ? WEDDING_FLAVORS : PREMIUM_FLAVORS;
-  
+  const activeFlavors = orderType === 'Standard Cakes' ? STANDARD_FLAVORS :
+    orderType === 'Wedding Cakes' ? WEDDING_FLAVORS : PREMIUM_FLAVORS;
+
   const currentFlavorObj = useMemo(() => {
     return activeFlavors.find(f => f.value === selectedFlavor) || activeFlavors[0];
   }, [selectedFlavor, activeFlavors]);
@@ -102,7 +102,7 @@ export function useCustomOrderController() {
       realCakeWeight: selectedSize,
       themeNotes,
     } : null;
-    
+
     const base = calculateEstimatedPrice(basePrice, orderType, selectedSize, cupcakeQuantity, weddingConfig);
     const modifier = currentFlavorObj.modifier || 0;
     return base + modifier;
@@ -135,9 +135,9 @@ export function useCustomOrderController() {
       quantity: 1,
       weddingConfig,
     });
-    
+
     addToCart(order);
-    
+
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };

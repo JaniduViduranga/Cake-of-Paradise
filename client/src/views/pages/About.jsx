@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import SectionHeading from '../components/common/SectionHeading';
 import { BAKER_VALUES } from '../../models/cakes';
+import AboutUs1 from '../../assets/AboutUs1.jpg';
+import AboutUs2 from '../../assets/AboutUs2.jpg';
 
 const PHILOSOPHY_POINTS = [
   { title: 'Artisan Focus', desc: 'Dedication to traditional techniques over mass production.' },
@@ -20,7 +22,7 @@ export default function About() {
       {/* Hero Banner */}
       <div className="relative h-72 sm:h-96 overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1556909114-44e3e9699a06?w=1600&auto=format&fit=crop"
+          src={AboutUs1}
           alt="Our bakery kitchen"
           className="w-full h-full object-cover"
         />
@@ -66,7 +68,7 @@ export default function About() {
           <div className="relative">
             <div className="absolute -inset-3 rounded-2xl bg-gradient-to-br from-cream-200/40 to-rose-soft/20 blur-lg" />
             <img
-              src="https://images.unsplash.com/photo-1607478900766-efe13248b125?w=800&auto=format&fit=crop"
+              src={AboutUs2}
               alt="Our bakers at work"
               className="relative rounded-2xl w-full h-80 lg:h-[450px] object-cover shadow-xl"
             />
@@ -89,31 +91,6 @@ export default function About() {
                 <div className="text-5xl mb-5 group-hover:scale-110 transition-transform duration-300">{val.icon}</div>
                 <h3 className="font-playfair font-bold text-lg text-chocolate-900 mb-2">{val.title}</h3>
                 <p className="font-montserrat text-sm text-chocolate-800/60 leading-relaxed">{val.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team */}
-      <section className="py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-6 lg:px-16">
-          <SectionHeading title="Meet Our Bakers" subtitle="The passionate artisans behind every creation" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto mt-4">
-            {TEAM.map((member) => (
-              <div key={member.name} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-50">
-                <div className="h-52 overflow-hidden">
-                  <img
-                    src={`https://images.unsplash.com/photo-${member.name.includes('Isabelle') ? '1607478900766-efe13248b125' : '1607748851687-1e576f03a5be'}?w=600&auto=format&fit=crop`}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="font-playfair font-bold text-lg text-chocolate-900">{member.name}</h3>
-                  <p className="font-montserrat text-xs text-caramel-600 font-semibold uppercase tracking-wide mt-1">{member.role}</p>
-                  <p className="font-montserrat text-sm text-chocolate-800/60 leading-relaxed mt-3">{member.bio}</p>
-                </div>
               </div>
             ))}
           </div>
