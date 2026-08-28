@@ -18,6 +18,7 @@ export const WEIGHT_MULTIPLIERS = {
   '1.5kg': 1.5,
   '2kg': 1.9,
   '3kg': 2.8,
+  '5kg': 4.5,
 };
 
 // Pricing for cupcake packs
@@ -30,7 +31,7 @@ export const CUPCAKE_PRICING = {
 /**
  * Calculates the estimated price for an order
  */
-export function calculateEstimatedPrice(basePrice, orderType, weight, cupcakeQuantity) {
+export function calculateEstimatedPrice(basePrice, orderType, weight, cupcakeQuantity, weddingConfig = null) {
   let price = 0;
   
   if (orderType === 'Cupcakes') {
@@ -42,7 +43,17 @@ export function calculateEstimatedPrice(basePrice, orderType, weight, cupcakeQua
     
     // Add premium for tiered wedding cakes
     if (orderType === 'Wedding Cakes') {
-      price += 50;
+      if (weddingConfig) {
+        if (weddingConfig.packageType === 'cake_and_structure') {
+          const tierPrices = { 3: 6000, 4: 9000, 5: 12000 };
+          price += tierPrices[weddingConfig.structureTiers] || 0;
+        }
+        if (weddingConfig.includeFreshFlowers) {
+          price += 4500;
+        }
+      } else {
+        price += 50; // Legacy premium
+      }
     }
   }
 
@@ -66,8 +77,9 @@ export function createOrder({
   deliveryDate = '',
   timeSlot = '',
   quantity = 1,
+  weddingConfig = null,
 }) {
-  const finalPrice = calculateEstimatedPrice(basePrice, orderType, weight, cupcakeQuantity);
+  const finalPrice = calculateEstimatedPrice(basePrice, orderType, weight, cupcakeQuantity, weddingConfig);
   
   return {
     cartItemId: `${id}-${Date.now()}`,
@@ -84,5 +96,6 @@ export function createOrder({
     deliveryDate,
     timeSlot,
     quantity,
+    ...(orderType === 'Wedding Cakes' && weddingConfig ? { weddingConfig } : {}),
   };
 }

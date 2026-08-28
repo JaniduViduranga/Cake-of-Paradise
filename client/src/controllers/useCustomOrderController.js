@@ -5,11 +5,9 @@ import { useCart } from '../context/CartContext';
 import { createOrder, calculateEstimatedPrice, ORDER_TYPES, CUPCAKE_QUANTITIES } from '../models/order';
 
 export const TIME_SLOTS = [
-  '10:00 AM - 12:00 PM',
-  '12:00 PM - 2:00 PM',
-  '2:00 PM - 4:00 PM',
-  '4:00 PM - 6:00 PM',
-  '6:00 PM - 8:00 PM',
+  'Morning 08:00 AM - 11:00 AM',
+  'Afternoon 11:00 AM - 03:00 PM',
+  'Evening 03:00 PM - 07:00 PM',
 ];
 
 export const STANDARD_FLAVORS = [
@@ -18,6 +16,13 @@ export const STANDARD_FLAVORS = [
   { label: 'Ribbon Cake', value: 'ribbon' },
   { label: 'Date Cake', value: 'date' },
   { label: 'Coconut Cake', value: 'coconut' },
+];
+
+export const WEDDING_FLAVORS = [
+  { label: 'Butter Cake', value: 'butter', modifier: 0 },
+  { label: 'Ribbon Cake', value: 'ribbon', modifier: 0 },
+  { label: 'Rich Fruit Cake', value: 'rich-fruit', modifier: 10 },
+  { label: 'Chocolate Fudge', value: 'chocolate-fudge', modifier: 5 },
 ];
 
 export const PREMIUM_FLAVORS = [
@@ -56,6 +61,12 @@ export function useCustomOrderController() {
   const [timeSlot, setTimeSlot] = useState(TIME_SLOTS[0]);
   const [added, setAdded] = useState(false);
 
+  const [weddingPackageType, setWeddingPackageType] = useState('cake_only');
+  const [weddingStructureSetup, setWeddingStructureSetup] = useState('bottom_real_upper_dummy');
+  const [weddingStructureTiers, setWeddingStructureTiers] = useState(3);
+  const [weddingIncludeFreshFlowers, setWeddingIncludeFreshFlowers] = useState(false);
+  const [themeNotes, setThemeNotes] = useState('');
+
   // Handle order type changes
   useEffect(() => {
     if (orderType === 'Cupcakes') {
@@ -66,24 +77,48 @@ export function useCustomOrderController() {
       setMessage('');
       setDesignPreview(null);
       setSelectedFlavor(STANDARD_FLAVORS[0].value);
+    } else if (orderType === 'Wedding Cakes') {
+      setSelectedFlavor(WEDDING_FLAVORS[0].value);
+      setSelectedSize('2kg');
     } else {
       setSelectedFlavor(PREMIUM_FLAVORS[0].value);
     }
   }, [orderType]);
 
-  const activeFlavors = orderType === 'Standard Cakes' ? STANDARD_FLAVORS : PREMIUM_FLAVORS;
+  const activeFlavors = orderType === 'Standard Cakes' ? STANDARD_FLAVORS : 
+                        orderType === 'Wedding Cakes' ? WEDDING_FLAVORS : PREMIUM_FLAVORS;
   
   const currentFlavorObj = useMemo(() => {
     return activeFlavors.find(f => f.value === selectedFlavor) || activeFlavors[0];
   }, [selectedFlavor, activeFlavors]);
 
   const totalPrice = useMemo(() => {
-    const base = calculateEstimatedPrice(basePrice, orderType, selectedSize, cupcakeQuantity);
+    const weddingConfig = orderType === 'Wedding Cakes' ? {
+      packageType: weddingPackageType,
+      structureSetup: weddingStructureSetup,
+      structureTiers: weddingStructureTiers,
+      includeFreshFlowers: weddingIncludeFreshFlowers,
+      flavor: currentFlavorObj.label,
+      realCakeWeight: selectedSize,
+      themeNotes,
+    } : null;
+    
+    const base = calculateEstimatedPrice(basePrice, orderType, selectedSize, cupcakeQuantity, weddingConfig);
     const modifier = currentFlavorObj.modifier || 0;
     return base + modifier;
-  }, [basePrice, orderType, selectedSize, cupcakeQuantity, currentFlavorObj]);
+  }, [basePrice, orderType, selectedSize, cupcakeQuantity, currentFlavorObj, weddingPackageType, weddingStructureSetup, weddingStructureTiers, weddingIncludeFreshFlowers]);
 
   const submitCustomOrder = () => {
+    const weddingConfig = orderType === 'Wedding Cakes' ? {
+      packageType: weddingPackageType,
+      structureSetup: weddingStructureSetup,
+      structureTiers: weddingStructureTiers,
+      includeFreshFlowers: weddingIncludeFreshFlowers,
+      flavor: currentFlavorObj.label,
+      realCakeWeight: selectedSize,
+      themeNotes,
+    } : null;
+
     const order = createOrder({
       id: locationState.id || `custom-${Date.now()}`,
       name: `${orderType} - ${currentFlavorObj.label}`,
@@ -98,6 +133,7 @@ export function useCustomOrderController() {
       deliveryDate: pickupDate,
       timeSlot,
       quantity: 1,
+      weddingConfig,
     });
     
     addToCart(order);
@@ -130,5 +166,15 @@ export function useCustomOrderController() {
     totalPrice,
     submitCustomOrder,
     added,
+    weddingPackageType,
+    setWeddingPackageType,
+    weddingStructureSetup,
+    setWeddingStructureSetup,
+    weddingStructureTiers,
+    setWeddingStructureTiers,
+    weddingIncludeFreshFlowers,
+    setWeddingIncludeFreshFlowers,
+    themeNotes,
+    setThemeNotes,
   };
 }

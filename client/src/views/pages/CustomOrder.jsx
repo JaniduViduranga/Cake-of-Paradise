@@ -30,6 +30,16 @@ export default function CustomOrder() {
     totalPrice,
     submitCustomOrder,
     added,
+    weddingPackageType,
+    setWeddingPackageType,
+    weddingStructureSetup,
+    setWeddingStructureSetup,
+    weddingStructureTiers,
+    setWeddingStructureTiers,
+    weddingIncludeFreshFlowers,
+    setWeddingIncludeFreshFlowers,
+    themeNotes,
+    setThemeNotes,
   } = useCustomOrderController();
 
   const handleAddToCart = () => {
@@ -81,6 +91,211 @@ export default function CustomOrder() {
             </div>
           </div>
 
+          {orderType === 'Wedding Cakes' ? (
+            <div className="space-y-8">
+              {/* Step 2: Package Type */}
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">2</div>
+                  <label className="font-playfair font-bold text-lg text-chocolate-900">
+                    Package Type
+                  </label>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div 
+                    onClick={() => setWeddingPackageType('cake_only')}
+                    className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${weddingPackageType === 'cake_only' ? 'border-caramel-600 bg-caramel-50' : 'border-gray-200 hover:border-caramel-300'}`}
+                  >
+                    <h3 className="font-playfair font-bold text-lg text-chocolate-900 mb-1">Cake Only</h3>
+                    <p className="font-montserrat text-xs text-chocolate-800/60">Traditional 100% edible cake.</p>
+                  </div>
+                  <div 
+                    onClick={() => setWeddingPackageType('cake_and_structure')}
+                    className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${weddingPackageType === 'cake_and_structure' ? 'border-caramel-600 bg-caramel-50' : 'border-gray-200 hover:border-caramel-300'}`}
+                  >
+                    <h3 className="font-playfair font-bold text-lg text-chocolate-900 mb-1">Cake + Structure</h3>
+                    <p className="font-montserrat text-xs text-chocolate-800/60">Grand showpiece dummy tier setup with real cake.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 3: Structure Config (Conditional) */}
+              {weddingPackageType === 'cake_and_structure' && (
+                <div className="pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">3</div>
+                    <label className="font-playfair font-bold text-lg text-chocolate-900">
+                      Structure Configuration
+                    </label>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 uppercase tracking-wide">Layout Style</label>
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input type="radio" name="structureSetup" checked={weddingStructureSetup === 'bottom_real_upper_dummy'} onChange={() => setWeddingStructureSetup('bottom_real_upper_dummy')} className="text-caramel-600 focus:ring-caramel-500" />
+                          <span className="font-montserrat text-sm text-chocolate-800">Bottom Tier Real + Upper Tiers Dummy Structure</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input type="radio" name="structureSetup" checked={weddingStructureSetup === 'full_structure_separate_cake'} onChange={() => setWeddingStructureSetup('full_structure_separate_cake')} className="text-caramel-600 focus:ring-caramel-500" />
+                          <span className="font-montserrat text-sm text-chocolate-800">Full Display Structure + Separate Serving Cake (Behind Scene)</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 uppercase tracking-wide">Structure Tier Height</label>
+                      <div className="flex gap-3">
+                        {[3, 4, 5].map(tiers => (
+                          <button
+                            key={tiers}
+                            onClick={() => setWeddingStructureTiers(tiers)}
+                            className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${weddingStructureTiers === tiers ? 'bg-caramel-600 text-white' : 'bg-gray-100 text-chocolate-800 hover:bg-gray-200'}`}
+                          >
+                            {tiers} Tiers
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="flex items-center gap-2 cursor-pointer p-3 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                        <input type="checkbox" checked={weddingIncludeFreshFlowers} onChange={(e) => setWeddingIncludeFreshFlowers(e.target.checked)} className="rounded text-caramel-600 focus:ring-caramel-500" />
+                        <span className="font-montserrat text-sm text-chocolate-800 font-medium">Include Fresh Flowers on Structure (+ LKR 4,500)</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 4: Real Cake Details */}
+              <div className="pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">{weddingPackageType === 'cake_and_structure' ? '4' : '3'}</div>
+                  <label className="font-playfair font-bold text-lg text-chocolate-900">
+                    Real Cake Details
+                  </label>
+                </div>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 uppercase tracking-wide">Cake Flavor</label>
+                    <div className="relative">
+                      <select
+                        value={selectedFlavor}
+                        onChange={(e) => setSelectedFlavor(e.target.value)}
+                        className="input-field w-full appearance-none pr-10 bg-white"
+                      >
+                        {activeFlavors.map((flavor) => (
+                          <option key={flavor.value} value={flavor.value}>
+                            {flavor.label}{flavor.modifier > 0 ? ` (+$${flavor.modifier})` : ''}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-chocolate-800/50 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 uppercase tracking-wide">Real Cake Weight / Portions</label>
+                    <div className="flex flex-wrap gap-3">
+                      {['1.5kg', '2kg', '3kg', '5kg'].map(weight => (
+                        <button
+                          key={weight}
+                          onClick={() => setSelectedSize(weight)}
+                          className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${selectedSize === weight ? 'bg-caramel-600 text-white' : 'bg-gray-100 text-chocolate-800 hover:bg-gray-200'}`}
+                        >
+                          {weight}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 5: Customization & Event Logistics */}
+              <div className="pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">{weddingPackageType === 'cake_and_structure' ? '5' : '4'}</div>
+                  <label className="font-playfair font-bold text-lg text-chocolate-900">
+                    Customization & Event Logistics
+                  </label>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 uppercase tracking-wide">Couple Names / Initials (Max 50 chars)</label>
+                    <input
+                      type="text"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value.slice(0, 50))}
+                      placeholder="e.g. A & B"
+                      className="input-field w-full"
+                    />
+                    <div className="text-right mt-1.5">
+                      <span className="font-montserrat text-xs text-chocolate-800/40">{message.length}/50 characters</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 uppercase tracking-wide">Theme Notes & Special Instructions</label>
+                    <textarea
+                      value={themeNotes}
+                      onChange={(e) => setThemeNotes(e.target.value)}
+                      placeholder="Describe your wedding theme, colors, or any special requests..."
+                      className="input-field w-full h-24 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 uppercase tracking-wide">Design Reference Image</label>
+                    <ImageUploader
+                      preview={designPreview}
+                      onUpload={(src) => setDesignPreview(src)}
+                      onClear={() => setDesignPreview(null)}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
+                        <CalendarDays size={14} />
+                        Wedding Date
+                      </label>
+                      <input
+                        type="date"
+                        value={pickupDate}
+                        min={today}
+                        onChange={(e) => setPickupDate(e.target.value)}
+                        className="input-field w-full bg-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
+                        <Clock4 size={14} />
+                        Time Slot
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={timeSlot}
+                          onChange={(e) => setTimeSlot(e.target.value)}
+                          className="input-field w-full appearance-none pr-10 bg-white"
+                        >
+                          {timeSlots.map((slot) => (
+                            <option key={slot} value={slot}>{slot}</option>
+                          ))}
+                        </select>
+                        <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-chocolate-800/50 pointer-events-none" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          ) : (
+            <div className="space-y-8">
           {/* Step 2: Flavor */}
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -212,6 +427,10 @@ export default function CustomOrder() {
               </div>
             </div>
           </div>
+
+
+            </div>
+          )}
 
           {/* Step 5: Summary & Checkout */}
           <div className="pt-8 border-t-2 border-dashed border-gray-200 mt-8">
