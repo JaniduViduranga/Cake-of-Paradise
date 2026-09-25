@@ -23,15 +23,15 @@ export const WEDDING_FLAVORS = [
   { label: 'Butter Cake', value: 'butter', modifier: 0 },
   { label: 'Ribbon Cake', value: 'ribbon', modifier: 0 },
   { label: 'Fruit Cake', value: 'fruit', modifier: 0 },
-  { label: 'Chocolate Fudge', value: 'chocolate-fudge', modifier: 0 },
+  { label: 'Chocolate Cake', value: 'chocolate Cake', modifier: 0 },
 ];
 
 export const PREMIUM_FLAVORS = [
-  { label: 'Butter', value: 'red-velvet', modifier: 0 },
-  { label: 'Chocolate', value: 'dark-chocolate', modifier: 0 },
-  { label: 'Coffee', value: 'vanilla-bean', modifier: 0 },
-  { label: 'Fruit', value: 'lemon-raspberry', modifier: 0 },
-  { label: 'Ribbon', value: 'salted-caramel', modifier: 0 },
+  { label: 'Butter', value: 'butter', modifier: 0 },
+  { label: 'Chocolate', value: 'chocolate', modifier: 0 },
+  { label: 'Coffee', value: 'coffee', modifier: 0 },
+  { label: 'Fruit', value: 'fruit', modifier: 0 },
+  { label: 'Ribbon', value: 'ribbon', modifier: 0 },
 ];
 
 export function useCustomOrderController() {
@@ -110,14 +110,14 @@ export function useCustomOrderController() {
   }, [basePrice, orderType, selectedSize, cupcakeQuantity, currentFlavorObj, weddingPackageType, weddingStructureSetup, weddingStructureTiers, weddingIncludeFreshFlowers, themeNotes]);
 
   // Submit custom order to Express API & MongoDB Atlas
-  const submitCustomOrder = async () => {
+  const submitCustomOrder = () => {
+    // 1. Client-side Validation Guard
     if (!pickupDate) {
       alert('Please select a delivery / pickup date.');
       return;
     }
 
-    setLoading(true);
-
+    // 2. Configure Wedding Package data if applicable
     const weddingConfig = orderType === 'Wedding Cakes' ? {
       packageType: weddingPackageType,
       structureSetup: weddingStructureSetup,
@@ -125,68 +125,36 @@ export function useCustomOrderController() {
       includeFreshFlowers: weddingIncludeFreshFlowers,
       flavor: currentFlavorObj.label,
       realCakeWeight: selectedSize,
-      themeNotes,
+      themeNotes: themeNotes || '',
     } : null;
 
-    // Payload formatted to match your backend createOrder controller
-    const orderPayload = {
+    // 3. Create standardized cart item object
+    const localOrder = createOrder({
+      id: `cart-${Date.now()}`,
+      name: `${orderType} - ${currentFlavorObj.label}`,
+      image: locationState?.image || null,
+      basePrice,
       orderType,
       flavor: currentFlavorObj.label,
-      cakeSize: orderType === 'Cupcakes' ? `${cupcakeQuantity} Pack` : selectedSize,
+      weight: selectedSize,
+      cupcakeQuantity,
+      customMessage: message || '',
+      referenceImage: designPreview || '',
       deliveryDate: pickupDate,
-      deliveryTimeSlot: timeSlot,
+      timeSlot,
+      quantity: 1,
+      weddingConfig,
       totalPrice: Number(totalPrice),
-      message: message || '',
-      themeNotes: themeNotes || '',
-      designPreview: designPreview || '',
-      weddingConfig: weddingConfig || undefined,
-    };
+    });
 
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const response = await fetch(`${apiUrl}/orders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderPayload),
-      });
+    console.log('🛒 Generated Cart Item:', localOrder);
 
-      const result = await response.json();
+    // 4. Save to local Cart Context (in-memory / localStorage)
+    addToCart(localOrder);
 
-      if (response.ok && result.success) {
-        // Also save to local Cart Context for checkout preview
-        const localOrder = createOrder({
-          id: result.data._id || `custom-${Date.now()}`,
-          name: `${orderType} - ${currentFlavorObj.label}`,
-          image: locationState.image || null,
-          basePrice,
-          orderType,
-          flavor: currentFlavorObj.label,
-          weight: selectedSize,
-          cupcakeQuantity,
-          customMessage: message,
-          referenceImage: designPreview,
-          deliveryDate: pickupDate,
-          timeSlot,
-          quantity: 1,
-          weddingConfig,
-        });
-
-        addToCart(localOrder);
-
-        setAdded(true);
-        alert(`🎉 Order saved to MongoDB! Order ID: ${result.data._id}`);
-        setTimeout(() => setAdded(false), 2500);
-      } else {
-        alert(`❌ Server rejected order: ${result.error || result.message || 'Validation error'}`);
-      }
-    } catch (error) {
-      console.error('Failed to submit order:', error);
-      alert('Could not connect to backend server. Make sure port 5000 is active.');
-    } finally {
-      setLoading(false);
-    }
+    // 5. Brief UI confirmation feedback
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
   };
 
   return {
