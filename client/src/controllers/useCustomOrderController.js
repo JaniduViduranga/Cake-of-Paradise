@@ -16,7 +16,7 @@ export const STANDARD_FLAVORS = [
   { label: 'Ribbon Cake', value: 'ribbon' },
   { label: 'Date Cake', value: 'date' },
   { label: 'Coconut Cake', value: 'coconut' },
-  { lable: 'Coffee Cake', value: 'coffee' },
+  { label: 'Coffee Cake', value: 'coffee' },
 ];
 
 export const WEDDING_FLAVORS = [
@@ -60,6 +60,7 @@ export function useCustomOrderController() {
   const [pickupDate, setPickupDate] = useState('');
   const [timeSlot, setTimeSlot] = useState(TIME_SLOTS[0]);
   const [added, setAdded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [weddingPackageType, setWeddingPackageType] = useState('cake_only');
   const [weddingStructureSetup, setWeddingStructureSetup] = useState('bottom_real_upper_dummy');
@@ -106,9 +107,17 @@ export function useCustomOrderController() {
     const base = calculateEstimatedPrice(basePrice, orderType, selectedSize, cupcakeQuantity, weddingConfig);
     const modifier = currentFlavorObj.modifier || 0;
     return base + modifier;
-  }, [basePrice, orderType, selectedSize, cupcakeQuantity, currentFlavorObj, weddingPackageType, weddingStructureSetup, weddingStructureTiers, weddingIncludeFreshFlowers]);
+  }, [basePrice, orderType, selectedSize, cupcakeQuantity, currentFlavorObj, weddingPackageType, weddingStructureSetup, weddingStructureTiers, weddingIncludeFreshFlowers, themeNotes]);
 
-  const submitCustomOrder = () => {
+  // Submit custom order to Express API & MongoDB Atlas
+  const submitCustomOrder = async () => {
+    if (!pickupDate) {
+      alert('Please select a delivery / pickup date.');
+      return;
+    }
+
+    setLoading(true);
+
     const weddingConfig = orderType === 'Wedding Cakes' ? {
       packageType: weddingPackageType,
       structureSetup: weddingStructureSetup,
@@ -119,27 +128,64 @@ export function useCustomOrderController() {
       themeNotes,
     } : null;
 
-    const order = createOrder({
-      id: locationState.id || `custom-${Date.now()}`,
-      name: `${orderType} - ${currentFlavorObj.label}`,
-      image: locationState.image || null,
-      basePrice,
+    // Payload formatted to match your backend createOrder controller
+    const orderPayload = {
       orderType,
       flavor: currentFlavorObj.label,
-      weight: selectedSize,
-      cupcakeQuantity,
-      customMessage: message,
-      referenceImage: designPreview,
+      cakeSize: orderType === 'Cupcakes' ? `${cupcakeQuantity} Pack` : selectedSize,
       deliveryDate: pickupDate,
-      timeSlot,
-      quantity: 1,
-      weddingConfig,
-    });
+      deliveryTimeSlot: timeSlot,
+      totalPrice: Number(totalPrice),
+      message: message || '',
+      themeNotes: themeNotes || '',
+      designPreview: designPreview || '',
+      weddingConfig: weddingConfig || undefined,
+    };
 
-    addToCart(order);
+    try {
+      const response = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderPayload),
+      });
 
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        // Also save to local Cart Context for checkout preview
+        const localOrder = createOrder({
+          id: result.data._id || `custom-${Date.now()}`,
+          name: `${orderType} - ${currentFlavorObj.label}`,
+          image: locationState.image || null,
+          basePrice,
+          orderType,
+          flavor: currentFlavorObj.label,
+          weight: selectedSize,
+          cupcakeQuantity,
+          customMessage: message,
+          referenceImage: designPreview,
+          deliveryDate: pickupDate,
+          timeSlot,
+          quantity: 1,
+          weddingConfig,
+        });
+
+        addToCart(localOrder);
+
+        setAdded(true);
+        alert(`🎉 Order saved to MongoDB! Order ID: ${result.data._id}`);
+        setTimeout(() => setAdded(false), 2500);
+      } else {
+        alert(`❌ Server rejected order: ${result.message || 'Validation error'}`);
+      }
+    } catch (error) {
+      console.error('Failed to submit order:', error);
+      alert('Could not connect to backend server. Make sure port 5000 is active.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
@@ -166,6 +212,7 @@ export function useCustomOrderController() {
     totalPrice,
     submitCustomOrder,
     added,
+    loading,
     weddingPackageType,
     setWeddingPackageType,
     weddingStructureSetup,

@@ -30,6 +30,7 @@ export default function CustomOrder() {
     totalPrice,
     submitCustomOrder,
     added,
+    loading,
     weddingPackageType,
     setWeddingPackageType,
     weddingStructureSetup,
@@ -150,6 +151,7 @@ export default function CustomOrder() {
                         {[3, 4, 5].map(tiers => (
                           <button
                             key={tiers}
+                            type="button"
                             onClick={() => setWeddingStructureTiers(tiers)}
                             className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${weddingStructureTiers === tiers ? 'bg-caramel-600 text-white' : 'bg-gray-100 text-chocolate-800 hover:bg-gray-200'}`}
                           >
@@ -203,6 +205,7 @@ export default function CustomOrder() {
                       {['1.5kg', '2kg', '3kg', '5kg'].map(weight => (
                         <button
                           key={weight}
+                          type="button"
                           onClick={() => setSelectedSize(weight)}
                           className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${selectedSize === weight ? 'bg-caramel-600 text-white' : 'bg-gray-100 text-chocolate-800 hover:bg-gray-200'}`}
                         >
@@ -427,8 +430,6 @@ export default function CustomOrder() {
                   </div>
                 </div>
               </div>
-
-
             </div>
           )}
 
@@ -440,10 +441,22 @@ export default function CustomOrder() {
                 <p className="font-playfair font-bold text-4xl text-chocolate-900">${totalPrice.toFixed(2)}</p>
               </div>
               <button
+                type="button"
                 onClick={handleAddToCart}
-                className="w-full sm:w-auto min-w-[240px] btn-primary py-4 flex items-center justify-center gap-2 text-base shadow-lg shadow-caramel-600/20"
+                disabled={loading}
+                className={`w-full sm:w-auto min-w-[240px] btn-primary py-4 flex items-center justify-center gap-2 text-base shadow-lg shadow-caramel-600/20 transition-all ${loading ? 'opacity-70 cursor-not-allowed bg-caramel-400' : ''
+                  }`}
               >
-                🛒 {added ? 'Added to Cart!' : 'Add to Cart / Place Order'}
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    Saving Order...
+                  </span>
+                ) : added ? (
+                  'Added to Cart!'
+                ) : (
+                  '🛒 Add to Cart / Place Order'
+                )}
               </button>
             </div>
 
