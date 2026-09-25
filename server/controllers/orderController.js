@@ -3,7 +3,18 @@ import Order from '../models/Order.js';
 // Create new order from submitted form
 export async function createOrder(req, res) {
     try {
-        const { orderType, flavor, cakeSize, deliveryDate, deliveryTimeSlot, totalPrice } = req.body;
+        const {
+            orderType,
+            flavor,
+            cakeSize,
+            deliveryDate,
+            deliveryTimeSlot,
+            totalPrice,
+            message,
+            themeNotes,
+            designPreview,
+            weddingConfig,
+        } = req.body;
 
         if (!orderType || !flavor || !deliveryDate || !deliveryTimeSlot) {
             return res.status(400).json({ success: false, message: 'Please complete all required fields.' });
@@ -16,6 +27,10 @@ export async function createOrder(req, res) {
             deliveryDate,
             deliveryTimeSlot,
             totalPrice: Number(totalPrice),
+            message: message || '',
+            themeNotes: themeNotes || '',
+            designPreview: designPreview || '',
+            weddingConfig: weddingConfig || null,
         });
 
         res.status(201).json({
@@ -24,7 +39,7 @@ export async function createOrder(req, res) {
             data: order,
         });
     } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        res.status(500).json({ success: false, message: error.message, error: error.message });
     }
 }
 
@@ -34,6 +49,6 @@ export async function getAllOrders(req, res) {
         const orders = await Order.find().sort({ createdAt: -1 });
         res.status(200).json({ success: true, count: orders.length, data: orders });
     } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        res.status(500).json({ success: false, message: error.message, error: error.message });
     }
 }

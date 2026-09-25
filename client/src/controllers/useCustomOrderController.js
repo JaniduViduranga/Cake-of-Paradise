@@ -143,7 +143,8 @@ export function useCustomOrderController() {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiUrl}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -178,7 +179,7 @@ export function useCustomOrderController() {
         alert(`🎉 Order saved to MongoDB! Order ID: ${result.data._id}`);
         setTimeout(() => setAdded(false), 2500);
       } else {
-        alert(`❌ Server rejected order: ${result.message || 'Validation error'}`);
+        alert(`❌ Server rejected order: ${result.error || result.message || 'Validation error'}`);
       }
     } catch (error) {
       console.error('Failed to submit order:', error);

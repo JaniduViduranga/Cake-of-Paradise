@@ -11,11 +11,10 @@ const orderSchema = new Schema(
         flavor: {
             type: String,
             required: true,
-            enum: ['Butter Cake', 'Chocolate Cake', 'Ribbon Cake', 'Date Cake', 'Coconut Cake'],
+            trim: true,
         },
         cakeSize: {
             type: String,
-            enum: ['500g', '1kg', '2kg', '3kg', null],
             default: '1kg',
         },
         deliveryDate: {
@@ -29,6 +28,22 @@ const orderSchema = new Schema(
         totalPrice: {
             type: Number,
             required: true,
+        },
+        message: {
+            type: String,
+            default: '',
+        },
+        themeNotes: {
+            type: String,
+            default: '',
+        },
+        designPreview: {
+            type: String,
+            default: '',
+        },
+        weddingConfig: {
+            type: Schema.Types.Mixed,
+            default: null,
         },
         status: {
             type: String,
