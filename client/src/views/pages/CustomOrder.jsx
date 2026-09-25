@@ -262,7 +262,7 @@ export default function CustomOrder() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
+                      <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 items-center gap-1.5 uppercase tracking-wide">
                         <CalendarDays size={14} />
                         Wedding Date
                       </label>
@@ -275,7 +275,7 @@ export default function CustomOrder() {
                       />
                     </div>
                     <div>
-                      <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
+                      <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 items-center gap-1.5 uppercase tracking-wide">
                         <Clock4 size={14} />
                         Time Slot
                       </label>
@@ -398,7 +398,7 @@ export default function CustomOrder() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
+                    <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 items-center gap-1.5 uppercase tracking-wide">
                       <CalendarDays size={14} />
                       Date
                     </label>
@@ -411,7 +411,7 @@ export default function CustomOrder() {
                     />
                   </div>
                   <div>
-                    <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
+                    <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 items-center gap-1.5 uppercase tracking-wide">
                       <Clock4 size={14} />
                       Time Slot
                     </label>
