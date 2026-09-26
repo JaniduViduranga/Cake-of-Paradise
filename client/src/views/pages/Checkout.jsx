@@ -4,8 +4,6 @@ import { useCheckoutController } from '../../controllers/useCheckoutController';
 
 const PAYMENT_METHODS = [
   { id: 'credit', label: 'Credit Card', icon: CreditCard },
-  { id: 'paypal', label: 'PayPal', icon: null },
-  { id: 'applepay', label: 'Apple Pay', icon: null },
 ];
 
 export default function Checkout() {
@@ -206,7 +204,7 @@ export default function Checkout() {
                         <p className="font-montserrat text-xs text-chocolate-800/40 mt-0.5">Qty: {item.quantity}</p>
                       </div>
                       <p className="font-montserrat font-bold text-sm text-chocolate-900 shrink-0">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        Rs. {(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   ))}
@@ -217,9 +215,9 @@ export default function Checkout() {
                 {/* Totals */}
                 <div className="space-y-2 mb-5">
                   {[
-                    { label: 'Subtotal', value: `$${subtotal.toFixed(2)}` },
-                    { label: 'Shipping', value: deliveryMethod === 'pickup' ? 'Free' : `$${shipping.toFixed(2)}` },
-                    { label: 'Tax', value: `$${tax.toFixed(2)}` },
+                    { label: 'Subtotal', value: `Rs. ${subtotal.toFixed(2)}` },
+                    { label: 'Shipping', value: deliveryMethod === 'pickup' ? 'Free' : `Rs. ${shipping.toFixed(2)}` },
+                    { label: 'Tax', value: `Rs. ${tax.toFixed(2)}` },
                   ].map(({ label, value }) => (
                     <div key={label} className="flex justify-between font-montserrat text-sm text-chocolate-800/70">
                       <span>{label}</span><span>{value}</span>
@@ -228,7 +226,7 @@ export default function Checkout() {
                   <div className="flex justify-between font-montserrat font-bold text-lg text-chocolate-900 pt-3 border-t border-gray-100">
                     <span>Total</span>
                     <span className="text-caramel-600">
-                      ${finalTotal.toFixed(2)}
+                      Rs. {finalTotal.toFixed(2)}
                     </span>
                   </div>
                 </div>

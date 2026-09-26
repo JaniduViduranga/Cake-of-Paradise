@@ -69,7 +69,7 @@ export function createOrder({
   image,
   basePrice = 45,
   orderType = 'Standard Cakes',
-  flavor = 'Butter Cake',
+  flavor = 'Butter',
   weight = '1kg',
   cupcakeQuantity = 12,
   customMessage = '',
@@ -78,8 +78,10 @@ export function createOrder({
   timeSlot = '',
   quantity = 1,
   weddingConfig = null,
+  totalPrice = undefined,
+  price = undefined,
 }) {
-  const finalPrice = calculateEstimatedPrice(basePrice, orderType, weight, cupcakeQuantity, weddingConfig);
+  const finalPrice = totalPrice !== undefined ? Number(totalPrice) : (price !== undefined ? Number(price) : calculateEstimatedPrice(basePrice, orderType, weight, cupcakeQuantity, weddingConfig));
   
   return {
     cartItemId: `${id}-${Date.now()}`,

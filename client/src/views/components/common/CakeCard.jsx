@@ -94,7 +94,7 @@ export default function CakeCard({ cake }) {
           </h3>
           <div className="text-right shrink-0">
             <p className="font-montserrat text-xs text-chocolate-800/50">from</p>
-            <p className="font-montserrat font-bold text-caramel-600 text-lg">${price}</p>
+            <p className="font-montserrat font-bold text-caramel-600 text-lg">Rs. {price}</p>
           </div>
         </div>
 

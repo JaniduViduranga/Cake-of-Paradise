@@ -115,7 +115,7 @@ export default function CartSidebar() {
                       </div>
                       <div className="flex items-center gap-2">
                         <p className="font-montserrat font-bold text-caramel-600 text-sm">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          Rs. {(item.price * item.quantity).toFixed(2)}
                         </p>
                         <button
                           onClick={() => removeFromCart(item.cartItemId)}
@@ -138,16 +138,16 @@ export default function CartSidebar() {
           <div className="border-t border-gray-100 bg-white px-6 py-5 space-y-3">
             <div className="space-y-1.5">
               <div className="flex justify-between font-montserrat text-sm text-chocolate-800/70">
-                <span>Subtotal</span><span>${subtotal.toFixed(2)}</span>
+                <span>Subtotal</span><span>Rs. {subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between font-montserrat text-sm text-chocolate-800/70">
-                <span>Shipping</span><span>${shipping.toFixed(2)}</span>
+                <span>Shipping</span><span>Rs. {shipping.toFixed(2)}</span>
               </div>
               <div className="flex justify-between font-montserrat text-sm text-chocolate-800/70">
-                <span>Tax (8%)</span><span>${tax.toFixed(2)}</span>
+                <span>Tax (8%)</span><span>Rs. {tax.toFixed(2)}</span>
               </div>
               <div className="flex justify-between font-montserrat font-bold text-base text-chocolate-900 pt-2 border-t border-gray-100">
-                <span>Total</span><span className="text-caramel-600">${total.toFixed(2)}</span>
+                <span>Total</span><span className="text-caramel-600">Rs. {total.toFixed(2)}</span>
               </div>
             </div>
             <button

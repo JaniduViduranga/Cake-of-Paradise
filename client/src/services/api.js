@@ -45,6 +45,9 @@ export const createOrder = (payload) => api.post('/orders', payload);
 export const getOrderById = (id) => api.get(`/orders/${id}`);
 export const getUserOrders = () => api.get('/orders/me');
 
+// ── Pricing ───────────────────────────────────────────────────────
+export const getPricing = () => api.get('/pricing');
+
 // ── Contact ───────────────────────────────────────────────────────
 export const sendContactMessage = (payload) => api.post('/contact', payload);
 

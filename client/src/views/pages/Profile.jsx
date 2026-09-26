@@ -249,7 +249,7 @@ export default function Profile() {
                             <p className="font-semibold text-chocolate-900">{item.name}</p>
                             <p className="text-xs text-chocolate-800/40">{item.size} · Qty: {item.qty}</p>
                           </div>
-                          <p className="font-bold text-caramel-600">${item.price}</p>
+                          <p className="font-bold text-caramel-600">Rs. {item.price}</p>
                         </div>
                       ))}
                     </div>
@@ -291,7 +291,7 @@ export default function Profile() {
                         </div>
                         <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                           <p className="font-montserrat font-bold text-sm text-chocolate-900">
-                            Total: <span className="text-caramel-600">${order.total.toFixed(2)}</span>
+                            Total: <span className="text-caramel-600">Rs. {order.total.toFixed(2)}</span>
                           </p>
                           <button
                             className="font-montserrat text-xs font-semibold text-caramel-600 hover:text-caramel-700 flex items-center gap-1 transition-colors"

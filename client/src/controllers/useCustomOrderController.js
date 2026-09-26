@@ -3,35 +3,19 @@ import { useSearchParams, useLocation } from 'react-router-dom';
 import { CAKES } from '../models/cakes';
 import { useCart } from '../context/CartContext';
 import { createOrder, calculateEstimatedPrice, ORDER_TYPES, CUPCAKE_QUANTITIES } from '../models/order';
+import { getPricing } from '../services/api';
+import {
+  STANDARD_FLAVORS,
+  CELEBRATION_FLAVORS,
+  getFlavorsForOrderType,
+} from '../constants/cakeOptions';
+
+export { STANDARD_FLAVORS, CELEBRATION_FLAVORS, getFlavorsForOrderType };
 
 export const TIME_SLOTS = [
   'Morning 08:00 AM - 11:00 AM',
   'Afternoon 11:00 AM - 03:00 PM',
   'Evening 03:00 PM - 07:00 PM',
-];
-
-export const STANDARD_FLAVORS = [
-  { label: 'Butter Cake', value: 'butter' },
-  { label: 'Chocolate Cake', value: 'chocolate' },
-  { label: 'Ribbon Cake', value: 'ribbon' },
-  { label: 'Date Cake', value: 'date' },
-  { label: 'Coconut Cake', value: 'coconut' },
-  { label: 'Coffee Cake', value: 'coffee' },
-];
-
-export const WEDDING_FLAVORS = [
-  { label: 'Butter Cake', value: 'butter', modifier: 0 },
-  { label: 'Ribbon Cake', value: 'ribbon', modifier: 0 },
-  { label: 'Fruit Cake', value: 'fruit', modifier: 0 },
-  { label: 'Chocolate Cake', value: 'chocolate Cake', modifier: 0 },
-];
-
-export const PREMIUM_FLAVORS = [
-  { label: 'Butter', value: 'butter', modifier: 0 },
-  { label: 'Chocolate', value: 'chocolate', modifier: 0 },
-  { label: 'Coffee', value: 'coffee', modifier: 0 },
-  { label: 'Fruit', value: 'fruit', modifier: 0 },
-  { label: 'Ribbon', value: 'ribbon', modifier: 0 },
 ];
 
 export function useCustomOrderController() {
@@ -45,15 +29,50 @@ export function useCustomOrderController() {
 
   const initialOrderType = locationState.orderType || 'Standard Cakes';
   const [orderType, setOrderType] = useState(initialOrderType);
-
   const [basePrice, setBasePrice] = useState(locationState.basePrice || 45);
 
   const [selectedSize, setSelectedSize] = useState('1kg');
   const [cupcakeQuantity, setCupcakeQuantity] = useState(12);
 
+  // Fetch /api/pricing from database
+  const [pricingData, setPricingData] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchPricing = async () => {
+      try {
+        const response = await getPricing();
+        if (isMounted && response?.data?.success && Array.isArray(response.data.data)) {
+          setPricingData(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching database pricing rules:', error);
+      }
+    };
+    fetchPricing();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Derive available flavors dynamically for the active order type
+  const availableFlavors = useMemo(() => {
+    return getFlavorsForOrderType(orderType);
+  }, [orderType]);
+
   const [selectedFlavor, setSelectedFlavor] = useState(
-    initialOrderType === 'Standard Cakes' ? STANDARD_FLAVORS[0].value : PREMIUM_FLAVORS[0].value
+    availableFlavors[0]?.id || availableFlavors[0]?.value || 'butter'
   );
+
+  // Fallback selectedFlavorId to first item of availableFlavors if current flavor is not available
+  useEffect(() => {
+    const isAvailable = availableFlavors.some(
+      (f) => f.value === selectedFlavor || f.id === selectedFlavor
+    );
+    if (!isAvailable && availableFlavors.length > 0) {
+      setSelectedFlavor(availableFlavors[0].value || availableFlavors[0].id);
+    }
+  }, [availableFlavors, selectedFlavor]);
 
   const [message, setMessage] = useState('');
   const [designPreview, setDesignPreview] = useState(null);
@@ -68,67 +87,164 @@ export function useCustomOrderController() {
   const [weddingIncludeFreshFlowers, setWeddingIncludeFreshFlowers] = useState(false);
   const [themeNotes, setThemeNotes] = useState('');
 
-  // Handle order type changes
+  // Reset category-specific fields on orderType change
   useEffect(() => {
-    if (orderType === 'Cupcakes') {
+    if (orderType === 'Cupcakes' || orderType === 'Standard Cakes' || orderType === 'Standard') {
       setMessage('');
       setDesignPreview(null);
-      setSelectedFlavor(PREMIUM_FLAVORS[0].value);
-    } else if (orderType === 'Standard Cakes') {
-      setMessage('');
-      setDesignPreview(null);
-      setSelectedFlavor(STANDARD_FLAVORS[0].value);
-    } else if (orderType === 'Wedding Cakes') {
-      setSelectedFlavor(WEDDING_FLAVORS[0].value);
+    }
+    if (orderType === 'Wedding Cakes') {
       setSelectedSize('2kg');
-    } else {
-      setSelectedFlavor(PREMIUM_FLAVORS[0].value);
     }
   }, [orderType]);
 
-  const activeFlavors = orderType === 'Standard Cakes' ? STANDARD_FLAVORS :
-    orderType === 'Wedding Cakes' ? WEDDING_FLAVORS : PREMIUM_FLAVORS;
-
+  // Current active flavor object
   const currentFlavorObj = useMemo(() => {
-    return activeFlavors.find(f => f.value === selectedFlavor) || activeFlavors[0];
-  }, [selectedFlavor, activeFlavors]);
+    return (
+      availableFlavors.find(
+        (f) => f.value === selectedFlavor || f.id === selectedFlavor
+      ) || availableFlavors[0]
+    );
+  }, [selectedFlavor, availableFlavors]);
 
+  // Find matching pricing document
+  const currentPricingRules = useMemo(() => {
+    if (!pricingData || pricingData.length === 0) return null;
+    return (
+      pricingData.find((p) => {
+        if (p.orderType === orderType) return true;
+        if (
+          (orderType === 'Standard Cakes' || orderType === 'Standard') &&
+          (p.orderType === 'Standard' || p.orderType === 'Standard Cakes')
+        ) {
+          return true;
+        }
+        return false;
+      }) || null
+    );
+  }, [pricingData, orderType]);
+
+  // Helper to extract flavor surcharge for active rule
+  const getFlavorSurcharge = (flavorLabel) => {
+    if (!currentPricingRules?.flavorPremiums) return 0;
+    const premiums = currentPricingRules.flavorPremiums;
+    if (typeof premiums.get === 'function') {
+      return premiums.get(flavorLabel) || 0;
+    }
+    return premiums[flavorLabel] || 0;
+  };
+
+  // Convert weight string (e.g. '500g', '1kg', '1.5kg') to numeric kilograms
+  const numericWeight = useMemo(() => {
+    if (typeof selectedSize === 'string') {
+      const lower = selectedSize.toLowerCase().trim();
+      if (lower.endsWith('g') && !lower.endsWith('kg')) {
+        return (parseFloat(lower) || 500) / 1000;
+      }
+      return parseFloat(lower) || 1;
+    }
+    if (typeof selectedSize === 'number') {
+      return selectedSize;
+    }
+    return 1;
+  }, [selectedSize]);
+
+  // Dynamic memoized calculation for totalPrice
   const totalPrice = useMemo(() => {
-    const weddingConfig = orderType === 'Wedding Cakes' ? {
-      packageType: weddingPackageType,
-      structureSetup: weddingStructureSetup,
-      structureTiers: weddingStructureTiers,
-      includeFreshFlowers: weddingIncludeFreshFlowers,
-      flavor: currentFlavorObj.label,
-      realCakeWeight: selectedSize,
-      themeNotes,
-    } : null;
+    const rules = currentPricingRules;
+    const flavorExtra = currentFlavorObj ? getFlavorSurcharge(currentFlavorObj.label) : 0;
 
-    const base = calculateEstimatedPrice(basePrice, orderType, selectedSize, cupcakeQuantity, weddingConfig);
+    if (rules) {
+      if (orderType === 'Cupcakes') {
+        const packKey = `pack${cupcakeQuantity}`;
+        const packPrices = rules.cupcakePackPrices;
+        const packPrice =
+          (packPrices &&
+            (typeof packPrices.get === 'function'
+              ? packPrices.get(packKey)
+              : packPrices[packKey])) ||
+          0;
+        return packPrice + flavorExtra * (cupcakeQuantity / 6);
+      }
+
+      if (orderType === 'Wedding Cakes') {
+        let tierRate = 0;
+        if (weddingPackageType === 'cake_and_structure') {
+          const tierKey = `tier${weddingStructureTiers}`;
+          const rates = rules.weddingTierRates;
+          tierRate =
+            (rates &&
+              (typeof rates.get === 'function' ? rates.get(tierKey) : rates[tierKey])) ||
+            0;
+        }
+        const freshFlowersRate = weddingIncludeFreshFlowers ? rules.freshFlowersRate || 0 : 0;
+        const perKg = (rules.pricePerKg || 0) + flavorExtra;
+        return (rules.basePrice || 0) + tierRate + freshFlowersRate + numericWeight * perKg;
+      }
+
+      // Standard / Birthday Cakes
+      const perKg = (rules.pricePerKg || 0) + flavorExtra;
+      return (rules.basePrice || 0) + numericWeight * perKg;
+    }
+
+    // Fallback if database rules are loading or not yet configured
+    const weddingConfig =
+      orderType === 'Wedding Cakes'
+        ? {
+            packageType: weddingPackageType,
+            structureSetup: weddingStructureSetup,
+            structureTiers: weddingStructureTiers,
+            includeFreshFlowers: weddingIncludeFreshFlowers,
+            flavor: currentFlavorObj.label,
+            realCakeWeight: selectedSize,
+            themeNotes,
+          }
+        : null;
+
+    const base = calculateEstimatedPrice(
+      basePrice,
+      orderType,
+      selectedSize,
+      cupcakeQuantity,
+      weddingConfig
+    );
     const modifier = currentFlavorObj.modifier || 0;
     return base + modifier;
-  }, [basePrice, orderType, selectedSize, cupcakeQuantity, currentFlavorObj, weddingPackageType, weddingStructureSetup, weddingStructureTiers, weddingIncludeFreshFlowers, themeNotes]);
+  }, [
+    currentPricingRules,
+    orderType,
+    cupcakeQuantity,
+    weddingPackageType,
+    weddingStructureTiers,
+    weddingIncludeFreshFlowers,
+    numericWeight,
+    currentFlavorObj,
+    selectedSize,
+    basePrice,
+    weddingStructureSetup,
+    themeNotes,
+  ]);
 
   // Submit custom order to Express API & MongoDB Atlas
   const submitCustomOrder = () => {
-    // 1. Client-side Validation Guard
     if (!pickupDate) {
       alert('Please select a delivery / pickup date.');
       return;
     }
 
-    // 2. Configure Wedding Package data if applicable
-    const weddingConfig = orderType === 'Wedding Cakes' ? {
-      packageType: weddingPackageType,
-      structureSetup: weddingStructureSetup,
-      structureTiers: weddingStructureTiers,
-      includeFreshFlowers: weddingIncludeFreshFlowers,
-      flavor: currentFlavorObj.label,
-      realCakeWeight: selectedSize,
-      themeNotes: themeNotes || '',
-    } : null;
+    const weddingConfig =
+      orderType === 'Wedding Cakes'
+        ? {
+            packageType: weddingPackageType,
+            structureSetup: weddingStructureSetup,
+            structureTiers: weddingStructureTiers,
+            includeFreshFlowers: weddingIncludeFreshFlowers,
+            flavor: currentFlavorObj.label,
+            realCakeWeight: selectedSize,
+            themeNotes: themeNotes || '',
+          }
+        : null;
 
-    // 3. Create standardized cart item object
     const localOrder = createOrder({
       id: `cart-${Date.now()}`,
       name: `${orderType} - ${currentFlavorObj.label}`,
@@ -145,14 +261,11 @@ export function useCustomOrderController() {
       quantity: 1,
       weddingConfig,
       totalPrice: Number(totalPrice),
+      price: Number(totalPrice),
     });
 
     console.log('🛒 Generated Cart Item:', localOrder);
-
-    // 4. Save to local Cart Context (in-memory / localStorage)
     addToCart(localOrder);
-
-    // 5. Brief UI confirmation feedback
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -168,7 +281,14 @@ export function useCustomOrderController() {
     cupcakeQuantities: CUPCAKE_QUANTITIES,
     selectedFlavor,
     setSelectedFlavor,
-    activeFlavors,
+    selectedFlavorId: selectedFlavor,
+    setSelectedFlavorId: setSelectedFlavor,
+    availableFlavors,
+    activeFlavors: availableFlavors,
+    currentFlavorObj,
+    pricingData,
+    currentPricingRules,
+    getFlavorSurcharge,
     message,
     setMessage,
     designPreview,

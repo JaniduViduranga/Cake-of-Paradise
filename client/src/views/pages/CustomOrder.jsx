@@ -17,7 +17,11 @@ export default function CustomOrder() {
     cupcakeQuantities,
     selectedFlavor,
     setSelectedFlavor,
+    selectedFlavorId,
+    setSelectedFlavorId,
+    availableFlavors,
     activeFlavors,
+    getFlavorSurcharge,
     message,
     setMessage,
     designPreview,
@@ -164,7 +168,7 @@ export default function CustomOrder() {
                     <div>
                       <label className="flex items-center gap-2 cursor-pointer p-3 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <input type="checkbox" checked={weddingIncludeFreshFlowers} onChange={(e) => setWeddingIncludeFreshFlowers(e.target.checked)} className="rounded text-caramel-600 focus:ring-caramel-500" />
-                        <span className="font-montserrat text-sm text-chocolate-800 font-medium">Include Fresh Flowers on Structure (+ LKR 4,500)</span>
+                        <span className="font-montserrat text-sm text-chocolate-800 font-medium">Include Fresh Flowers on Structure (+ Rs. 4,500)</span>
                       </label>
                     </div>
                   </div>
@@ -183,19 +187,34 @@ export default function CustomOrder() {
                 <div className="space-y-6">
                   <div>
                     <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 uppercase tracking-wide">Cake Flavor</label>
-                    <div className="relative">
-                      <select
-                        value={selectedFlavor}
-                        onChange={(e) => setSelectedFlavor(e.target.value)}
-                        className="input-field w-full appearance-none pr-10 bg-white"
-                      >
-                        {activeFlavors.map((flavor) => (
-                          <option key={flavor.value} value={flavor.value}>
-                            {flavor.label}{flavor.modifier > 0 ? ` (+$${flavor.modifier})` : ''}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-chocolate-800/50 pointer-events-none" />
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {(availableFlavors || activeFlavors).map((flavor) => {
+                        const isSelected = selectedFlavor === flavor.value || selectedFlavor === flavor.id;
+                        const surcharge = getFlavorSurcharge ? getFlavorSurcharge(flavor.label) : 0;
+                        const surchargeLabel = surcharge > 0 ? `+Rs. ${surcharge}/kg` : 'Standard Price';
+
+                        return (
+                          <button
+                            key={flavor.value || flavor.id}
+                            type="button"
+                            onClick={() => (setSelectedFlavorId ? setSelectedFlavorId(flavor.value || flavor.id) : setSelectedFlavor(flavor.value || flavor.id))}
+                            className={`flex flex-col items-center justify-center p-3.5 rounded-xl border-2 transition-all text-center ${
+                              isSelected
+                                ? 'border-caramel-600 bg-caramel-50/80 text-chocolate-900 shadow-sm ring-1 ring-caramel-600'
+                                : 'border-gray-200 bg-white hover:border-caramel-300 text-chocolate-800'
+                            }`}
+                          >
+                            <span className="font-montserrat font-bold text-sm mb-1">{flavor.label}</span>
+                            <span
+                              className={`font-montserrat text-xs ${
+                                surcharge > 0 ? 'text-caramel-700 font-semibold' : 'text-chocolate-800/50'
+                              }`}
+                            >
+                              {surchargeLabel}
+                            </span>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -307,19 +326,36 @@ export default function CustomOrder() {
                     Choose Flavor
                   </label>
                 </div>
-                <div className="relative">
-                  <select
-                    value={selectedFlavor}
-                    onChange={(e) => setSelectedFlavor(e.target.value)}
-                    className="input-field w-full appearance-none pr-10 bg-white"
-                  >
-                    {activeFlavors.map((flavor) => (
-                      <option key={flavor.value} value={flavor.value}>
-                        {flavor.label}{flavor.modifier > 0 ? ` (+$${flavor.modifier})` : ''}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-chocolate-800/50 pointer-events-none" />
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {(availableFlavors || activeFlavors).map((flavor) => {
+                    const isSelected = selectedFlavor === flavor.value || selectedFlavor === flavor.id;
+                    const surcharge = getFlavorSurcharge ? getFlavorSurcharge(flavor.label) : 0;
+                    const surchargeLabel = surcharge > 0
+                      ? (orderType === 'Cupcakes' ? `+Rs. ${surcharge}` : `+Rs. ${surcharge}/kg`)
+                      : 'Standard Price';
+
+                    return (
+                      <button
+                        key={flavor.value || flavor.id}
+                        type="button"
+                        onClick={() => (setSelectedFlavorId ? setSelectedFlavorId(flavor.value || flavor.id) : setSelectedFlavor(flavor.value || flavor.id))}
+                        className={`flex flex-col items-center justify-center p-3.5 rounded-xl border-2 transition-all text-center ${
+                          isSelected
+                            ? 'border-caramel-600 bg-caramel-50/80 text-chocolate-900 shadow-sm ring-1 ring-caramel-600'
+                            : 'border-gray-200 bg-white hover:border-caramel-300 text-chocolate-800'
+                        }`}
+                      >
+                        <span className="font-montserrat font-bold text-sm mb-1">{flavor.label}</span>
+                        <span
+                          className={`font-montserrat text-xs ${
+                            surcharge > 0 ? 'text-caramel-700 font-semibold' : 'text-chocolate-800/50'
+                          }`}
+                        >
+                          {surchargeLabel}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -438,7 +474,7 @@ export default function CustomOrder() {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
               <div>
                 <p className="font-montserrat font-semibold text-sm text-chocolate-800/60 uppercase tracking-wider mb-1">Estimated Total</p>
-                <p className="font-playfair font-bold text-4xl text-chocolate-900">${totalPrice.toFixed(2)}</p>
+                <p className="font-playfair font-bold text-4xl text-chocolate-900">Rs. {totalPrice.toFixed(2)}</p>
               </div>
               <button
                 type="button"
