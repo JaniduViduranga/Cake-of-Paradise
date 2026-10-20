@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MapPin, Clock, MessageCircle, Camera, ThumbsUp, Play, Send, CheckCircle } from 'lucide-react';
 import SectionHeading from '../components/common/SectionHeading';
-import { BAKER_VALUES } from '../../models/cakes';
 import { useContactController } from '../../controllers/useContactController';
 import AboutUs1 from '../../assets/AboutUs1.jpg';
 import AboutUs2 from '../../assets/AboutUs2.jpg';
@@ -103,22 +102,6 @@ export default function About() {
               <p className="font-playfair italic text-caramel-600 font-semibold text-sm">Cake of Paradise</p>
               <p className="font-montserrat text-xs text-chocolate-800/50">Est. 2021</p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values Cards */}
-      <section className="py-16 bg-white border-y border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 lg:px-16">
-          <SectionHeading title="What We Stand For" subtitle="Our commitments that define every cake we bake" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-            {BAKER_VALUES.map((val) => (
-              <div key={val.title} className="bg-cream-50 rounded-2xl p-7 border border-gray-100 hover:shadow-md transition-all duration-300 text-center group">
-                <div className="text-5xl mb-5 group-hover:scale-110 transition-transform duration-300">{val.icon}</div>
-                <h3 className="font-playfair font-bold text-lg text-chocolate-900 mb-2">{val.title}</h3>
-                <p className="font-montserrat text-sm text-chocolate-800/60 leading-relaxed">{val.description}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
