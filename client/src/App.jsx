@@ -8,7 +8,6 @@ import Home from './views/pages/Home';
 import Gallery from './views/pages/Gallery';
 import CustomOrder from './views/pages/CustomOrder';
 import About from './views/pages/About';
-import Contact from './views/pages/Contact';
 import Checkout from './views/pages/Checkout';
 import Profile from './views/pages/Profile';
 
@@ -22,7 +21,7 @@ function AppLayout() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/custom-order" element={<CustomOrder />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/contact" element={<About />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/profile" element={<Profile />} />
           {/* 404 Fallback */}
