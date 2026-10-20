@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Leaf } from 'lucide-react';
 import SectionHeading from '../components/common/SectionHeading';
-import { CAKES, REVIEWS, BAKER_VALUES } from '../../models/cakes';
+import { CAKES, BAKER_VALUES } from '../../models/cakes';
 import HomePageImage from '../../assets/HomePageImage.jpg';
 
 const STATS = [
@@ -9,16 +9,6 @@ const STATS = [
   { value: '12+', label: 'Signature Recipes' },
   { value: '4.9★', label: 'Average Rating' },
 ];
-
-function StarRating({ rating }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: 5 }, (_, i) => (
-        <span key={i} className={i < rating ? 'text-amber-400' : 'text-gray-200'}>★</span>
-      ))}
-    </div>
-  );
-}
 
 export default function Home() {
   return (
@@ -109,62 +99,6 @@ export default function Home() {
                 <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">{val.icon}</div>
                 <h3 className="font-playfair font-bold text-lg sm:text-xl text-chocolate-900 mb-2 sm:mb-3">{val.title}</h3>
                 <p className="font-montserrat text-xs sm:text-sm text-chocolate-800/60 leading-relaxed">{val.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Custom Order CTA ── */}
-      <section className="py-14 sm:py-20 bg-chocolate-900 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <img
-            src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=1200&auto=format&fit=crop"
-            alt=""
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <p className="font-montserrat font-semibold text-xs tracking-widest text-cream-200/60 uppercase mb-3 sm:mb-4">
-            Bespoke Creations
-          </p>
-          <h2 className="font-playfair font-bold text-3xl sm:text-4xl lg:text-5xl text-cream-50 mb-4 sm:mb-6 leading-tight">
-            Design Your Dream Cake
-          </h2>
-          <p className="font-montserrat text-sm sm:text-base text-cream-200/80 leading-relaxed mb-6 sm:mb-8">
-            From intimate birthday cakes to grand wedding showpieces — our master bakers bring your vision to life with precision and artistry.
-          </p>
-          <Link
-            to="/custom-order"
-            className="inline-flex items-center gap-2 bg-cream-50 text-chocolate-900 font-montserrat font-bold text-sm tracking-wider px-6 sm:px-8 py-3.5 sm:py-4 rounded hover:bg-white transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            Start Customizing
-            <ArrowRight size={16} />
-          </Link>
-        </div>
-      </section>
-
-      {/* ── Reviews ── */}
-      <section className="py-14 sm:py-20 bg-cream-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
-          <SectionHeading
-            title="Sweet Words from Our Customers"
-            subtitle="What our community is saying about their Cake of Paradise experience"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 mt-4">
-            {REVIEWS.map((review) => (
-              <div
-                key={review.id}
-                className="bg-white rounded-2xl p-5 sm:p-7 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-50"
-              >
-                <StarRating rating={review.rating} />
-                <p className="font-montserrat text-xs sm:text-sm text-chocolate-800/70 leading-relaxed mt-4 mb-4 sm:mb-5 italic">
-                  "{review.text}"
-                </p>
-                <div className="border-t border-gray-100 pt-3 sm:pt-4">
-                  <p className="font-montserrat font-semibold text-sm text-chocolate-900">{review.name}</p>
-                  <p className="font-montserrat text-xs text-chocolate-800/40 mt-0.5">{review.product} · {review.date}</p>
-                </div>
               </div>
             ))}
           </div>
