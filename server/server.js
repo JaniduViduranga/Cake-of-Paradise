@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express, { json, urlencoded } from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
+import authRoutes from './routes/authRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import pricingRoutes from './routes/pricingRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
@@ -15,6 +16,7 @@ app.use(cors({ origin: ['http://localhost:5173', 'http://127.0.0.1:5173'] }));
 app.use(json({ limit: '20mb' }));
 app.use(urlencoded({ extended: true, limit: '20mb' }));
 
+app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/pricing', pricingRoutes);
 app.use('/api/payment', paymentRoutes);
