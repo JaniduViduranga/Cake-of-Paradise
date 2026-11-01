@@ -13,67 +13,118 @@
   }
 
   body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #fff8f6;
-    color: #2b1613;
+    font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #FCF8F8;
+    color: #574A4A;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Satoshi', sans-serif;
+    letter-spacing: -0.02em;
+    color: #3D2727;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-[#715954] text-white font-montserrat font-semibold text-sm tracking-widest px-8 py-4 rounded transition-all duration-200 hover:bg-[#5d4a46] active:scale-95 shadow-sm hover:shadow-md;
+    background-color: #F5AFAF;
+    color: #ffffff;
+    border: 1px solid #F5AFAF;
+    @apply font-sans font-semibold text-sm tracking-wide px-7 py-3.5 rounded-xl transition-all duration-200 active:scale-95 shadow-sm hover:shadow-md;
+  }
+  .btn-primary:hover {
+    background-color: #EFA3A3;
+    border-color: #EFA3A3;
   }
 
   .btn-secondary {
-    @apply border border-[#7d562d] text-[#7d562d] font-montserrat font-semibold text-sm tracking-widest px-8 py-4 rounded transition-all duration-200 hover:bg-[#7d562d] hover:text-white active:scale-95;
+    border: 1px solid #F5AFAF;
+    color: #3D2727;
+    background-color: transparent;
+    @apply font-sans font-semibold text-sm tracking-wide px-7 py-3.5 rounded-xl transition-all duration-200 active:scale-95 shadow-sm;
+  }
+  .btn-secondary:hover {
+    background-color: #FBEFEF;
+    color: #3D2727;
   }
 
   .btn-ghost {
-    @apply text-[#7d562d] font-montserrat font-semibold text-sm tracking-widest px-4 py-2 rounded transition-all duration-200 hover:bg-cream-100;
+    color: #3D2727;
+    @apply font-sans font-semibold text-sm tracking-wide px-4 py-2 rounded-lg transition-all duration-200;
+  }
+  .btn-ghost:hover {
+    background-color: #FBEFEF;
+    color: #3D2727;
   }
 
   .card {
-    @apply bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden;
+    background-color: #FCF8F8;
+    border: 1px solid #F9DFDF;
+    @apply rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden;
   }
 
   .input-field {
-    @apply w-full border border-gray-200 rounded-lg px-4 py-3 text-sm font-montserrat text-chocolate-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-caramel-600/30 focus:border-caramel-600 transition-all duration-200 bg-white;
+    border: 1px solid #F9DFDF;
+    background-color: #ffffff;
+    color: #3D2727;
+    @apply w-full rounded-xl px-4 py-3 text-sm font-sans placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F5AFAF]/30 focus:border-[#F5AFAF] transition-all duration-200;
   }
 
   .section-heading {
-    @apply font-playfair text-4xl font-bold text-chocolate-900;
+    color: #3D2727;
+    @apply font-heading text-3xl sm:text-4xl font-bold tracking-tight;
   }
 
   .section-subheading {
-    @apply font-montserrat text-base text-chocolate-800/70 mt-3 leading-relaxed;
+    color: #705E5E;
+    @apply font-body text-sm sm:text-base mt-2.5 leading-relaxed;
   }
 
   .tag-pill {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-montserrat font-semibold tracking-wide;
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans font-semibold tracking-wide;
   }
 
   .category-pill {
-    @apply px-4 py-2 rounded-full border font-montserrat font-semibold text-sm tracking-wide transition-all duration-200 cursor-pointer;
+    border: 1px solid #F9DFDF;
+    color: #574A4A;
+    background-color: #ffffff;
+    @apply px-4 py-2 rounded-full font-sans font-semibold text-sm tracking-wide transition-all duration-200 cursor-pointer;
+  }
+  .category-pill:hover {
+    border-color: #F5AFAF;
+    background-color: #FBEFEF;
+    color: #3D2727;
   }
 
   .category-pill-active {
-    @apply bg-chocolate-900 text-white border-chocolate-900;
+    background-color: #F5AFAF;
+    color: #ffffff;
+    border: 1px solid #F5AFAF;
+    @apply shadow-sm;
   }
 
   .category-pill-inactive {
-    @apply bg-white text-chocolate-800 border-gray-200 hover:border-caramel-600 hover:text-caramel-600;
+    background-color: #ffffff;
+    color: #574A4A;
+    border: 1px solid #F9DFDF;
+  }
+  .category-pill-inactive:hover {
+    border-color: #F5AFAF;
+    background-color: #FBEFEF;
+    color: #3D2727;
   }
 
   .nav-link {
-    @apply font-montserrat font-semibold text-sm tracking-widest text-chocolate-800/70 hover:text-caramel-600 transition-colors duration-200 relative;
+    color: #574A4A;
+    @apply font-sans font-semibold text-xs uppercase tracking-wider transition-colors duration-200 relative;
+  }
+  .nav-link:hover {
+    color: #F5AFAF;
   }
 
   .nav-link-active {
-    @apply text-caramel-600 font-bold;
+    color: #F5AFAF;
+    font-weight: 700;
   }
 
   .star-rating {
@@ -81,17 +132,31 @@
   }
 
   .badge {
-    @apply absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] rounded-full bg-caramel-600 text-white text-[10px] font-bold flex items-center justify-center;
+    background-color: #F5AFAF;
+    color: #ffffff;
+    @apply absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] rounded-full text-[10px] font-bold flex items-center justify-center;
   }
 }
 
 @layer utilities {
+  .font-heading {
+    font-family: 'Satoshi', sans-serif;
+  }
+
+  .font-body {
+    font-family: 'Satoshi', sans-serif;
+  }
+
+  .font-satoshi {
+    font-family: 'Satoshi', sans-serif;
+  }
+
   .font-playfair {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Satoshi', serif;
   }
 
   .font-montserrat {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Satoshi', sans-serif;
   }
 
   .text-balance {
@@ -114,16 +179,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #fff8f6;
+  background: #FCF8F8;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ffc4bb;
+  background: #F9DFDF;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #7d562d;
+  background: #F5AFAF;
 }
 
 /* Masonry layout */
@@ -162,8 +227,8 @@
 .navbar-glass {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  background-color: rgba(255, 248, 246, 0.85);
-  border-bottom: 1px solid rgba(125, 86, 45, 0.15);
+  background-color: rgba(252, 248, 248, 0.95);
+  border-bottom: 1px solid rgba(249, 223, 223, 0.8);
 }
 
 /* Toast animation */

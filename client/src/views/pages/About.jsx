@@ -4,7 +4,6 @@ import { MapPin, Clock, MessageCircle, Camera, ThumbsUp, Play, Send, CheckCircle
 import SectionHeading from '../components/common/SectionHeading';
 import { useContactController } from '../../controllers/useContactController';
 import AboutUs1 from '../../assets/AboutUs1.jpg';
-import AboutUs2 from '../../assets/AboutUs2.jpg';
 
 const PHILOSOPHY_POINTS = [
   { title: 'Artisan Focus', desc: 'Dedication to traditional techniques over mass production.' },
@@ -47,9 +46,6 @@ export default function About() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-chocolate-900/50 via-chocolate-900/30 to-cream-50 flex items-center justify-center">
           <div className="text-center px-6">
-            <span className="inline-block px-3.5 py-1 mb-3 rounded-full bg-caramel-600/30 text-white backdrop-blur-sm font-montserrat text-xs tracking-wider uppercase font-medium">
-              About & Contact
-            </span>
             <h1 className="font-playfair font-bold text-4xl lg:text-5xl text-white mb-3 drop-shadow-sm">
               Baking Memories with Passion
             </h1>
@@ -60,47 +56,45 @@ export default function About() {
         </div>
       </div>
 
-      {/* Our Story */}
-      <section className="py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-6 lg:px-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <div>
-            <span className="font-montserrat font-semibold text-xs tracking-widest text-caramel-600 uppercase mb-2 block">
-              Our Journey
-            </span>
-            <h2 className="font-playfair font-bold text-3xl lg:text-4xl text-chocolate-900 mb-5">Our Story</h2>
-            <p className="font-montserrat text-base text-chocolate-800/70 leading-relaxed mb-5">
+      {/* Our Story (Centered) */}
+      <section className="py-16 lg:py-20 bg-white border-b border-[#F9DFDF]/50">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
+          <span className="font-montserrat font-semibold text-xs tracking-widest text-[#F5AFAF] uppercase mb-2 block">
+            Our Journey
+          </span>
+          <h2 className="font-playfair font-bold text-3xl sm:text-4xl lg:text-5xl text-[#F5AFAF] mb-6">
+            Our Story
+          </h2>
+          <div className="space-y-4 max-w-3xl mx-auto text-[#57595B] font-montserrat text-base sm:text-lg leading-relaxed mb-10">
+            <p>
               Cake of Paradise began with a simple dream: to bring the warmth of a traditional bakery to modern celebrations. Every creation is a testament to our dedication to the craft.
             </p>
-            <p className="font-montserrat text-base text-chocolate-800/70 leading-relaxed mb-7">
+            <p>
               We believe that a cake is more than just dessert; it's a centerpiece of memories, a symbol of joy, and a work of art meant to be shared.
             </p>
-
-            <h3 className="font-playfair font-semibold italic text-xl text-caramel-600 mb-4">Our Baking Philosophy</h3>
-            <ul className="space-y-4">
-              {PHILOSOPHY_POINTS.map((point) => (
-                <li key={point.title} className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full border-2 border-caramel-600 flex items-center justify-center shrink-0 mt-0.5">
-                    <div className="w-2 h-2 rounded-full bg-caramel-600" />
-                  </div>
-                  <p className="font-montserrat text-sm text-chocolate-800/70 leading-relaxed">
-                    <strong className="text-chocolate-900">{point.title}:</strong> {point.desc}
-                  </p>
-                </li>
-              ))}
-            </ul>
           </div>
 
-          <div className="relative">
-            <div className="absolute -inset-3 rounded-2xl bg-gradient-to-br from-cream-200/40 to-rose-soft/20 blur-lg" />
-            <img
-              src={AboutUs2}
-              alt="Our bakers at work"
-              className="relative rounded-2xl w-full h-80 lg:h-[450px] object-cover shadow-xl"
-            />
-            {/* Overlay badge */}
-            <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-lg p-4 border border-gray-100">
-              <p className="font-playfair italic text-caramel-600 font-semibold text-sm">Cake of Paradise</p>
-              <p className="font-montserrat text-xs text-chocolate-800/50">Est. 2021</p>
+          <div className="pt-8 border-t border-[#F9DFDF]/60">
+            <h3 className="font-playfair font-semibold italic text-2xl text-[#F5AFAF] mb-8">
+              Our Baking Philosophy
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {PHILOSOPHY_POINTS.map((point) => (
+                <div
+                  key={point.title}
+                  className="p-6 rounded-2xl bg-[#FCF8F8] border border-[#F9DFDF] hover:shadow-md hover:border-[#F5AFAF] transition-all duration-300 text-center flex flex-col items-center"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#FBEFEF] text-[#F5AFAF] flex items-center justify-center mb-4">
+                    <span className="w-3 h-3 rounded-full bg-[#F5AFAF]" />
+                  </div>
+                  <h4 className="font-playfair font-bold text-lg text-chocolate-900 mb-2">
+                    {point.title}
+                  </h4>
+                  <p className="font-montserrat text-xs sm:text-sm text-[#57595B] leading-relaxed">
+                    {point.desc}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -244,7 +238,7 @@ export default function About() {
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-5">
                 {/* Address */}
                 <div className="flex items-start gap-3">
-                  <MapPin size={18} className="text-caramel-600 shrink-0 mt-0.5" />
+                  <MapPin size={18} className="text-[#F5AFAF] shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-montserrat font-bold text-sm text-chocolate-900 mb-1">Our Bakery</h4>
                     <p className="font-montserrat text-sm text-chocolate-800/60 leading-relaxed">
@@ -257,7 +251,7 @@ export default function About() {
 
                 {/* Hours */}
                 <div className="flex items-start gap-3">
-                  <Clock size={18} className="text-caramel-600 shrink-0 mt-0.5" />
+                  <Clock size={18} className="text-[#F5AFAF] shrink-0 mt-0.5" />
                   <div className="w-full">
                     <h4 className="font-montserrat font-bold text-sm text-chocolate-900 mb-2">Hours</h4>
                     <div className="space-y-1.5">
@@ -276,7 +270,7 @@ export default function About() {
                 <hr className="border-gray-100" />
 
                 {/* Map iframe */}
-                <div className="rounded-xl overflow-hidden h-36 bg-cream-100 relative">
+                <div className="rounded-xl overflow-hidden h-36 bg-[#FBEFEF] relative">
                   <iframe
                     title="Bakery Map"
                     src="https://www.openstreetmap.org/export/embed.html?bbox=-118.2711%2C34.0522%2C-118.2311%2C34.0722&layer=mapnik"
@@ -303,7 +297,7 @@ export default function About() {
                 <span className="font-montserrat text-xs font-semibold text-chocolate-800/50 uppercase tracking-widest">Follow Us</span>
                 <div className="flex gap-4">
                   {[Camera, ThumbsUp, Play].map((Icon, i) => (
-                    <a key={i} href="#" className="text-chocolate-800/40 hover:text-caramel-600 transition-colors">
+                    <a key={i} href="#" className="text-chocolate-800/40 hover:text-[#F5AFAF] transition-colors">
                       <Icon size={18} strokeWidth={1.5} />
                     </a>
                   ))}

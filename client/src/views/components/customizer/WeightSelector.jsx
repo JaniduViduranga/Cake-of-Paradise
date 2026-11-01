@@ -15,8 +15,8 @@ export default function WeightSelector({ selected, onChange }) {
           onClick={() => onChange(size.value, size.modifier)}
           className={`px-5 py-2 rounded-full border font-montserrat font-semibold text-sm transition-all duration-200 ${
             selected === size.value
-              ? 'bg-chocolate-900 border-chocolate-900 text-white shadow-sm'
-              : 'bg-white border-gray-200 text-chocolate-800/70 hover:border-caramel-600 hover:text-caramel-600'
+              ? 'bg-[#F5AFAF] border-[#F5AFAF] text-white shadow-sm'
+              : 'bg-white border-divider text-chocolate-800/70 hover:border-[#F5AFAF]'
           }`}
           aria-pressed={selected === size.value}
         >

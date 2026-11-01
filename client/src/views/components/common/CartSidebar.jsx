@@ -41,10 +41,10 @@ export default function CartSidebar() {
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-white">
           <div className="flex items-center gap-2">
-            <ShoppingCart size={20} className="text-caramel-600" strokeWidth={1.8} />
+            <ShoppingCart size={20} className="text-[#F5AFAF]" strokeWidth={1.8} />
             <h2 className="font-playfair font-bold text-xl text-chocolate-900">Your Cart</h2>
             {itemCount > 0 && (
-              <span className="bg-caramel-600 text-white text-xs font-montserrat font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-[#F5AFAF] text-white text-xs font-montserrat font-bold px-2 py-0.5 rounded-full">
                 {itemCount}
               </span>
             )}
@@ -97,7 +97,7 @@ export default function CartSidebar() {
                       <div className="flex items-center gap-2 bg-cream-100 rounded-full px-2 py-1">
                         <button
                           onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
-                          className="text-chocolate-800/70 hover:text-caramel-600 transition-colors"
+                          className="text-chocolate-800/70 hover:text-[#F5AFAF] transition-colors"
                           aria-label="Decrease quantity"
                         >
                           <Minus size={12} />
@@ -107,14 +107,14 @@ export default function CartSidebar() {
                         </span>
                         <button
                           onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
-                          className="text-chocolate-800/70 hover:text-caramel-600 transition-colors"
+                          className="text-chocolate-800/70 hover:text-[#F5AFAF] transition-colors"
                           aria-label="Increase quantity"
                         >
                           <Plus size={12} />
                         </button>
                       </div>
                       <div className="flex items-center gap-2">
-                        <p className="font-montserrat font-bold text-caramel-600 text-sm">
+                        <p className="font-montserrat font-bold text-[#F5AFAF] text-sm">
                           Rs. {(item.price * item.quantity).toFixed(2)}
                         </p>
                         <button
@@ -147,7 +147,7 @@ export default function CartSidebar() {
                 <span>Tax (8%)</span><span>Rs. {tax.toFixed(2)}</span>
               </div>
               <div className="flex justify-between font-montserrat font-bold text-base text-chocolate-900 pt-2 border-t border-gray-100">
-                <span>Total</span><span className="text-caramel-600">Rs. {total.toFixed(2)}</span>
+                <span>Total</span><span className="text-[#F5AFAF]">Rs. {total.toFixed(2)}</span>
               </div>
             </div>
             <button

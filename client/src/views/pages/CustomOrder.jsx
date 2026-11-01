@@ -1,11 +1,9 @@
-import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, CalendarDays, Clock4, ChevronRight, ChevronDown } from 'lucide-react';
+import { ShieldCheck, CalendarDays, Clock4, ChevronDown, ShoppingCart } from 'lucide-react';
 import WeightSelector from '../components/customizer/WeightSelector';
 import ImageUploader from '../components/customizer/ImageUploader';
 import { useCustomOrderController } from '../../controllers/useCustomOrderController';
 
 export default function CustomOrder() {
-  const navigate = useNavigate();
   const {
     orderType,
     setOrderType,
@@ -57,18 +55,12 @@ export default function CustomOrder() {
   return (
     <div className="min-h-screen bg-cream-50 pt-16">
       <div className="max-w-3xl mx-auto px-6 lg:px-8 py-10">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 font-montserrat text-xs text-chocolate-800/50 mb-8">
-          <button onClick={() => navigate('/gallery')} className="hover:text-caramel-600 transition-colors">Gallery</button>
-          <ChevronRight size={12} />
-          <span className="text-chocolate-900 font-semibold">Custom Order</span>
-        </nav>
 
         {/* Customizer Form */}
-        <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-sm border border-gray-50 space-y-8">
+        <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-sm border border-divider space-y-8">
           {/* Header */}
-          <div className="text-center pb-6 border-b border-gray-100">
-            <h1 className="font-playfair font-bold text-3xl md:text-4xl text-chocolate-900">Custom Order</h1>
+          <div className="text-center pb-6 border-b border-divider">
+            <h1 className="font-playfair font-bold text-3xl md:text-4xl text-[#F5AFAF]">Custom Order</h1>
             <p className="font-montserrat text-sm text-chocolate-800/60 leading-relaxed mt-3 max-w-lg mx-auto">
               Configure your perfect cake step by step. We'll bake it fresh and have it ready for your special occasion.
             </p>
@@ -77,7 +69,7 @@ export default function CustomOrder() {
           {/* Step 1: Order Type */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">1</div>
+              <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">1</div>
               <label className="font-playfair font-bold text-lg text-chocolate-900">
                 Select Order Type
               </label>
@@ -101,7 +93,7 @@ export default function CustomOrder() {
               {/* Step 2: Package Type */}
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">2</div>
+                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">2</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     Package Type
                   </label>
@@ -109,14 +101,14 @@ export default function CustomOrder() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div
                     onClick={() => setWeddingPackageType('cake_only')}
-                    className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${weddingPackageType === 'cake_only' ? 'border-caramel-600 bg-caramel-50' : 'border-gray-200 hover:border-caramel-300'}`}
+                    className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${weddingPackageType === 'cake_only' ? 'border-[#F5AFAF] bg-[#FBEFEF]' : 'border-divider hover:border-[#F5AFAF]'}`}
                   >
                     <h3 className="font-playfair font-bold text-lg text-chocolate-900 mb-1">Cake Only</h3>
                     <p className="font-montserrat text-xs text-chocolate-800/60">Traditional 100% edible cake.</p>
                   </div>
                   <div
                     onClick={() => setWeddingPackageType('cake_and_structure')}
-                    className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${weddingPackageType === 'cake_and_structure' ? 'border-caramel-600 bg-caramel-50' : 'border-gray-200 hover:border-caramel-300'}`}
+                    className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${weddingPackageType === 'cake_and_structure' ? 'border-[#F5AFAF] bg-[#FBEFEF]' : 'border-divider hover:border-[#F5AFAF]'}`}
                   >
                     <h3 className="font-playfair font-bold text-lg text-chocolate-900 mb-1">Cake + Structure</h3>
                     <p className="font-montserrat text-xs text-chocolate-800/60">Grand showpiece dummy tier setup with real cake.</p>
@@ -126,9 +118,9 @@ export default function CustomOrder() {
 
               {/* Step 3: Structure Config (Conditional) */}
               {weddingPackageType === 'cake_and_structure' && (
-                <div className="pt-4 border-t border-gray-100">
+                <div className="pt-4 border-t border-divider">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">3</div>
+                    <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">3</div>
                     <label className="font-playfair font-bold text-lg text-chocolate-900">
                       Structure Configuration
                     </label>
@@ -139,11 +131,11 @@ export default function CustomOrder() {
                       <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 uppercase tracking-wide">Layout Style</label>
                       <div className="space-y-2">
                         <label className="flex items-center gap-2 cursor-pointer">
-                          <input type="radio" name="structureSetup" checked={weddingStructureSetup === 'bottom_real_upper_dummy'} onChange={() => setWeddingStructureSetup('bottom_real_upper_dummy')} className="text-caramel-600 focus:ring-caramel-500" />
+                          <input type="radio" name="structureSetup" checked={weddingStructureSetup === 'bottom_real_upper_dummy'} onChange={() => setWeddingStructureSetup('bottom_real_upper_dummy')} className="text-[#F5AFAF] focus:ring-[#F5AFAF]" />
                           <span className="font-montserrat text-sm text-chocolate-800">Bottom Tier Real + Upper Tiers Dummy Structure</span>
                         </label>
                         <label className="flex items-center gap-2 cursor-pointer">
-                          <input type="radio" name="structureSetup" checked={weddingStructureSetup === 'full_structure_separate_cake'} onChange={() => setWeddingStructureSetup('full_structure_separate_cake')} className="text-caramel-600 focus:ring-caramel-500" />
+                          <input type="radio" name="structureSetup" checked={weddingStructureSetup === 'full_structure_separate_cake'} onChange={() => setWeddingStructureSetup('full_structure_separate_cake')} className="text-[#F5AFAF] focus:ring-[#F5AFAF]" />
                           <span className="font-montserrat text-sm text-chocolate-800">Full Display Structure + Separate Serving Cake (Behind Scene)</span>
                         </label>
                       </div>
@@ -157,7 +149,7 @@ export default function CustomOrder() {
                             key={tiers}
                             type="button"
                             onClick={() => setWeddingStructureTiers(tiers)}
-                            className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${weddingStructureTiers === tiers ? 'bg-caramel-600 text-white' : 'bg-gray-100 text-chocolate-800 hover:bg-gray-200'}`}
+                            className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${weddingStructureTiers === tiers ? 'bg-[#F5AFAF] text-white' : 'bg-white border border-divider text-chocolate-800 hover:border-[#F5AFAF]'}`}
                           >
                             {tiers} Tiers
                           </button>
@@ -166,8 +158,8 @@ export default function CustomOrder() {
                     </div>
 
                     <div>
-                      <label className="flex items-center gap-2 cursor-pointer p-3 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" checked={weddingIncludeFreshFlowers} onChange={(e) => setWeddingIncludeFreshFlowers(e.target.checked)} className="rounded text-caramel-600 focus:ring-caramel-500" />
+                      <label className="flex items-center gap-2 cursor-pointer p-3 border border-divider rounded-lg bg-[#FCF8F8] hover:bg-[#FBEFEF] transition-colors">
+                        <input type="checkbox" checked={weddingIncludeFreshFlowers} onChange={(e) => setWeddingIncludeFreshFlowers(e.target.checked)} className="rounded text-[#F5AFAF] focus:ring-[#F5AFAF]" />
                         <span className="font-montserrat text-sm text-chocolate-800 font-medium">Include Fresh Flowers on Structure (+ Rs. 4,500)</span>
                       </label>
                     </div>
@@ -176,9 +168,9 @@ export default function CustomOrder() {
               )}
 
               {/* Step 4: Real Cake Details */}
-              <div className="pt-4 border-t border-gray-100">
+              <div className="pt-4 border-t border-divider">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">{weddingPackageType === 'cake_and_structure' ? '4' : '3'}</div>
+                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">{weddingPackageType === 'cake_and_structure' ? '4' : '3'}</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     Real Cake Details
                   </label>
@@ -200,14 +192,14 @@ export default function CustomOrder() {
                             onClick={() => (setSelectedFlavorId ? setSelectedFlavorId(flavor.value || flavor.id) : setSelectedFlavor(flavor.value || flavor.id))}
                             className={`flex flex-col items-center justify-center p-3.5 rounded-xl border-2 transition-all text-center ${
                               isSelected
-                                ? 'border-caramel-600 bg-caramel-50/80 text-chocolate-900 shadow-sm ring-1 ring-caramel-600'
-                                : 'border-gray-200 bg-white hover:border-caramel-300 text-chocolate-800'
+                                ? 'border-[#F5AFAF] bg-[#FBEFEF] text-chocolate-900 shadow-sm ring-1 ring-[#F5AFAF]'
+                                : 'border-divider bg-white hover:border-[#F5AFAF] text-chocolate-800'
                             }`}
                           >
                             <span className="font-montserrat font-bold text-sm mb-1">{flavor.label}</span>
                             <span
                               className={`font-montserrat text-xs ${
-                                surcharge > 0 ? 'text-caramel-700 font-semibold' : 'text-chocolate-800/50'
+                                surcharge > 0 ? 'text-[#F5AFAF] font-semibold' : 'text-chocolate-800/50'
                               }`}
                             >
                               {surchargeLabel}
@@ -226,7 +218,7 @@ export default function CustomOrder() {
                           key={weight}
                           type="button"
                           onClick={() => setSelectedSize(weight)}
-                          className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${selectedSize === weight ? 'bg-caramel-600 text-white' : 'bg-gray-100 text-chocolate-800 hover:bg-gray-200'}`}
+                          className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${selectedSize === weight ? 'bg-[#F5AFAF] text-white' : 'bg-white border border-divider text-chocolate-800 hover:border-[#F5AFAF]'}`}
                         >
                           {weight}
                         </button>
@@ -237,9 +229,9 @@ export default function CustomOrder() {
               </div>
 
               {/* Step 5: Customization & Event Logistics */}
-              <div className="pt-4 border-t border-gray-100">
+              <div className="pt-4 border-t border-divider">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">{weddingPackageType === 'cake_and_structure' ? '5' : '4'}</div>
+                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">{weddingPackageType === 'cake_and_structure' ? '5' : '4'}</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     Customization & Event Logistics
                   </label>
@@ -321,7 +313,7 @@ export default function CustomOrder() {
               {/* Step 2: Flavor */}
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">2</div>
+                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">2</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     Choose Flavor
                   </label>
@@ -341,14 +333,14 @@ export default function CustomOrder() {
                         onClick={() => (setSelectedFlavorId ? setSelectedFlavorId(flavor.value || flavor.id) : setSelectedFlavor(flavor.value || flavor.id))}
                         className={`flex flex-col items-center justify-center p-3.5 rounded-xl border-2 transition-all text-center ${
                           isSelected
-                            ? 'border-caramel-600 bg-caramel-50/80 text-chocolate-900 shadow-sm ring-1 ring-caramel-600'
-                            : 'border-gray-200 bg-white hover:border-caramel-300 text-chocolate-800'
+                            ? 'border-[#F5AFAF] bg-[#FBEFEF] text-chocolate-900 shadow-sm ring-1 ring-[#F5AFAF]'
+                            : 'border-divider bg-white hover:border-[#F5AFAF] text-chocolate-800'
                         }`}
                       >
                         <span className="font-montserrat font-bold text-sm mb-1">{flavor.label}</span>
                         <span
                           className={`font-montserrat text-xs ${
-                            surcharge > 0 ? 'text-caramel-700 font-semibold' : 'text-chocolate-800/50'
+                            surcharge > 0 ? 'text-[#F5AFAF] font-semibold' : 'text-chocolate-800/50'
                           }`}
                         >
                           {surchargeLabel}
@@ -362,7 +354,7 @@ export default function CustomOrder() {
               {/* Step 3: Size / Quantity */}
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">3</div>
+                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">3</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     {orderType === 'Cupcakes' ? 'Select Quantity' : 'Select Cake Size'}
                   </label>
@@ -388,10 +380,10 @@ export default function CustomOrder() {
 
               {/* Conditional Steps: Message & Image */}
               {isCakeWithDesign && (
-                <div className="space-y-8 pt-4 border-t border-gray-100">
+                <div className="space-y-8 pt-4 border-t border-divider">
                   <div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">A</div>
+                      <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">A</div>
                       <label className="font-playfair font-bold text-lg text-chocolate-900">
                         Custom Message <span className="font-montserrat font-normal text-sm text-chocolate-800/40 ml-2">(Optional)</span>
                       </label>
@@ -410,7 +402,7 @@ export default function CustomOrder() {
 
                   <div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">B</div>
+                      <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">B</div>
                       <label className="font-playfair font-bold text-lg text-chocolate-900">
                         Design Reference <span className="font-montserrat font-normal text-sm text-chocolate-800/40 ml-2">(Optional)</span>
                       </label>
@@ -425,9 +417,9 @@ export default function CustomOrder() {
               )}
 
               {/* Step 4: Delivery / Pickup */}
-              <div className="pt-4 border-t border-gray-100 mt-8">
+              <div className="pt-4 border-t border-divider mt-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-caramel-600 text-white flex items-center justify-center font-montserrat font-bold text-xs">4</div>
+                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">4</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     Delivery & Pickup Date
                   </label>
@@ -470,7 +462,7 @@ export default function CustomOrder() {
           )}
 
           {/* Step 5: Summary & Checkout */}
-          <div className="pt-8 border-t-2 border-dashed border-gray-200 mt-8">
+          <div className="pt-8 border-t-2 border-dashed border-divider mt-8">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
               <div>
                 <p className="font-montserrat font-semibold text-sm text-chocolate-800/60 uppercase tracking-wider mb-1">Estimated Total</p>
@@ -480,18 +472,22 @@ export default function CustomOrder() {
                 type="button"
                 onClick={handleAddToCart}
                 disabled={loading}
-                className={`w-full sm:w-auto min-w-[240px] btn-primary py-4 flex items-center justify-center gap-2 text-base shadow-lg shadow-caramel-600/20 transition-all ${loading ? 'opacity-70 cursor-not-allowed bg-caramel-400' : ''
-                  }`}
+                className={`w-full sm:w-auto min-w-[240px] btn-primary py-4 flex items-center justify-center gap-2 text-base shadow-lg shadow-[#F5AFAF]/20 transition-all ${
+                  loading ? 'opacity-70 cursor-not-allowed bg-[#F5AFAF]/70' : ''
+                }`}
               >
                 {loading ? (
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2 text-white">
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                     Saving Order...
                   </span>
                 ) : added ? (
-                  'Added to Cart!'
+                  <span className="text-white font-semibold">Added to Cart!</span>
                 ) : (
-                  '🛒 Add to Cart / Place Order'
+                  <span className="flex items-center justify-center gap-2 text-white font-semibold">
+                    <ShoppingCart size={18} className="text-white" />
+                    <span>Add to Cart / Place Order</span>
+                  </span>
                 )}
               </button>
             </div>

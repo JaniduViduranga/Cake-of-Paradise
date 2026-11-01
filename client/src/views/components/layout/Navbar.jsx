@@ -49,7 +49,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2 font-playfair italic font-semibold text-2xl text-caramel-600 shrink-0 hover:text-caramel-700 transition-colors"
+            className="flex items-center gap-2 font-playfair italic font-semibold text-2xl text-[#F5AFAF] shrink-0 hover:text-[#EFA3A3] transition-colors"
           >
             <img src={heroLogo} alt="Cake of Paradise Logo" className="w-8 h-8 object-contain" />
             Cake of Paradise
@@ -62,7 +62,7 @@ export default function Navbar() {
                 key={link.path}
                 to={link.path}
                 className={`nav-link text-xs uppercase ${isActive(link.path)
-                    ? 'nav-link-active border-b-2 border-caramel-600 pb-0.5'
+                    ? 'nav-link-active border-b-2 border-[#F5AFAF] pb-0.5'
                     : ''
                   }`}
               >
@@ -77,7 +77,7 @@ export default function Navbar() {
             <button
               id="cart-btn"
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-chocolate-800/70 hover:text-caramel-600 transition-colors"
+              className="relative p-2 text-chocolate-800/70 hover:text-[#F5AFAF] transition-colors"
               aria-label="Open cart"
             >
               <ShoppingCart size={20} strokeWidth={1.8} />
@@ -92,7 +92,7 @@ export default function Navbar() {
                 <button
                   id="user-menu-btn"
                   onClick={() => setUserMenuOpen((v) => !v)}
-                  className="flex items-center gap-1.5 p-2 text-chocolate-800/70 hover:text-caramel-600 transition-colors"
+                  className="flex items-center gap-1.5 p-2 text-chocolate-800/70 hover:text-[#F5AFAF] transition-colors"
                   aria-label="User menu"
                 >
                   <User size={20} strokeWidth={1.8} />
@@ -106,7 +106,7 @@ export default function Navbar() {
                     </div>
                     <button
                       onClick={() => { navigate('/profile'); setUserMenuOpen(false); }}
-                      className="w-full text-left px-4 py-2 text-sm font-montserrat text-chocolate-800 hover:bg-cream-50 hover:text-caramel-600 transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm font-montserrat text-chocolate-800 hover:bg-cream-50 hover:text-[#F5AFAF] transition-colors"
                     >
                       My Profile
                     </button>
@@ -123,7 +123,7 @@ export default function Navbar() {
               <button
                 id="login-btn"
                 onClick={() => setIsLoginOpen(true)}
-                className="p-2 text-chocolate-800/70 hover:text-caramel-600 transition-colors"
+                className="p-2 text-chocolate-800/70 hover:text-[#F5AFAF] transition-colors"
                 aria-label="Sign in"
               >
                 <User size={20} strokeWidth={1.8} />
@@ -154,13 +154,13 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="lg:hidden bg-cream-50/95 backdrop-blur-lg border-t border-caramel-600/10 animate-fade-in">
+          <div className="lg:hidden bg-cream-50/95 backdrop-blur-lg border-t border-[#F9DFDF] animate-fade-in">
             <div className="px-6 py-4 flex flex-col gap-1">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`py-3 font-montserrat font-semibold text-sm tracking-wide border-b border-gray-100 last:border-0 ${isActive(link.path) ? 'text-caramel-600' : 'text-chocolate-800/70'
+                  className={`py-3 font-montserrat font-semibold text-sm tracking-wide border-b border-gray-100 last:border-0 ${isActive(link.path) ? 'text-[#F5AFAF]' : 'text-chocolate-800/70'
                     }`}
                 >
                   {link.label}
