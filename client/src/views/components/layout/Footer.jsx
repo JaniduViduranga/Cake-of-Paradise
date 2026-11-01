@@ -14,7 +14,7 @@ const FOOTER_LINKS = {
     { label: 'Menu', to: '/menu' },
     { label: 'Gallery', to: '/gallery' },
     { label: 'Custom Order', to: '/custom-order' },
-    { label: 'About Us', to: '/about' },
+    { label: 'About & Contact', to: '/about' },
   ],
 };
 

@@ -10,8 +10,7 @@ const NAV_LINKS = [
   { label: 'Home', path: '/' },
   { label: 'Gallery', path: '/gallery' },
   { label: 'Custom Order', path: '/custom-order' },
-  { label: 'About Us', path: '/about' },
-  { label: 'Contact', path: '/contact' },
+  { label: 'About & Contact', path: '/about' },
 ];
 
 export default function Navbar() {
@@ -36,6 +35,7 @@ export default function Navbar() {
 
   const isActive = (path) => {
     if (path === '/') return location.pathname === '/';
+    if (path === '/about') return location.pathname === '/about' || location.pathname === '/contact';
     return location.pathname.startsWith(path);
   };
 
