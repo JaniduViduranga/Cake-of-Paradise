@@ -46,7 +46,9 @@ export default function Profile() {
     );
   }
 
-  const activeOrder = user.activeOrder;
+  const activeOrder = user?.activeOrder;
+  const displayName = user?.fullName || user?.name || 'Valued Customer';
+  const firstName = displayName.split(' ')[0];
 
   return (
     <div className="min-h-screen bg-cream-50 pt-16">
@@ -54,7 +56,7 @@ export default function Profile() {
         {/* Welcome Header */}
         <div className="mb-10">
           <h1 className="font-playfair font-bold text-4xl text-chocolate-900">
-            Welcome Back, {user.name.split(' ')[0]}
+            Welcome Back, {firstName}
           </h1>
           <p className="font-montserrat text-sm text-chocolate-800/50 mt-2">
             Manage your artisanal indulgences and track your upcoming orders.
@@ -86,7 +88,10 @@ export default function Profile() {
               <div className="border-t border-gray-100">
                 <button
                   id="profile-signout-btn"
-                  onClick={() => { logout(); navigate('/'); }}
+                  onClick={() => {
+                    logout();
+                    navigate('/');
+                  }}
                   className="w-full flex items-center gap-3 px-5 py-4 font-montserrat font-semibold text-sm text-red-500 hover:bg-red-50 transition-colors"
                 >
                   <LogOut size={16} strokeWidth={1.8} />
@@ -116,8 +121,16 @@ export default function Profile() {
                       </button>
                     ) : (
                       <div className="flex gap-3">
-                        <button onClick={cancelEditing} className="font-montserrat text-xs font-semibold text-chocolate-800/50 hover:text-chocolate-800 transition-colors">Cancel</button>
-                        <button onClick={saveProfile} className="flex items-center gap-1 font-montserrat text-xs font-semibold text-caramel-600 hover:text-caramel-700">
+                        <button
+                          onClick={cancelEditing}
+                          className="font-montserrat text-xs font-semibold text-chocolate-800/50 hover:text-chocolate-800 transition-colors"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={saveProfile}
+                          className="flex items-center gap-1 font-montserrat text-xs font-semibold text-caramel-600 hover:text-caramel-700"
+                        >
                           <Check size={13} />Save
                         </button>
                       </div>
@@ -127,9 +140,9 @@ export default function Profile() {
                   <div className="flex items-start gap-6">
                     <div className="flex-1 space-y-5">
                       {[
-                        { label: 'Full Name', field: 'name', value: user.name, type: 'text' },
-                        { label: 'Email Address', field: 'email', value: user.email, type: 'email' },
-                        { label: 'Phone Number', field: 'phone', value: user.phone, type: 'tel' },
+                        { label: 'Full Name', field: 'name', value: user?.fullName || user?.name || '', type: 'text' },
+                        { label: 'Email Address', field: 'email', value: user?.email || '', type: 'email' },
+                        { label: 'Phone Number', field: 'phone', value: user?.phone || 'Not provided', type: 'tel' },
                       ].map(({ label, field, value, type }) => (
                         <div key={field} className="border-b border-gray-100 pb-4 last:border-0">
                           <p className="font-montserrat text-xs text-chocolate-800/40 uppercase tracking-wide mb-1.5">{label}</p>
@@ -149,12 +162,8 @@ export default function Profile() {
 
                     {/* Avatar */}
                     <div className="shrink-0">
-                      <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-cream-200 shadow">
-                        <img
-                          src="https://images.unsplash.com/photo-1494790108755-2616b612b11c?w=200&auto=format&fit=crop"
-                          alt={user.name}
-                          className="w-full h-full object-cover"
-                        />
+                      <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-cream-200 shadow bg-caramel-600/10 flex items-center justify-center font-playfair font-bold text-2xl text-caramel-700">
+                        {firstName.charAt(0).toUpperCase()}
                       </div>
                     </div>
                   </div>
@@ -170,19 +179,32 @@ export default function Profile() {
                     </button>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {user.addresses.map((addr) => (
-                      <div key={addr.id} className={`border rounded-xl p-4 ${addr.isDefault ? 'border-caramel-600/30 bg-cream-50' : 'border-gray-200 bg-white'}`}>
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="font-montserrat font-bold text-sm text-chocolate-900">{addr.label}</p>
-                          {addr.isDefault && (
-                            <span className="text-[10px] font-montserrat font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">Default</span>
-                          )}
+                    {(user?.addresses || []).length > 0 ? (
+                      user.addresses.map((addr) => (
+                        <div
+                          key={addr.id}
+                          className={`border rounded-xl p-4 ${
+                            addr.isDefault ? 'border-caramel-600/30 bg-cream-50' : 'border-gray-200 bg-white'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="font-montserrat font-bold text-sm text-chocolate-900">{addr.label}</p>
+                            {addr.isDefault && (
+                              <span className="text-[10px] font-montserrat font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
+                                Default
+                              </span>
+                            )}
+                          </div>
+                          <p className="font-montserrat text-xs text-chocolate-800/60 leading-relaxed">
+                            {addr.street}<br />{addr.city}, {addr.state} {addr.zip}
+                          </p>
                         </div>
-                        <p className="font-montserrat text-xs text-chocolate-800/60 leading-relaxed">
-                          {addr.street}<br />{addr.city}, {addr.state} {addr.zip}
-                        </p>
-                      </div>
-                    ))}
+                      ))
+                    ) : (
+                      <p className="font-montserrat text-xs text-chocolate-800/50 py-3 col-span-2">
+                        No saved delivery addresses yet. Add your preferred addresses for faster checkout.
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -207,7 +229,7 @@ export default function Profile() {
                     {/* Progress Tracker */}
                     <div className="relative mb-8">
                       <div className="flex items-center justify-between">
-                        {activeOrder.steps.map((step, i) => {
+                        {activeOrder.steps?.map((step, i) => {
                           const isCompleted = i < activeOrder.currentStep;
                           const isCurrent = i === activeOrder.currentStep;
                           return (
@@ -243,7 +265,7 @@ export default function Profile() {
 
                     {/* Order Items */}
                     <div className="border-t border-gray-100 pt-4 space-y-3">
-                      {activeOrder.items.map((item, i) => (
+                      {activeOrder.items?.map((item, i) => (
                         <div key={i} className="flex justify-between font-montserrat text-sm">
                           <div>
                             <p className="font-semibold text-chocolate-900">{item.name}</p>
@@ -259,7 +281,7 @@ export default function Profile() {
                     <Truck size={36} className="text-gray-200 mx-auto mb-3" strokeWidth={1.2} />
                     <p className="font-playfair text-lg font-semibold text-chocolate-900">No active orders</p>
                     <p className="font-montserrat text-sm text-chocolate-800/40 mt-1">Your current orders will appear here</p>
-                    <button onClick={() => navigate('/menu')} className="btn-primary mt-5">Order Now</button>
+                    <button onClick={() => navigate('/custom-order')} className="btn-primary mt-5">Order Custom Cake</button>
                   </div>
                 )}
               </div>
@@ -269,7 +291,7 @@ export default function Profile() {
             {activeTab === 'past' && (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
                 <h2 className="font-playfair font-bold text-2xl text-caramel-600 mb-6">Order History</h2>
-                {user.orders.length > 0 ? (
+                {(user?.orders || []).length > 0 ? (
                   <div className="space-y-4">
                     {user.orders.map((order) => (
                       <div key={order.id} className="border border-gray-100 rounded-xl p-5 hover:shadow-sm transition-all duration-200">
@@ -283,7 +305,7 @@ export default function Profile() {
                           </span>
                         </div>
                         <div className="space-y-1.5 mb-3">
-                          {order.items.map((item, i) => (
+                          {order.items?.map((item, i) => (
                             <p key={i} className="font-montserrat text-xs text-chocolate-800/60">
                               {item.name} — {item.size} × {item.qty}
                             </p>
@@ -291,7 +313,7 @@ export default function Profile() {
                         </div>
                         <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                           <p className="font-montserrat font-bold text-sm text-chocolate-900">
-                            Total: <span className="text-caramel-600">Rs. {order.total.toFixed(2)}</span>
+                            Total: <span className="text-caramel-600">Rs. {Number(order.total || 0).toFixed(2)}</span>
                           </p>
                           <button
                             className="font-montserrat text-xs font-semibold text-caramel-600 hover:text-caramel-700 flex items-center gap-1 transition-colors"
@@ -307,7 +329,7 @@ export default function Profile() {
                   <div className="py-12 text-center">
                     <Clock size={36} className="text-gray-200 mx-auto mb-3" strokeWidth={1.2} />
                     <p className="font-playfair text-lg font-semibold text-chocolate-900">No past orders</p>
-                    <p className="font-montserrat text-sm text-chocolate-800/40 mt-1">Your completed orders will appear here</p>
+                    <p className="font-montserrat text-sm text-chocolate-800/40 mt-1">Your placed order history will be archived here.</p>
                   </div>
                 )}
               </div>
