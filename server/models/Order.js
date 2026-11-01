@@ -24,6 +24,7 @@ const customerDetailsSchema = new Schema(
     email: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
+    phone: { type: String, default: '' },
     address: { type: String, default: '' },
     city: { type: String, default: '' },
     state: { type: String, default: '' },

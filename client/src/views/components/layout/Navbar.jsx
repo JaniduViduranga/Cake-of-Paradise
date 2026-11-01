@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCart, User, Menu, X, ChevronDown } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, ChevronDown, ShieldCheck } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
 import { useAuth } from '../../../context/AuthContext';
 import CartSidebar from '../common/CartSidebar';
@@ -64,62 +64,86 @@ export default function Navbar() {
                 className={`nav-link text-xs uppercase ${isActive(link.path)
                     ? 'nav-link-active border-b-2 border-caramel-600 pb-0.5'
                     : ''
-                  }`}
+                }`}
               >
-                {link.label}
-              </Link>
+            {link.label}
+          </Link>
             ))}
-          </div>
+        </div>
 
-          {/* Right Actions */}
-          <div className="hidden lg:flex items-center gap-4">
-            {/* Cart */}
-            <button
-              id="cart-btn"
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-chocolate-800/70 hover:text-caramel-600 transition-colors"
-              aria-label="Open cart"
-            >
-              <ShoppingCart size={20} strokeWidth={1.8} />
-              {itemCount > 0 && (
-                <span className="badge animate-scale-in">{itemCount}</span>
-              )}
-            </button>
+        {/* Right Actions */}
+        <div className="hidden lg:flex items-center gap-4">
+          {/* Cart */}
+          <button
+            id="cart-btn"
+            onClick={() => setIsCartOpen(true)}
+            className="relative p-2 text-chocolate-800/70 hover:text-caramel-600 transition-colors"
+            aria-label="Open cart"
+          >
+            <ShoppingCart size={20} strokeWidth={1.8} />
+            {itemCount > 0 && (
+              <span className="badge animate-scale-in">{itemCount}</span>
+            )}
+          </button>
 
-            {/* User */}
-            {isLoggedIn ? (
-              <div className="relative">
-                <button
-                  id="user-menu-btn"
-                  onClick={() => setUserMenuOpen((v) => !v)}
-                  className="flex items-center gap-1.5 p-2 text-chocolate-800/70 hover:text-caramel-600 transition-colors"
-                  aria-label="User menu"
-                >
-                  <User size={20} strokeWidth={1.8} />
-                  <ChevronDown size={14} className={`transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {userMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 animate-scale-in z-50">
+          {/* User */}
+          {isLoggedIn ? (
+            <div className="relative">
+              <button
+                id="user-menu-btn"
+                onClick={() => setUserMenuOpen((v) => !v)}
+                className="flex items-center gap-1.5 p-2 text-chocolate-800/70 hover:text-caramel-600 transition-colors"
+                aria-label="User menu"
+              >
+                <User size={20} strokeWidth={1.8} />
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform ${userMenuOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+              {userMenuOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-100 py-2 animate-scale-in z-50">
                     <div className="px-4 py-2 border-b border-gray-100 mb-1">
-                      <p className="font-montserrat text-xs font-semibold text-chocolate-900 truncate">{user.name}</p>
-                      <p className="font-montserrat text-xs text-chocolate-800/50 truncate">{user.email}</p>
+                      <p className="font-montserrat text-xs font-semibold text-chocolate-900 truncate">
+                        {user.name}
+                      </p>
+                      <p className="font-montserrat text-xs text-chocolate-800/50 truncate">
+                        {user.email}
+                      </p>
                     </div>
                     <button
-                      onClick={() => { navigate('/profile'); setUserMenuOpen(false); }}
+                      onClick={() => {
+                        navigate('/profile');
+                        setUserMenuOpen(false);
+                      }}
                       className="w-full text-left px-4 py-2 text-sm font-montserrat text-chocolate-800 hover:bg-cream-50 hover:text-caramel-600 transition-colors"
                     >
                       My Profile
                     </button>
                     <button
-                      onClick={() => { logout(); setUserMenuOpen(false); }}
+                      onClick={() => {
+                        navigate('/admin');
+                        setUserMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm font-montserrat text-caramel-700 font-semibold hover:bg-cream-50 transition-colors flex items-center justify-between"
+                    >
+                      <span>Admin Portal</span>
+                      <span className="text-[10px] bg-caramel-600/15 text-caramel-700 px-1.5 py-0.2 rounded font-bold">Chef</span>
+                    </button>
+                    <div className="border-t border-gray-100 my-1" />
+                    <button
+                      onClick={() => {
+                        logout();
+                        setUserMenuOpen(false);
+                      }}
                       className="w-full text-left px-4 py-2 text-sm font-montserrat text-red-500 hover:bg-red-50 transition-colors"
                     >
                       Sign Out
                     </button>
                   </div>
                 )}
-              </div>
-            ) : (
+                </div>
+              ) : (
               <button
                 id="login-btn"
                 onClick={() => setIsLoginOpen(true)}
@@ -129,7 +153,7 @@ export default function Navbar() {
                 <User size={20} strokeWidth={1.8} />
               </button>
             )}
-          </div>
+            </div>
 
           {/* Mobile: Cart + Hamburger */}
           <div className="lg:hidden flex items-center gap-3">
@@ -166,6 +190,20 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+
+              {/* Admin Portal mobile button */}
+              <Link
+                to="/admin"
+                className="py-3 font-montserrat font-semibold text-sm text-caramel-700 flex items-center justify-between border-b border-gray-100"
+              >
+                <span className="flex items-center gap-2">
+                  <ShieldCheck size={16} /> Admin Portal
+                </span>
+                <span className="text-[10px] bg-caramel-600 text-white px-2 py-0.5 rounded font-bold">
+                  Dashboard
+                </span>
+              </Link>
+
               <div className="pt-3 flex gap-3">
                 {isLoggedIn ? (
                   <>
@@ -175,28 +213,34 @@ export default function Navbar() {
                     >
                       My Profile
                     </button>
-                    <button onClick={logout} className="flex-1 py-2.5 text-sm font-montserrat font-semibold text-red-500 border border-red-200 rounded">
-                      Sign Out
-                    </button>
-                  </>
-                ) : (
-                  <button onClick={() => setIsLoginOpen(true)} className="flex-1 btn-primary py-2.5">
-                    Sign In
-                  </button>
+                      <button
+                        onClick={logout}
+                        className="flex-1 py-2.5 text-sm font-montserrat font-semibold text-red-500 border border-red-200 rounded"
+                      >
+                        Sign Out
+                      </button>
+                    </>
+                    ) : (
+                      <button
+                        onClick={() => setIsLoginOpen(true)}
+                        className="flex-1 btn-primary py-2.5"
+                      >
+                        Sign In
+                      </button>
                 )}
+                    </div>
+                  </div>
               </div>
-            </div>
-          </div>
         )}
-      </nav>
+            </nav>
 
-      {/* Cart Sidebar */}
-      <CartSidebar />
+            {/* Cart Sidebar */}
+            <CartSidebar />
 
-      {/* Click outside to close user menu */}
-      {userMenuOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
-      )}
-    </>
-  );
+            {/* Click outside to close user menu */}
+            {userMenuOpen && (
+              <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
+            )}
+          </>
+        );
 }

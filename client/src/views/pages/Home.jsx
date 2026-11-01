@@ -1,8 +1,10 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Leaf } from 'lucide-react';
 import SectionHeading from '../components/common/SectionHeading';
 import { CAKES, BAKER_VALUES } from '../../models/cakes';
 import HomePageImage from '../../assets/HomePageImage.jpg';
+import { getGallery } from '../../services/api';
 
 const STATS = [
   { value: '500+', label: 'Happy Customers' },
@@ -11,6 +13,28 @@ const STATS = [
 ];
 
 export default function Home() {
+  const [featuredCakes, setFeaturedCakes] = useState([]);
+
+  // Fetch items toggled as "Featured on Home" by Admin
+  useEffect(() => {
+    getGallery({ featured: 'true' })
+      .then((res) => {
+        const items = res.data?.data || res.data?.items || [];
+        if (items.length > 0) {
+          setFeaturedCakes(
+            items.slice(0, 4).map((i) => ({
+              id: i._id || i.id,
+              name: i.title,
+              image: i.image,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const displayShowcase = featuredCakes.length > 0 ? featuredCakes : CAKES.slice(0, 4);
+
   return (
     <div className="min-h-screen bg-cream-50">
       {/* ── Hero ── */}
@@ -105,7 +129,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Gallery Teaser ── */}
+      {/* ── Gallery Teaser / Homepage Showcase ── */}
       <section className="py-14 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
           <div className="flex items-center justify-between mb-8 sm:mb-10">
@@ -119,7 +143,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-            {CAKES.slice(0, 4).map((cake) => (
+            {displayShowcase.map((cake) => (
               <Link
                 key={cake.id}
                 to="/gallery"
