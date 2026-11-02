@@ -277,7 +277,7 @@ export default function AdminPricing() {
       // If server unreachable, notify gracefully
       setError(
         err.response?.data?.message ||
-          'Failed to update MongoDB Atlas. Please ensure backend server is running.'
+        'Failed to update MongoDB Atlas. Please ensure backend server is running.'
       );
     } finally {
       setSaving(false);
@@ -301,9 +301,6 @@ export default function AdminPricing() {
             <h1 className="font-playfair font-bold text-2xl sm:text-3xl text-chocolate-900">
               Pricing Manager
             </h1>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-caramel-600 text-white uppercase tracking-wider">
-              Tab 4
-            </span>
           </div>
           <p className="text-xs sm:text-sm text-chocolate-800/60 mt-1">
             Update category base rates, cupcake pack prices, and flavor premiums directly from this UI without editing MongoDB Atlas.
@@ -379,7 +376,7 @@ export default function AdminPricing() {
 
       {/* Form sections */}
       <form onSubmit={handleSaveChanges} className="space-y-8">
-        
+
         {/* SECTION 1: Category Base Rates */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100 bg-cream-50/70 flex items-center justify-between">
@@ -402,7 +399,7 @@ export default function AdminPricing() {
           </div>
 
           <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-            
+
             {/* Standard Cakes */}
             <div className="p-4 rounded-xl border border-gray-200/80 bg-cream-50/30 space-y-4">
               <div className="border-b border-gray-200/60 pb-2">
@@ -563,7 +560,7 @@ export default function AdminPricing() {
           </div>
 
           <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
-            
+
             {/* 6-Pack */}
             <div className="p-4 rounded-xl border border-gray-200/80 bg-cream-50/20 space-y-2">
               <div className="flex items-center justify-between">
@@ -646,7 +643,7 @@ export default function AdminPricing() {
           </div>
 
           <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
+
             {/* Standard Flavors */}
             <div className="space-y-4">
               <div className="border-b border-gray-100 pb-2 flex items-center justify-between">

@@ -273,15 +273,10 @@ export default function AdminGallery() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="font-playfair font-bold text-2xl sm:text-3xl text-chocolate-900">
-              Gallery Upload & Management
-            </h1>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-caramel-600 text-white uppercase tracking-wider">
-              Tab 3
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-chocolate-800/60 mt-1">
+          <h1 className="font-playfair font-bold text-2xl sm:text-3xl text-brand-text-dark">
+            Gallery Upload & Management
+          </h1>
+          <p className="text-xs sm:text-sm text-brand-text-muted mt-1">
             Manage photos showcased to customers on your public website gallery and homepage highlight reel.
           </p>
         </div>
@@ -301,9 +296,6 @@ export default function AdminGallery() {
       <div className="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 bg-cream-50/70 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-caramel-600/10 text-caramel-600 flex items-center justify-center">
-              <Upload size={18} />
-            </div>
             <div>
               <h2 className="font-playfair font-bold text-base sm:text-lg text-chocolate-900">
                 Upload New Cake Photo Card
@@ -318,22 +310,20 @@ export default function AdminGallery() {
             <button
               type="button"
               onClick={() => setUploadMode('file')}
-              className={`px-2.5 py-1 rounded-md transition-all ${
-                uploadMode === 'file'
-                  ? 'bg-white text-chocolate-900 shadow-2xs'
-                  : 'text-gray-500 hover:text-chocolate-900'
-              }`}
+              className={`px-2.5 py-1 rounded-md transition-all ${uploadMode === 'file'
+                ? 'bg-white text-chocolate-900 shadow-2xs'
+                : 'text-gray-500 hover:text-chocolate-900'
+                }`}
             >
               File / Drop
             </button>
             <button
               type="button"
               onClick={() => setUploadMode('url')}
-              className={`px-2.5 py-1 rounded-md transition-all ${
-                uploadMode === 'url'
-                  ? 'bg-white text-chocolate-900 shadow-2xs'
-                  : 'text-gray-500 hover:text-chocolate-900'
-              }`}
+              className={`px-2.5 py-1 rounded-md transition-all ${uploadMode === 'url'
+                ? 'bg-white text-chocolate-900 shadow-2xs'
+                : 'text-gray-500 hover:text-chocolate-900'
+                }`}
             >
               Image URL
             </button>
@@ -342,7 +332,7 @@ export default function AdminGallery() {
 
         <form onSubmit={handleSubmitNewCake} className="p-6 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
+
             {/* Left Col: Image Upload / Dropzone */}
             <div className="lg:col-span-5 space-y-3">
               <label className="block text-xs font-bold text-chocolate-800 uppercase tracking-wide">
@@ -354,11 +344,10 @@ export default function AdminGallery() {
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`relative cursor-pointer border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
-                    imagePreview
-                      ? 'border-caramel-600/50 bg-cream-50/40'
-                      : 'border-gray-300 hover:border-caramel-600 bg-cream-50/30'
-                  }`}
+                  className={`relative cursor-pointer border-2 border-dashed rounded-2xl p-6 text-center transition-all ${imagePreview
+                    ? 'border-caramel-600/50 bg-cream-50/40'
+                    : 'border-gray-300 hover:border-caramel-600 bg-cream-50/30'
+                    }`}
                 >
                   <input
                     type="file"
@@ -580,11 +569,10 @@ export default function AdminGallery() {
                 key={cat}
                 type="button"
                 onClick={() => setCategoryFilter(cat)}
-                className={`text-xs px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${
-                  categoryFilter === cat
-                    ? 'bg-chocolate-900 text-white shadow-xs'
-                    : 'bg-white border border-gray-200 text-chocolate-800 hover:border-caramel-600'
-                }`}
+                className={`text-xs px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${categoryFilter === cat
+                  ? 'bg-chocolate-900 text-white shadow-xs'
+                  : 'bg-white border border-gray-200 text-chocolate-800 hover:border-caramel-600'
+                  }`}
               >
                 {cat}
               </button>
@@ -679,11 +667,10 @@ export default function AdminGallery() {
                         type="button"
                         onClick={() => handleToggleFeatured(item)}
                         title={item.isFeatured ? 'Remove from Homepage' : 'Showcase on Homepage'}
-                        className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-all ${
-                          item.isFeatured
-                            ? 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100'
-                            : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-cream-100 hover:text-caramel-600'
-                        }`}
+                        className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-all ${item.isFeatured
+                          ? 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100'
+                          : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-cream-100 hover:text-caramel-600'
+                          }`}
                       >
                         <Star
                           size={13}
