@@ -48,10 +48,13 @@ const paymentInfoSchema = new Schema(
     paymentMethod: { type: String, default: 'credit' },
     paymentStatus: {
       type: String,
-      enum: ['Paid', 'Pending', 'Failed'],
-      default: 'Paid',
+      enum: ['Paid', 'Pending', 'Failed', 'PAID', 'CONFIRMED'],
+      default: 'PAID',
     },
-    paymentIntentId: { type: String, required: true },
+    paymentIntentId: { type: String },
+    transactionId: { type: String, required: true },
+    paymentProvider: { type: String, default: 'stripe' },
+    providerMetadata: { type: Schema.Types.Mixed, default: null },
   },
   { _id: false }
 );
