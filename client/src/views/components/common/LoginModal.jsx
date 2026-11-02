@@ -1,15 +1,30 @@
 import { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
+import authService from '../../../services/authService';
 import Modal from './Modal';
 
 export default function LoginModal() {
-  const { isLoginOpen, setIsLoginOpen, login, register } = useAuth();
+  const {
+    isLoginOpen,
+    setIsLoginOpen,
+    login,
+    redirectPath,
+    setRedirectPath,
+  } = useAuth();
+
+  const navigate = useNavigate();
   const [mode, setMode] = useState('login'); // 'login' | 'register'
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({ name: '', email: '', password: '', phone: '' });
+  const [form, setForm] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    phone: '',
+  });
 
   const update = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -20,15 +35,51 @@ export default function LoginModal() {
     e.preventDefault();
     setLoading(true);
     setError('');
+
     try {
-      await new Promise((r) => setTimeout(r, 600)); // mock delay
       if (mode === 'login') {
-        const result = login({ email: form.email, password: form.password });
-        if (!result.success) setError(result.error);
+        const res = await authService.login({
+          email: form.email.trim(),
+          password: form.password,
+        });
+
+        if (res.success && res.token && res.user) {
+          login(res.user, res.token);
+          setIsLoginOpen(false);
+
+          if (redirectPath) {
+            navigate(redirectPath);
+            if (setRedirectPath) setRedirectPath(null);
+          }
+        } else {
+          setError(res.message || 'Failed to sign in.');
+        }
       } else {
-        const result = register({ name: form.name, email: form.email, phone: form.phone });
-        if (!result.success) setError('Registration failed. Please try again.');
+        const res = await authService.register({
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          password: form.password,
+        });
+
+        if (res.success && res.token && res.user) {
+          login(res.user, res.token);
+          setIsLoginOpen(false);
+
+          if (redirectPath) {
+            navigate(redirectPath);
+            if (setRedirectPath) setRedirectPath(null);
+          }
+        } else {
+          setError(res.message || 'Registration failed.');
+        }
       }
+    } catch (err) {
+      const serverMessage =
+        err.response?.data?.message ||
+        err.message ||
+        'Authentication failed. Please check your network and credentials.';
+      setError(serverMessage);
     } finally {
       setLoading(false);
     }
@@ -37,7 +88,7 @@ export default function LoginModal() {
   const switchMode = () => {
     setMode((m) => (m === 'login' ? 'register' : 'login'));
     setError('');
-    setForm({ name: '', email: '', password: '', phone: '' });
+    setForm({ fullName: '', email: '', password: '', phone: '' });
   };
 
   return (
@@ -52,14 +103,17 @@ export default function LoginModal() {
           <p className="font-montserrat text-sm text-chocolate-800/50 mt-2">
             {mode === 'login'
               ? 'Sign in to track orders and manage your profile'
-              : 'Join us for exclusive offers and order tracking'}
+              : 'Join us for custom cake orders and order tracking'}
           </p>
         </div>
 
-        {/* Error */}
+        {/* Backend validation error display */}
         {error && (
-          <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="font-montserrat text-sm text-red-600">{error}</p>
+          <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+            <AlertCircle size={16} className="text-red-500 shrink-0" />
+            <p className="font-montserrat text-xs sm:text-sm text-red-600 font-medium">
+              {error}
+            </p>
           </div>
         )}
 
@@ -67,12 +121,12 @@ export default function LoginModal() {
           {mode === 'register' && (
             <div>
               <label className="block font-montserrat text-xs font-semibold text-chocolate-800/70 mb-1.5 uppercase tracking-wide">
-                Full Name
+                Full Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                value={form.name}
-                onChange={(e) => update('name', e.target.value)}
+                value={form.fullName}
+                onChange={(e) => update('fullName', e.target.value)}
                 placeholder="Jane Doe"
                 required
                 className="input-field"
@@ -82,7 +136,7 @@ export default function LoginModal() {
 
           <div>
             <label className="block font-montserrat text-xs font-semibold text-chocolate-800/70 mb-1.5 uppercase tracking-wide">
-              Email Address
+              Email Address <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -111,7 +165,7 @@ export default function LoginModal() {
 
           <div>
             <label className="block font-montserrat text-xs font-semibold text-chocolate-800/70 mb-1.5 uppercase tracking-wide">
-              Password
+              Password <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input
@@ -132,22 +186,29 @@ export default function LoginModal() {
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
+            {mode === 'register' && (
+              <p className="text-[11px] text-chocolate-800/50 mt-1">
+                Must be at least 6 characters.
+              </p>
+            )}
           </div>
-
-          {/* Hint */}
-          {mode === 'login' && (
-            <p className="font-montserrat text-xs text-chocolate-800/40 text-center">
-              Demo: any email + any password
-            </p>
-          )}
 
           <button
             id="auth-submit-btn"
             type="submit"
             disabled={loading}
-            className="w-full btn-primary py-3.5 mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full btn-primary py-3.5 mt-2 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span>Please wait...</span>
+              </>
+            ) : mode === 'login' ? (
+              'Sign In'
+            ) : (
+              'Create Account'
+            )}
           </button>
         </form>
 

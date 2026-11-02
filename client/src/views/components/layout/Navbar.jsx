@@ -49,7 +49,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2 font-playfair italic font-semibold text-2xl text-brand-accent shrink-0 hover:text-brand-primary-hover transition-colors"
+            className="flex items-center gap-2 font-playfair font-semibold text-2xl text-brand-accent shrink-0 hover:text-brand-primary-hover transition-colors"
           >
             <img src={heroLogo} alt="Cake of Paradise Logo" className="w-8 h-8 object-contain" />
             Cake of Paradise
