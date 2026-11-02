@@ -96,7 +96,7 @@ export default function LoginModal() {
       <div className="px-8 py-8">
         {/* Header */}
         <div className="text-center mb-7">
-          <p className="font-playfair italic text-caramel-600 text-lg mb-1">Cake of Paradise</p>
+          <p className="font-playfair text-caramel-600 text-lg mb-1">Cake of Paradise</p>
           <h2 className="font-playfair font-bold text-2xl text-chocolate-900">
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
           </h2>
