@@ -60,7 +60,7 @@ export default function CustomOrder() {
         <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-sm border border-divider space-y-8">
           {/* Header */}
           <div className="text-center pb-6 border-b border-divider">
-            <h1 className="font-playfair font-bold text-3xl md:text-4xl text-[#F5AFAF]">Custom Order</h1>
+            <h1 className="font-playfair font-bold text-3xl md:text-4xl text-brand-text-dark">Custom Order</h1>
             <p className="font-montserrat text-sm text-chocolate-800/60 leading-relaxed mt-3 max-w-lg mx-auto">
               Configure your perfect cake step by step. We'll bake it fresh and have it ready for your special occasion.
             </p>
@@ -69,7 +69,7 @@ export default function CustomOrder() {
           {/* Step 1: Order Type */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">1</div>
+              <div className="w-6 h-6 rounded-full bg-brand-accent text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">1</div>
               <label className="font-playfair font-bold text-lg text-chocolate-900">
                 Select Order Type
               </label>
@@ -93,7 +93,7 @@ export default function CustomOrder() {
               {/* Step 2: Package Type */}
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">2</div>
+                  <div className="w-6 h-6 rounded-full bg-brand-accent text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">2</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     Package Type
                   </label>
@@ -101,14 +101,14 @@ export default function CustomOrder() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div
                     onClick={() => setWeddingPackageType('cake_only')}
-                    className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${weddingPackageType === 'cake_only' ? 'border-[#F5AFAF] bg-[#FBEFEF]' : 'border-divider hover:border-[#F5AFAF]'}`}
+                    className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${weddingPackageType === 'cake_only' ? 'border-brand-accent bg-brand-bg-hero' : 'border-divider hover:border-brand-accent'}`}
                   >
                     <h3 className="font-playfair font-bold text-lg text-chocolate-900 mb-1">Cake Only</h3>
                     <p className="font-montserrat text-xs text-chocolate-800/60">Traditional 100% edible cake.</p>
                   </div>
                   <div
                     onClick={() => setWeddingPackageType('cake_and_structure')}
-                    className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${weddingPackageType === 'cake_and_structure' ? 'border-[#F5AFAF] bg-[#FBEFEF]' : 'border-divider hover:border-[#F5AFAF]'}`}
+                    className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${weddingPackageType === 'cake_and_structure' ? 'border-brand-accent bg-brand-bg-hero' : 'border-divider hover:border-brand-accent'}`}
                   >
                     <h3 className="font-playfair font-bold text-lg text-chocolate-900 mb-1">Cake + Structure</h3>
                     <p className="font-montserrat text-xs text-chocolate-800/60">Grand showpiece dummy tier setup with real cake.</p>
@@ -120,7 +120,7 @@ export default function CustomOrder() {
               {weddingPackageType === 'cake_and_structure' && (
                 <div className="pt-4 border-t border-divider">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">3</div>
+                    <div className="w-6 h-6 rounded-full bg-brand-accent text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">3</div>
                     <label className="font-playfair font-bold text-lg text-chocolate-900">
                       Structure Configuration
                     </label>
@@ -131,11 +131,11 @@ export default function CustomOrder() {
                       <label className="block font-montserrat font-semibold text-xs text-chocolate-900 mb-2 uppercase tracking-wide">Layout Style</label>
                       <div className="space-y-2">
                         <label className="flex items-center gap-2 cursor-pointer">
-                          <input type="radio" name="structureSetup" checked={weddingStructureSetup === 'bottom_real_upper_dummy'} onChange={() => setWeddingStructureSetup('bottom_real_upper_dummy')} className="text-[#F5AFAF] focus:ring-[#F5AFAF]" />
+                          <input type="radio" name="structureSetup" checked={weddingStructureSetup === 'bottom_real_upper_dummy'} onChange={() => setWeddingStructureSetup('bottom_real_upper_dummy')} className="text-brand-accent focus:ring-brand-accent" />
                           <span className="font-montserrat text-sm text-chocolate-800">Bottom Tier Real + Upper Tiers Dummy Structure</span>
                         </label>
                         <label className="flex items-center gap-2 cursor-pointer">
-                          <input type="radio" name="structureSetup" checked={weddingStructureSetup === 'full_structure_separate_cake'} onChange={() => setWeddingStructureSetup('full_structure_separate_cake')} className="text-[#F5AFAF] focus:ring-[#F5AFAF]" />
+                          <input type="radio" name="structureSetup" checked={weddingStructureSetup === 'full_structure_separate_cake'} onChange={() => setWeddingStructureSetup('full_structure_separate_cake')} className="text-brand-accent focus:ring-brand-accent" />
                           <span className="font-montserrat text-sm text-chocolate-800">Full Display Structure + Separate Serving Cake (Behind Scene)</span>
                         </label>
                       </div>
@@ -149,7 +149,7 @@ export default function CustomOrder() {
                             key={tiers}
                             type="button"
                             onClick={() => setWeddingStructureTiers(tiers)}
-                            className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${weddingStructureTiers === tiers ? 'bg-[#F5AFAF] text-white' : 'bg-white border border-divider text-chocolate-800 hover:border-[#F5AFAF]'}`}
+                            className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${weddingStructureTiers === tiers ? 'bg-brand-accent text-white' : 'bg-white border border-divider text-chocolate-800 hover:border-brand-accent'}`}
                           >
                             {tiers} Tiers
                           </button>
@@ -158,8 +158,8 @@ export default function CustomOrder() {
                     </div>
 
                     <div>
-                      <label className="flex items-center gap-2 cursor-pointer p-3 border border-divider rounded-lg bg-[#FCF8F8] hover:bg-[#FBEFEF] transition-colors">
-                        <input type="checkbox" checked={weddingIncludeFreshFlowers} onChange={(e) => setWeddingIncludeFreshFlowers(e.target.checked)} className="rounded text-[#F5AFAF] focus:ring-[#F5AFAF]" />
+                      <label className="flex items-center gap-2 cursor-pointer p-3 border border-divider rounded-lg bg-brand-surface hover:bg-brand-bg-hero transition-colors">
+                        <input type="checkbox" checked={weddingIncludeFreshFlowers} onChange={(e) => setWeddingIncludeFreshFlowers(e.target.checked)} className="rounded text-brand-accent focus:ring-brand-accent" />
                         <span className="font-montserrat text-sm text-chocolate-800 font-medium">Include Fresh Flowers on Structure (+ Rs. 4,500)</span>
                       </label>
                     </div>
@@ -170,7 +170,7 @@ export default function CustomOrder() {
               {/* Step 4: Real Cake Details */}
               <div className="pt-4 border-t border-divider">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">{weddingPackageType === 'cake_and_structure' ? '4' : '3'}</div>
+                  <div className="w-6 h-6 rounded-full bg-brand-accent text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">{weddingPackageType === 'cake_and_structure' ? '4' : '3'}</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     Real Cake Details
                   </label>
@@ -192,14 +192,14 @@ export default function CustomOrder() {
                             onClick={() => (setSelectedFlavorId ? setSelectedFlavorId(flavor.value || flavor.id) : setSelectedFlavor(flavor.value || flavor.id))}
                             className={`flex flex-col items-center justify-center p-3.5 rounded-xl border-2 transition-all text-center ${
                               isSelected
-                                ? 'border-[#F5AFAF] bg-[#FBEFEF] text-chocolate-900 shadow-sm ring-1 ring-[#F5AFAF]'
-                                : 'border-divider bg-white hover:border-[#F5AFAF] text-chocolate-800'
+                                ? 'border-brand-accent bg-brand-bg-hero text-chocolate-900 shadow-sm ring-1 ring-brand-accent'
+                                : 'border-divider bg-white hover:border-brand-accent text-chocolate-800'
                             }`}
                           >
                             <span className="font-montserrat font-bold text-sm mb-1">{flavor.label}</span>
                             <span
                               className={`font-montserrat text-xs ${
-                                surcharge > 0 ? 'text-[#F5AFAF] font-semibold' : 'text-chocolate-800/50'
+                                surcharge > 0 ? 'text-brand-accent font-semibold' : 'text-chocolate-800/50'
                               }`}
                             >
                               {surchargeLabel}
@@ -218,7 +218,7 @@ export default function CustomOrder() {
                           key={weight}
                           type="button"
                           onClick={() => setSelectedSize(weight)}
-                          className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${selectedSize === weight ? 'bg-[#F5AFAF] text-white' : 'bg-white border border-divider text-chocolate-800 hover:border-[#F5AFAF]'}`}
+                          className={`px-4 py-2 rounded-full font-montserrat text-sm transition-colors ${selectedSize === weight ? 'bg-brand-accent text-white' : 'bg-white border border-divider text-chocolate-800 hover:border-brand-accent'}`}
                         >
                           {weight}
                         </button>
@@ -231,7 +231,7 @@ export default function CustomOrder() {
               {/* Step 5: Customization & Event Logistics */}
               <div className="pt-4 border-t border-divider">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">{weddingPackageType === 'cake_and_structure' ? '5' : '4'}</div>
+                  <div className="w-6 h-6 rounded-full bg-brand-accent text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">{weddingPackageType === 'cake_and_structure' ? '5' : '4'}</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     Customization & Event Logistics
                   </label>
@@ -313,7 +313,7 @@ export default function CustomOrder() {
               {/* Step 2: Flavor */}
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">2</div>
+                  <div className="w-6 h-6 rounded-full bg-brand-accent text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">2</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     Choose Flavor
                   </label>
@@ -333,14 +333,14 @@ export default function CustomOrder() {
                         onClick={() => (setSelectedFlavorId ? setSelectedFlavorId(flavor.value || flavor.id) : setSelectedFlavor(flavor.value || flavor.id))}
                         className={`flex flex-col items-center justify-center p-3.5 rounded-xl border-2 transition-all text-center ${
                           isSelected
-                            ? 'border-[#F5AFAF] bg-[#FBEFEF] text-chocolate-900 shadow-sm ring-1 ring-[#F5AFAF]'
-                            : 'border-divider bg-white hover:border-[#F5AFAF] text-chocolate-800'
+                            ? 'border-brand-accent bg-brand-bg-hero text-chocolate-900 shadow-sm ring-1 ring-brand-accent'
+                            : 'border-divider bg-white hover:border-brand-accent text-chocolate-800'
                         }`}
                       >
                         <span className="font-montserrat font-bold text-sm mb-1">{flavor.label}</span>
                         <span
                           className={`font-montserrat text-xs ${
-                            surcharge > 0 ? 'text-[#F5AFAF] font-semibold' : 'text-chocolate-800/50'
+                            surcharge > 0 ? 'text-brand-accent font-semibold' : 'text-chocolate-800/50'
                           }`}
                         >
                           {surchargeLabel}
@@ -354,7 +354,7 @@ export default function CustomOrder() {
               {/* Step 3: Size / Quantity */}
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">3</div>
+                  <div className="w-6 h-6 rounded-full bg-brand-accent text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">3</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     {orderType === 'Cupcakes' ? 'Select Quantity' : 'Select Cake Size'}
                   </label>
@@ -383,7 +383,7 @@ export default function CustomOrder() {
                 <div className="space-y-8 pt-4 border-t border-divider">
                   <div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">A</div>
+                      <div className="w-6 h-6 rounded-full bg-brand-accent text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">A</div>
                       <label className="font-playfair font-bold text-lg text-chocolate-900">
                         Custom Message <span className="font-montserrat font-normal text-sm text-chocolate-800/40 ml-2">(Optional)</span>
                       </label>
@@ -402,7 +402,7 @@ export default function CustomOrder() {
 
                   <div>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">B</div>
+                      <div className="w-6 h-6 rounded-full bg-brand-accent text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">B</div>
                       <label className="font-playfair font-bold text-lg text-chocolate-900">
                         Design Reference <span className="font-montserrat font-normal text-sm text-chocolate-800/40 ml-2">(Optional)</span>
                       </label>
@@ -419,7 +419,7 @@ export default function CustomOrder() {
               {/* Step 4: Delivery / Pickup */}
               <div className="pt-4 border-t border-divider mt-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 rounded-full bg-[#F5AFAF] text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">4</div>
+                  <div className="w-6 h-6 rounded-full bg-brand-accent text-white flex items-center justify-center font-montserrat font-bold text-xs shadow-sm">4</div>
                   <label className="font-playfair font-bold text-lg text-chocolate-900">
                     Delivery & Pickup Date
                   </label>
@@ -472,8 +472,8 @@ export default function CustomOrder() {
                 type="button"
                 onClick={handleAddToCart}
                 disabled={loading}
-                className={`w-full sm:w-auto min-w-[240px] btn-primary py-4 flex items-center justify-center gap-2 text-base shadow-lg shadow-[#F5AFAF]/20 transition-all ${
-                  loading ? 'opacity-70 cursor-not-allowed bg-[#F5AFAF]/70' : ''
+                className={`w-full sm:w-auto min-w-[240px] btn-primary py-4 flex items-center justify-center gap-2 text-base shadow-lg shadow-brand-primary/20 transition-all ${
+                  loading ? 'opacity-70 cursor-not-allowed bg-brand-primary/70' : ''
                 }`}
               >
                 {loading ? (

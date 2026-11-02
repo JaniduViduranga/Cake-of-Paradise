@@ -104,7 +104,7 @@ export default function Profile() {
                 {/* Personal Details */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="font-playfair font-bold text-2xl text-caramel-600">Personal Details</h2>
+                    <h2 className="font-playfair font-bold text-2xl text-brand-text-dark">Personal Details</h2>
                     {!editing ? (
                       <button
                         id="edit-profile-btn"
@@ -163,7 +163,7 @@ export default function Profile() {
                 {/* Saved Addresses */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
                   <div className="flex items-center justify-between mb-5">
-                    <h2 className="font-playfair font-bold text-2xl text-caramel-600">Saved Addresses</h2>
+                    <h2 className="font-playfair font-bold text-2xl text-brand-text-dark">Saved Addresses</h2>
                     <button className="flex items-center gap-1.5 font-montserrat text-xs font-semibold text-caramel-600 hover:text-caramel-700 transition-colors">
                       <Plus size={14} />
                       Add New
@@ -191,7 +191,7 @@ export default function Profile() {
             {/* ── Active Order Tab ── */}
             {activeTab === 'active' && (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
-                <h2 className="font-playfair font-bold text-2xl text-caramel-600 mb-6">Active Order</h2>
+                <h2 className="font-playfair font-bold text-2xl text-brand-text-dark mb-6">Active Order</h2>
                 {activeOrder ? (
                   <div>
                     <div className="flex items-center justify-between mb-5">
@@ -268,7 +268,7 @@ export default function Profile() {
             {/* ── Past Orders Tab ── */}
             {activeTab === 'past' && (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
-                <h2 className="font-playfair font-bold text-2xl text-caramel-600 mb-6">Order History</h2>
+                <h2 className="font-playfair font-bold text-2xl text-brand-text-dark mb-6">Order History</h2>
                 {user.orders.length > 0 ? (
                   <div className="space-y-4">
                     {user.orders.map((order) => (

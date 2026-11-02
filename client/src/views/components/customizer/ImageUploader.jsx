@@ -43,8 +43,8 @@ export default function ImageUploader({ onUpload, preview, onClear }) {
         <div
           className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200 ${
             dragging
-              ? 'border-[#F5AFAF] bg-[#FBEFEF]'
-              : 'border-[#F9DFDF] bg-white hover:border-[#F5AFAF] hover:bg-[#FCF8F8]'
+              ? 'border-brand-accent bg-brand-bg-hero'
+              : 'border-brand-border bg-brand-surface hover:border-brand-accent hover:bg-brand-bg-hero'
           }`}
           onClick={() => inputRef.current?.click()}
           onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
@@ -56,15 +56,15 @@ export default function ImageUploader({ onUpload, preview, onClear }) {
           aria-label="Upload design reference image"
         >
           <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-[#FBEFEF] flex items-center justify-center">
-              <Upload size={22} className="text-[#F5AFAF]" strokeWidth={1.5} />
+            <div className="w-12 h-12 rounded-full bg-brand-bg-hero flex items-center justify-center">
+              <Upload size={22} className="text-brand-accent" strokeWidth={1.5} />
             </div>
             <div>
-              <p className="font-montserrat text-sm text-chocolate-800/70">
+              <p className="font-montserrat text-sm text-brand-text-body">
                 Drag &amp; drop or{' '}
                 <button
                   type="button"
-                  className="text-[#F5AFAF] font-semibold underline hover:text-[#EFA3A3]"
+                  className="text-brand-accent font-semibold underline hover:text-brand-primary-hover"
                   onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
                 >
                   browse

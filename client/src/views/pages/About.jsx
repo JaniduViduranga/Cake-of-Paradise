@@ -57,15 +57,15 @@ export default function About() {
       </div>
 
       {/* Our Story (Centered) */}
-      <section className="py-16 lg:py-20 bg-white border-b border-[#F9DFDF]/50">
+      <section className="py-16 lg:py-20 bg-white border-b border-brand-border/50">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-          <span className="font-montserrat font-semibold text-xs tracking-widest text-[#F5AFAF] uppercase mb-2 block">
+          <span className="font-montserrat font-semibold text-xs tracking-widest text-brand-accent uppercase mb-2 block">
             Our Journey
           </span>
-          <h2 className="font-playfair font-bold text-3xl sm:text-4xl lg:text-5xl text-[#F5AFAF] mb-6">
+          <h2 className="font-playfair font-bold text-3xl sm:text-4xl lg:text-5xl text-brand-text-dark mb-6">
             Our Story
           </h2>
-          <div className="space-y-4 max-w-3xl mx-auto text-[#57595B] font-montserrat text-base sm:text-lg leading-relaxed mb-10">
+          <div className="space-y-4 max-w-3xl mx-auto text-brand-text-body font-montserrat text-base sm:text-lg leading-relaxed mb-10">
             <p>
               Cake of Paradise began with a simple dream: to bring the warmth of a traditional bakery to modern celebrations. Every creation is a testament to our dedication to the craft.
             </p>
@@ -74,23 +74,23 @@ export default function About() {
             </p>
           </div>
 
-          <div className="pt-8 border-t border-[#F9DFDF]/60">
-            <h3 className="font-playfair font-semibold italic text-2xl text-[#F5AFAF] mb-8">
+          <div className="pt-8 border-t border-brand-border/60">
+            <h3 className="font-playfair font-semibold italic text-2xl text-brand-text-dark mb-8">
               Our Baking Philosophy
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {PHILOSOPHY_POINTS.map((point) => (
                 <div
                   key={point.title}
-                  className="p-6 rounded-2xl bg-[#FCF8F8] border border-[#F9DFDF] hover:shadow-md hover:border-[#F5AFAF] transition-all duration-300 text-center flex flex-col items-center"
+                  className="p-6 rounded-2xl bg-brand-surface border border-brand-border hover:shadow-md hover:border-brand-accent transition-all duration-300 text-center flex flex-col items-center"
                 >
-                  <div className="w-10 h-10 rounded-full bg-[#FBEFEF] text-[#F5AFAF] flex items-center justify-center mb-4">
-                    <span className="w-3 h-3 rounded-full bg-[#F5AFAF]" />
+                  <div className="w-10 h-10 rounded-full bg-brand-bg-hero text-brand-accent flex items-center justify-center mb-4">
+                    <span className="w-3 h-3 rounded-full bg-brand-accent" />
                   </div>
                   <h4 className="font-playfair font-bold text-lg text-chocolate-900 mb-2">
                     {point.title}
                   </h4>
-                  <p className="font-montserrat text-xs sm:text-sm text-[#57595B] leading-relaxed">
+                  <p className="font-montserrat text-xs sm:text-sm text-brand-text-body leading-relaxed">
                     {point.desc}
                   </p>
                 </div>
@@ -238,7 +238,7 @@ export default function About() {
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-5">
                 {/* Address */}
                 <div className="flex items-start gap-3">
-                  <MapPin size={18} className="text-[#F5AFAF] shrink-0 mt-0.5" />
+                  <MapPin size={18} className="text-brand-accent shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-montserrat font-bold text-sm text-chocolate-900 mb-1">Our Bakery</h4>
                     <p className="font-montserrat text-sm text-chocolate-800/60 leading-relaxed">
@@ -251,7 +251,7 @@ export default function About() {
 
                 {/* Hours */}
                 <div className="flex items-start gap-3">
-                  <Clock size={18} className="text-[#F5AFAF] shrink-0 mt-0.5" />
+                  <Clock size={18} className="text-brand-accent shrink-0 mt-0.5" />
                   <div className="w-full">
                     <h4 className="font-montserrat font-bold text-sm text-chocolate-900 mb-2">Hours</h4>
                     <div className="space-y-1.5">
@@ -270,7 +270,7 @@ export default function About() {
                 <hr className="border-gray-100" />
 
                 {/* Map iframe */}
-                <div className="rounded-xl overflow-hidden h-36 bg-[#FBEFEF] relative">
+                <div className="rounded-xl overflow-hidden h-36 bg-brand-bg-hero relative">
                   <iframe
                     title="Bakery Map"
                     src="https://www.openstreetmap.org/export/embed.html?bbox=-118.2711%2C34.0522%2C-118.2311%2C34.0722&layer=mapnik"
@@ -297,7 +297,7 @@ export default function About() {
                 <span className="font-montserrat text-xs font-semibold text-chocolate-800/50 uppercase tracking-widest">Follow Us</span>
                 <div className="flex gap-4">
                   {[Camera, ThumbsUp, Play].map((Icon, i) => (
-                    <a key={i} href="#" className="text-chocolate-800/40 hover:text-[#F5AFAF] transition-colors">
+                    <a key={i} href="#" className="text-chocolate-800/40 hover:text-brand-accent transition-colors">
                       <Icon size={18} strokeWidth={1.5} />
                     </a>
                   ))}

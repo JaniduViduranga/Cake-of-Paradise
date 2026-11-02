@@ -29,86 +29,96 @@ export default {
         '6xl': ['3.75rem', { lineHeight: '1.1', letterSpacing: '-0.04em' }],
       },
       colors: {
-        // ── Brand Palette Tokens ───────────────────────────────────────────
+        // ── Standardized WCAG AA Brand Palette Tokens ─────────────────────────
         brand: {
-          DEFAULT: '#F5AFAF',      // Primary Brand / CTA (F5AFAF)
-          cta: '#F5AFAF',          // Buttons, active tabs, brand accents
-          hover: '#EFA3A3',        // Primary Brand Hover
-          light: '#FBEFEF',        // Soft surface tint
+          'text-dark': '#2E1E1A',      // High-contrast headings and primary labels
+          'text-body': '#4A3F3D',      // Paragraphs, descriptions, input text
+          'text-muted': '#786C6A',     // Placeholders, captions, secondary metadata
+          'accent': '#C45B59',         // Emphasized heading words, badges, active tabs
+          'primary': '#E87A78',        // Main CTA button fill (+ Order Custom Cake)
+          'primary-hover': '#D16260',  // CTA hover & pressed states
+          'border-btn': '#DCA5A4',     // Secondary button outline & text (+ View Gallery)
+          'border': '#F0D5D4',         // Card borders, input field borders, dividers
+          'bg-hero': '#FFF5F4',        // Hero section background tint
+          'surface': '#FFFFFF',        // Card surfaces, modals, popovers
+          DEFAULT: '#E87A78',
+          cta: '#E87A78',
+          hover: '#D16260',
+          light: '#FFF5F4',
         },
         accent: {
-          DEFAULT: '#F5AFAF',      // Secondary / Accent (F5AFAF)
-          secondary: '#F9DFDF',    // Light Accent / Border (F9DFDF)
-          hover: '#EFA3A3',
+          DEFAULT: '#C45B59',
+          secondary: '#F0D5D4',
+          hover: '#D16260',
         },
         surface: {
-          main: '#FCF8F8',         // Background - Main (FCF8F8)
-          card: '#FCF8F8',         // Background - Card / Surface (FCF8F8)
-          soft: '#FBEFEF',         // Background - Subtle Tint (FBEFEF)
+          main: '#FFF5F4',
+          card: '#FFFFFF',
+          soft: '#FFF5F4',
         },
         divider: {
-          DEFAULT: '#F9DFDF',      // Borders & Dividers (F9DFDF)
-          border: '#F9DFDF',
+          DEFAULT: '#F0D5D4',
+          border: '#F0D5D4',
         },
         content: {
-          primary: '#3D2727',      // Text - Primary (Headings & Titles)
-          body: '#574A4A',         // Text - Body / Paragraphs
-          muted: '#857373',        // Text - Muted / Secondary
-          accent: '#F5AFAF',       // Accent Text (F5AFAF)
+          primary: '#2E1E1A',
+          body: '#4A3F3D',
+          muted: '#786C6A',
+          accent: '#C45B59',
         },
         status: {
-          success: '#48A111',      // Success / Status Green
-          error: '#E00000',        // Error / Alert Red
+          success: '#48A111',
+          error: '#E00000',
         },
 
-        // ── Unified Existing Theme Mapping ─────────────────────────────────
+        // ── Backward Compatible Theme Aliases ─────────────────────────────────
         cream: {
-          50: '#FCF8F8',           // Background - Main (FCF8F8)
-          100: '#FBEFEF',          // Surface Tint (FBEFEF)
-          200: '#FBEFEF',
-          300: '#F9DFDF',          // Borders & Dividers (F9DFDF)
-          400: '#F5AFAF',          // Primary Accent (F5AFAF)
-          500: '#F5AFAF',
+          50: '#FFF5F4',
+          100: '#FFF5F4',
+          200: '#FFF5F4',
+          300: '#F0D5D4',
+          400: '#E87A78',
+          500: '#C45B59',
         },
         chocolate: {
-          50: '#FCF8F8',
-          100: '#FBEFEF',
-          200: '#F9DFDF',
-          700: '#705E5E',
-          800: '#574A4A',          // Text - Body / Secondary
-          900: '#3D2727',          // Text - Primary (Headings & Titles)
-          950: '#261717',
+          50: '#FFF5F4',
+          100: '#FFF5F4',
+          200: '#F0D5D4',
+          700: '#786C6A',
+          800: '#4A3F3D',
+          900: '#2E1E1A',
+          950: '#1E1412',
         },
         caramel: {
-          50: '#FBEFEF',           // Card selection background tint (FBEFEF)
-          100: '#FBEFEF',
-          200: '#F9DFDF',
-          300: '#F9DFDF',          // Border accent (F9DFDF)
-          400: '#F5AFAF',
-          500: '#F5AFAF',
-          600: '#F5AFAF',          // Primary brand & active states (F5AFAF)
-          700: '#EFA3A3',
-          800: '#D88A8A',
+          50: '#FFF5F4',
+          100: '#FFF5F4',
+          200: '#F0D5D4',
+          300: '#F0D5D4',
+          400: '#E87A78',
+          500: '#E87A78',
+          600: '#C45B59',
+          700: '#D16260',
+          800: '#B84E4C',
         },
         rose: {
-          50: '#FCF8F8',
-          100: '#FBEFEF',
-          200: '#F9DFDF',
-          300: '#F9DFDF',
-          400: '#F5AFAF',
-          500: '#F5AFAF',
-          soft: '#FCF8F8',         // Card / Surface
-          blush: '#FBEFEF',        // Primary Hover / Soft background
-          border: '#F9DFDF',       // Borders & Dividers
-          muted: '#F9DFDF',
-          accent: '#F5AFAF',       // Accent
+          50: '#FFF5F4',
+          100: '#FFF5F4',
+          200: '#F0D5D4',
+          300: '#F0D5D4',
+          400: '#E87A78',
+          500: '#C45B59',
+          soft: '#FFFFFF',
+          blush: '#FFF5F4',
+          border: '#F0D5D4',
+          muted: '#F0D5D4',
+          accent: '#C45B59',
         },
         success: {
-          DEFAULT: '#48A111',      // Success / Status Green
+          DEFAULT: '#48A111',
           500: '#48A111',
         },
         error: {
-          DEFAULT: '#E00000',      // Error / Alert Red
+          DEFAULT: '#E00000',
           500: '#E00000',
         },
       },
@@ -117,8 +127,8 @@ export default {
         '3xl': '1.5rem',
       },
       boxShadow: {
-        'warm': '0 4px 20px -2px rgba(245, 175, 175, 0.25)',
-        'warm-lg': '0 12px 30px -4px rgba(245, 175, 175, 0.35)',
+        'warm': '0 4px 20px -2px rgba(232, 122, 120, 0.25)',
+        'warm-lg': '0 12px 30px -4px rgba(232, 122, 120, 0.35)',
       },
       animation: {
         'fade-in': 'fadeIn 0.4s ease-out',
@@ -140,7 +150,7 @@ export default {
         },
       },
       backgroundImage: {
-        'hero-gradient': 'linear-gradient(135deg, #FCF8F8 0%, #FBEFEF 50%, #FCF8F8 100%)',
+        'hero-gradient': 'linear-gradient(135deg, #FFF5F4 0%, #FFFFFF 50%, #FFF5F4 100%)',
       },
     },
   },
