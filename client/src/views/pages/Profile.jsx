@@ -72,11 +72,10 @@ export default function Profile() {
                   key={id}
                   id={`profile-tab-${id}`}
                   onClick={() => setActiveTab(id)}
-                  className={`w-full flex items-center gap-3 px-5 py-4 font-montserrat font-semibold text-sm transition-colors border-b border-gray-50 last:border-0 ${
-                    activeTab === id
-                      ? 'bg-cream-100 text-chocolate-900'
-                      : 'text-chocolate-800/60 hover:bg-cream-50 hover:text-chocolate-900'
-                  }`}
+                  className={`w-full flex items-center gap-3 px-5 py-4 font-montserrat font-semibold text-sm transition-colors border-b border-gray-50 last:border-0 ${activeTab === id
+                    ? 'bg-cream-100 text-chocolate-900'
+                    : 'text-chocolate-800/60 hover:bg-cream-50 hover:text-chocolate-900'
+                    }`}
                 >
                   <Icon size={16} strokeWidth={1.8} />
                   {label}
@@ -109,7 +108,7 @@ export default function Profile() {
                 {/* Personal Details */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="font-playfair font-bold text-2xl text-caramel-600">Personal Details</h2>
+                    <h2 className="font-playfair font-bold text-2xl text-brand-text-dark">Personal Details</h2>
                     {!editing ? (
                       <button
                         id="edit-profile-btn"
@@ -172,39 +171,26 @@ export default function Profile() {
                 {/* Saved Addresses */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
                   <div className="flex items-center justify-between mb-5">
-                    <h2 className="font-playfair font-bold text-2xl text-caramel-600">Saved Addresses</h2>
+                    <h2 className="font-playfair font-bold text-2xl text-brand-text-dark">Saved Addresses</h2>
                     <button className="flex items-center gap-1.5 font-montserrat text-xs font-semibold text-caramel-600 hover:text-caramel-700 transition-colors">
                       <Plus size={14} />
                       Add New
                     </button>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {(user?.addresses || []).length > 0 ? (
-                      user.addresses.map((addr) => (
-                        <div
-                          key={addr.id}
-                          className={`border rounded-xl p-4 ${
-                            addr.isDefault ? 'border-caramel-600/30 bg-cream-50' : 'border-gray-200 bg-white'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <p className="font-montserrat font-bold text-sm text-chocolate-900">{addr.label}</p>
-                            {addr.isDefault && (
-                              <span className="text-[10px] font-montserrat font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
-                                Default
-                              </span>
-                            )}
-                          </div>
-                          <p className="font-montserrat text-xs text-chocolate-800/60 leading-relaxed">
-                            {addr.street}<br />{addr.city}, {addr.state} {addr.zip}
-                          </p>
+                    {user.addresses.map((addr) => (
+                      <div key={addr.id} className={`border rounded-xl p-4 ${addr.isDefault ? 'border-caramel-600/30 bg-cream-50' : 'border-gray-200 bg-white'}`}>
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="font-montserrat font-bold text-sm text-chocolate-900">{addr.label}</p>
+                          {addr.isDefault && (
+                            <span className="text-[10px] font-montserrat font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">Default</span>
+                          )}
                         </div>
-                      ))
-                    ) : (
-                      <p className="font-montserrat text-xs text-chocolate-800/50 py-3 col-span-2">
-                        No saved delivery addresses yet. Add your preferred addresses for faster checkout.
-                      </p>
-                    )}
+                        <p className="font-montserrat text-xs text-chocolate-800/60 leading-relaxed">
+                          {addr.street}<br />{addr.city}, {addr.state} {addr.zip}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -213,7 +199,7 @@ export default function Profile() {
             {/* ── Active Order Tab ── */}
             {activeTab === 'active' && (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
-                <h2 className="font-playfair font-bold text-2xl text-caramel-600 mb-6">Active Order</h2>
+                <h2 className="font-playfair font-bold text-2xl text-brand-text-dark mb-6">Active Order</h2>
                 {activeOrder ? (
                   <div>
                     <div className="flex items-center justify-between mb-5">
@@ -234,22 +220,20 @@ export default function Profile() {
                           const isCurrent = i === activeOrder.currentStep;
                           return (
                             <div key={step} className="flex flex-col items-center flex-1">
-                              <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center z-10 ${
-                                isCompleted ? 'bg-caramel-600 border-caramel-600' : isCurrent ? 'bg-white border-caramel-600' : 'bg-white border-gray-200'
-                              }`}>
+                              <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center z-10 ${isCompleted ? 'bg-caramel-600 border-caramel-600' : isCurrent ? 'bg-white border-caramel-600' : 'bg-white border-gray-200'
+                                }`}>
                                 {isCompleted ? <Check size={14} className="text-white" /> : <div className={`w-2 h-2 rounded-full ${isCurrent ? 'bg-caramel-600' : 'bg-gray-200'}`} />}
                               </div>
                               <p className={`font-montserrat text-[10px] text-center mt-2 leading-tight max-w-[70px] ${isCurrent || isCompleted ? 'font-semibold text-chocolate-900' : 'text-chocolate-800/40'}`}>
                                 {step}
                               </p>
                               {i < activeOrder.steps.length - 1 && (
-                                <div className={`absolute top-4 h-0.5 transition-all duration-500 ${
-                                  isCompleted ? 'bg-caramel-600' : 'bg-gray-100'
-                                }`}
-                                style={{
-                                  left: `calc(${(i / (activeOrder.steps.length - 1)) * 100}% + 16px)`,
-                                  width: `calc(${(1 / (activeOrder.steps.length - 1)) * 100}% - 32px)`,
-                                }}
+                                <div className={`absolute top-4 h-0.5 transition-all duration-500 ${isCompleted ? 'bg-caramel-600' : 'bg-gray-100'
+                                  }`}
+                                  style={{
+                                    left: `calc(${(i / (activeOrder.steps.length - 1)) * 100}% + 16px)`,
+                                    width: `calc(${(1 / (activeOrder.steps.length - 1)) * 100}% - 32px)`,
+                                  }}
                                 />
                               )}
                             </div>
@@ -290,8 +274,8 @@ export default function Profile() {
             {/* ── Past Orders Tab ── */}
             {activeTab === 'past' && (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
-                <h2 className="font-playfair font-bold text-2xl text-caramel-600 mb-6">Order History</h2>
-                {(user?.orders || []).length > 0 ? (
+                <h2 className="font-playfair font-bold text-2xl text-brand-text-dark mb-6">Order History</h2>
+                {user.orders.length > 0 ? (
                   <div className="space-y-4">
                     {user.orders.map((order) => (
                       <div key={order.id} className="border border-gray-100 rounded-xl p-5 hover:shadow-sm transition-all duration-200">
