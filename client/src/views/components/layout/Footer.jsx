@@ -26,7 +26,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <Link to="/" className="font-playfair italic font-semibold text-2xl text-cream-50 mb-4 block hover:text-cream-200 transition-colors">
+            <Link to="/" className="font-playfair font-semibold text-2xl text-cream-50 mb-4 block hover:text-cream-200 transition-colors">
               Cake of Paradise
             </Link>
             <p className="font-montserrat text-sm text-cream-200/80 leading-relaxed mb-5">

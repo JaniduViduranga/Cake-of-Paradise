@@ -19,7 +19,11 @@ export function useProfileController() {
 
   const startEditing = () => {
     if (user) {
-      setEditForm({ name: user.name, email: user.email, phone: user.phone });
+      setEditForm({
+        name: user.fullName || user.name || '',
+        email: user.email || '',
+        phone: user.phone || '',
+      });
     }
     setEditing(true);
   };

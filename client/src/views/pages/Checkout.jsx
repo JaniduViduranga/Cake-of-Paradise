@@ -183,7 +183,7 @@ function CheckoutContent() {
     <div className="min-h-screen bg-cream-50 pt-16">
       {/* Logo Header */}
       <div className="bg-white border-b border-gray-100 py-4 text-center">
-        <p className="font-playfair italic font-semibold text-2xl text-caramel-600">Cake of Paradise</p>
+        <p className="font-playfair font-semibold text-2xl text-caramel-600">Cake of Paradise</p>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 lg:px-16 py-10">
@@ -380,7 +380,7 @@ function CheckoutContent() {
 
       {/* Secure Footer */}
       <div className="bg-chocolate-900 py-5 text-center mt-10">
-        <p className="font-playfair italic font-semibold text-lg text-cream-50 mb-1">Cake of Paradise</p>
+        <p className="font-playfair font-semibold text-lg text-cream-50 mb-1">Cake of Paradise</p>
         <div className="flex items-center justify-center gap-1.5 text-cream-200/50">
           <ShieldCheck size={13} />
           <span className="font-montserrat text-xs">Secure Checkout</span>
