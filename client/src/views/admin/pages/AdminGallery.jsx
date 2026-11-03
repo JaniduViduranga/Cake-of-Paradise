@@ -16,18 +16,12 @@ import {
 } from 'lucide-react';
 import {
   getGallery,
-  createGalleryItem,
   updateGalleryItem,
   deleteGalleryItem,
 } from '../../../services/api';
-import { GALLERY_ITEMS } from '../../../models/cakes';
+import GalleryUploadModal from '../GalleryUploadModal';
 
-const CATEGORIES = [
-  'Standard Cakes',
-  'Birthday Cakes',
-  'Wedding Cakes',
-  'Cupcakes',
-];
+const CATEGORIES = ['Standard', 'Birthday', 'Wedding Cake', 'Cupcake', 'Custom'];
 
 export default function AdminGallery() {
   const [galleryItems, setGalleryItems] = useState([]);
@@ -37,55 +31,32 @@ export default function AdminGallery() {
   const [toastMessage, setToastMessage] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   // Form State
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('Standard Cakes');
+  const [category, setCategory] = useState('Standard');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
   const [isFeatured, setIsFeatured] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [imageUrlInput, setImageUrlInput] = useState('');
   const [uploadMode, setUploadMode] = useState('file'); // 'file' or 'url'
 
   const fileInputRef = useRef(null);
 
-  // Load existing gallery items from API or fallback
+  // Load existing gallery items from API without hardcoded seeds
   const fetchGalleryItems = async () => {
     setLoading(true);
     setError('');
     try {
-      const res = await getGallery();
-      const items = res.data?.data || res.data?.items || [];
-      if (items.length > 0) {
-        setGalleryItems(items);
-      } else {
-        // Fallback to static seed items from cakes.js
-        const seedItems = GALLERY_ITEMS.map((item) => ({
-          _id: item.id,
-          id: item.id,
-          title: item.title,
-          image: item.image,
-          category: item.category === 'Cup Cakes' ? 'Cupcakes' : item.category,
-          description: 'Artisanal cake masterpiece crafted by Cake of Paradise.',
-          tags: [item.category],
-          isFeatured: false,
-        }));
-        setGalleryItems(seedItems);
-      }
+      const res = await getGallery({ limit: 100 });
+      const items = res.data?.images || res.data?.data || res.data?.items || [];
+      setGalleryItems(items);
     } catch (err) {
-      console.warn('Could not load gallery from backend, using default items:', err);
-      const seedItems = GALLERY_ITEMS.map((item) => ({
-        _id: item.id,
-        id: item.id,
-        title: item.title,
-        image: item.image,
-        category: item.category === 'Cup Cakes' ? 'Cupcakes' : item.category,
-        description: 'Artisanal cake masterpiece crafted by Cake of Paradise.',
-        tags: [item.category],
-        isFeatured: false,
-      }));
-      setGalleryItems(seedItems);
+      console.warn('Could not load gallery from backend:', err);
+      setGalleryItems([]);
     } finally {
       setLoading(false);
     }
@@ -110,6 +81,7 @@ export default function AdminGallery() {
       return;
     }
 
+    setSelectedFile(file);
     const reader = new FileReader();
     reader.onload = (event) => {
       setImagePreview(event.target.result);
@@ -122,6 +94,7 @@ export default function AdminGallery() {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith('image/')) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onload = (event) => {
         setImagePreview(event.target.result);
@@ -136,69 +109,99 @@ export default function AdminGallery() {
     const val = e.target.value;
     setImageUrlInput(val);
     setImagePreview(val);
+    setSelectedFile(null);
   };
 
-  // Submit new photo to gallery
+  // Submit new photo to gallery via Cloudinary
   const handleSubmitNewCake = async (e) => {
     e.preventDefault();
-    const finalImage = uploadMode === 'file' ? imagePreview : imageUrlInput;
 
     if (!title.trim()) {
       alert('Please enter a cake title.');
       return;
     }
-    if (!finalImage) {
+
+    let fileToUpload = selectedFile || fileInputRef.current?.files?.[0];
+
+    // If no direct file object but imagePreview is a data URI (base64)
+    if (!fileToUpload && imagePreview && imagePreview.startsWith('data:image/')) {
+      try {
+        const fetchRes = await fetch(imagePreview);
+        const blob = await fetchRes.blob();
+        fileToUpload = new File([blob], 'cake-photo.jpg', { type: blob.type || 'image/jpeg' });
+      } catch (e) {
+        console.warn('Failed to convert preview to File:', e);
+      }
+    } else if (!fileToUpload && imageUrlInput && uploadMode === 'url') {
+      try {
+        const fetchRes = await fetch(imageUrlInput);
+        const blob = await fetchRes.blob();
+        fileToUpload = new File([blob], 'cake-photo.jpg', { type: blob.type || 'image/jpeg' });
+      } catch (e) {
+        console.warn('Failed to fetch image URL:', e);
+      }
+    }
+
+    if (!fileToUpload && !imageUrlInput) {
       alert('Please provide or upload a cake image.');
       return;
     }
 
     setUploading(true);
     try {
-      const payload = {
-        title: title.trim(),
-        image: finalImage,
-        category,
-        description: description.trim(),
-        tags: tags
-          .split(',')
-          .map((t) => t.trim())
-          .filter(Boolean),
-        isFeatured,
-      };
+      const formData = new FormData();
+      formData.append('title', title.trim());
+      formData.append('category', category);
+      if (description.trim()) formData.append('description', description.trim());
+      if (tags.trim()) formData.append('tags', tags.trim());
+      formData.append('isFeatured', String(isFeatured));
 
-      const res = await createGalleryItem(payload);
-      const createdItem = res.data?.data || res.data?.item || {
-        _id: `g-${Date.now()}`,
-        ...payload,
-      };
+      if (fileToUpload) {
+        formData.append('image', fileToUpload);
+      } else if (imageUrlInput) {
+        formData.append('imageUrl', imageUrlInput.trim());
+      }
 
-      // Add to front of gallery list
-      setGalleryItems((prev) => [createdItem, ...prev]);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const res = await fetch(`${apiUrl}/gallery/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const responseText = await res.text();
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseErr) {
+        console.error('Server returned non-JSON response:', responseText);
+        throw new Error(
+          res.ok
+            ? 'Invalid response format received from server.'
+            : `Server responded with ${res.status}: ${res.statusText || 'Upload failed'}. Please ensure the backend server is running.`
+        );
+      }
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || 'Failed to upload cake image to Cloudinary.');
+      }
+
+      await fetchGalleryItems();
 
       // Reset form
       setTitle('');
       setDescription('');
+      setCategory('Standard');
       setTags('');
       setIsFeatured(false);
+      setSelectedFile(null);
       setImagePreview('');
       setImageUrlInput('');
       if (fileInputRef.current) fileInputRef.current.value = '';
 
-      showToast(`🎉 "${payload.title}" published to public gallery!`);
+      showToast(`🎉 "${title.trim()}" published to Cloudinary & live gallery!`);
     } catch (err) {
       console.error('Error publishing cake image:', err);
-      // Optimistic local add if server endpoint unavailable
-      const localItem = {
-        _id: `local-${Date.now()}`,
-        title: title.trim(),
-        image: finalImage,
-        category,
-        description: description.trim(),
-        tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
-        isFeatured,
-      };
-      setGalleryItems((prev) => [localItem, ...prev]);
-      showToast(`🎉 "${title}" added to gallery!`);
+      showToast(`❌ Error: ${err.message}`);
     } finally {
       setUploading(false);
     }
@@ -256,7 +259,10 @@ export default function AdminGallery() {
     return galleryItems.filter((item) => {
       const cat = (item.category || '').toLowerCase();
       const filter = categoryFilter.toLowerCase();
-      return cat.includes(filter) || filter.includes(cat);
+      if (filter.includes('wedding')) return cat.includes('wedding');
+      if (filter.includes('cupcake')) return cat.includes('cupcake');
+      if (filter.includes('standard')) return cat.includes('standard');
+      return cat === filter || cat.includes(filter) || filter.includes(cat);
     });
   }, [galleryItems, categoryFilter]);
 
@@ -281,15 +287,25 @@ export default function AdminGallery() {
           </p>
         </div>
 
-        <a
-          href="/gallery"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-caramel-600 hover:text-caramel-700 bg-cream-100 hover:bg-cream-200/80 px-3.5 py-2 rounded-xl transition-colors self-start sm:self-auto"
-        >
-          <span>View Live Public Gallery</span>
-          <ExternalLink size={13} />
-        </a>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setIsUploadModalOpen(true)}
+            className="btn-primary text-xs px-4 py-2.5 rounded-xl font-semibold flex items-center gap-2 cursor-pointer shadow-sm"
+          >
+            <Plus size={16} />
+            <span>Upload New Cake</span>
+          </button>
+          <a
+            href="/gallery"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-accent hover:text-brand-primary bg-brand-bg-hero hover:bg-brand-surface border border-brand-border px-3.5 py-2.5 rounded-xl transition-colors self-start sm:self-auto"
+          >
+            <span>View Live Public Gallery</span>
+            <ExternalLink size={13} />
+          </a>
+        </div>
       </div>
 
       {/* Upload New Cake Photo Card */}
@@ -372,6 +388,7 @@ export default function AdminGallery() {
                         onClick={(e) => {
                           e.stopPropagation();
                           setImagePreview('');
+                          setSelectedFile(null);
                           if (fileInputRef.current) fileInputRef.current.value = '';
                         }}
                         className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-rose-600 transition-colors"
@@ -421,6 +438,7 @@ export default function AdminGallery() {
                         type="button"
                         onClick={() => {
                           setImagePreview('');
+                          setSelectedFile(null);
                           setImageUrlInput('');
                         }}
                         className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-rose-600 transition-colors"
@@ -605,8 +623,9 @@ export default function AdminGallery() {
                   {/* Image Container with Badges */}
                   <div className="relative aspect-4/3 overflow-hidden bg-gray-100">
                     <img
-                      src={item.image}
+                      src={item.imageUrl || item.image}
                       alt={item.title}
+                      loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
 
@@ -718,6 +737,16 @@ export default function AdminGallery() {
           </div>
         )}
       </div>
+
+      {/* Dynamic Cloudinary Upload Modal */}
+      <GalleryUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onSuccess={() => {
+          fetchGalleryItems();
+          showToast('🎉 New cake design uploaded to Cloudinary & published!');
+        }}
+      />
     </div>
   );
 }

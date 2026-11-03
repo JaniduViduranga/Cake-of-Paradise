@@ -7,15 +7,28 @@ const gallerySchema = new Schema(
       required: true,
       trim: true,
     },
-    image: {
-      type: String,
-      required: true,
-    },
     category: {
       type: String,
       required: true,
-      enum: ['Standard', 'Standard Cakes', 'Birthday Cakes', 'Wedding Cakes', 'Cupcakes', 'Cup Cakes', 'Other'],
-      default: 'Standard Cakes',
+      enum: [
+        'Standard',
+        'Birthday',
+        'Wedding Cake',
+        'Cupcake',
+        'Custom',
+        'Wedding',
+        'Cupcakes',
+        'Anniversary',
+      ],
+      default: 'Standard',
+    },
+    imageUrl: {
+      type: String,
+      required: true,
+    },
+    publicId: {
+      type: String,
+      required: true,
     },
     description: {
       type: String,
@@ -33,8 +46,14 @@ const gallerySchema = new Schema(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 
-export default model('Gallery', gallerySchema, 'gallery');
+// Virtual alias 'image' -> 'imageUrl' for backward compatibility
+gallerySchema.virtual('image').get(function () {
+  return this.imageUrl;
+});
 
+export default model('Gallery', gallerySchema, 'gallery');

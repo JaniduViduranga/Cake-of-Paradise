@@ -1,147 +1,225 @@
 import Gallery from '../models/Gallery.js';
+import { cloudinary } from '../config/cloudinary.js';
 
-// Default gallery items if database is freshly started
-const DEFAULT_GALLERY_SEEDS = [
-  {
-    title: 'Vintage Heart Lace',
-    image: 'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=600&auto=format&fit=crop',
-    category: 'Birthday Cakes',
-    description: 'Delicate piping and vintage buttercream lace finish',
-    tags: ['Vintage', 'Buttercream', 'Lace'],
-    isFeatured: true,
-  },
-  {
-    title: 'Elegant White Tiered',
-    image: 'https://images.unsplash.com/photo-1549040132-3922d9d16562?w=600&auto=format&fit=crop',
-    category: 'Wedding Cakes',
-    description: '3-tier white fondant with fresh floral arrangement',
-    tags: ['Wedding', 'Floral', 'Tiered'],
-    isFeatured: true,
-  },
-  {
-    title: 'Wonderland Book Stack',
-    image: 'https://images.unsplash.com/photo-1587668178277-295251f900ce?w=600&auto=format&fit=crop',
-    category: 'Standard Cakes',
-    description: 'Hand-sculpted fondant books with edible gold paint',
-    tags: ['Sculpted', 'Standard', 'Book'],
-    isFeatured: false,
-  },
-  {
-    title: 'Pastel Macaroon Stack',
-    image: 'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=600&auto=format&fit=crop',
-    category: 'Cupcakes',
-    description: 'Assorted pastel cupcakes topped with macarons',
-    tags: ['Cupcakes', 'Macarons', 'Pastel'],
-    isFeatured: true,
-  },
-];
+/**
+ * Normalizes input category to match Mongoose schema enum:
+ * ['Standard', 'Birthday', 'Wedding Cake', 'Cupcake', 'Custom']
+ */
+const normalizeCategory = (cat) => {
+  if (!cat) return 'Standard';
+  const lower = cat.trim().toLowerCase();
+  if (lower.includes('wedding')) return 'Wedding Cake';
+  if (lower.includes('birthday')) return 'Birthday';
+  if (lower.includes('cupcake')) return 'Cupcake';
+  if (lower.includes('custom')) return 'Custom';
+  if (lower.includes('standard')) return 'Standard';
+  const valid = ['Standard', 'Birthday', 'Wedding Cake', 'Cupcake', 'Custom'];
+  const match = valid.find((v) => v.toLowerCase() === lower);
+  return match || 'Standard';
+};
 
-export async function getAllGallery(req, res) {
+/**
+ * Uploads a single image to Cloudinary via Multer and creates MongoDB Gallery record.
+ * POST /api/gallery/upload
+ */
+export async function uploadGalleryImage(req, res) {
   try {
-    const { category, featured } = req.query;
-    const filter = {};
+    let imageUrl = req.file?.path || req.file?.secure_url || req.file?.url;
+    let publicId = req.file?.filename || req.file?.public_id;
 
-    if (category && category !== 'All') {
-      filter.category = new RegExp(category, 'i');
-    }
-    if (featured === 'true') {
-      filter.isFeatured = true;
-    }
-
-    let items = await Gallery.find(filter).sort({ createdAt: -1 });
-
-    // Seed defaults if totally empty
-    if ((!items || items.length === 0) && !category && !featured) {
-      try {
-        await Gallery.insertMany(DEFAULT_GALLERY_SEEDS);
-        items = await Gallery.find().sort({ createdAt: -1 });
-      } catch (seedErr) {
-        console.warn('Could not auto-seed gallery:', seedErr.message);
-        items = DEFAULT_GALLERY_SEEDS;
-      }
+    // Fallback if imageUrl is provided directly
+    if (!imageUrl && req.body.imageUrl) {
+      imageUrl = req.body.imageUrl.trim();
+      publicId = `external_${Date.now()}`;
     }
 
-    res.status(200).json({
-      success: true,
-      count: items.length,
-      data: items,
-      items,
-    });
-  } catch (error) {
-    console.error('Error fetching gallery items:', error);
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Server error fetching gallery items.',
-      data: DEFAULT_GALLERY_SEEDS,
-    });
-  }
-}
+    if (!imageUrl) {
+      return res.status(400).json({
+        success: false,
+        message: 'No image file uploaded. Please attach an image file.',
+      });
+    }
 
-export async function createGalleryItem(req, res) {
-  try {
-    const { title, image, category, description, tags, isFeatured } = req.body;
+    const { title, category, description, tags, isFeatured } = req.body;
 
     if (!title || !title.trim()) {
-      return res.status(400).json({ success: false, message: 'Cake title is required.' });
+      return res.status(400).json({
+        success: false,
+        message: 'Image title is required.',
+      });
     }
-    if (!image) {
-      return res.status(400).json({ success: false, message: 'Cake image is required.' });
+
+    if (!publicId) {
+      publicId = `gallery_${Date.now()}`;
     }
 
     // Process tags
     let parsedTags = [];
     if (Array.isArray(tags)) {
       parsedTags = tags.map((t) => String(t).trim()).filter(Boolean);
-    } else if (typeof tags === 'string') {
+    } else if (typeof tags === 'string' && tags.trim()) {
       parsedTags = tags.split(',').map((t) => t.trim()).filter(Boolean);
     }
 
-    const newItem = await Gallery.create({
+    const newImage = await Gallery.create({
       title: title.trim(),
-      image,
-      category: category || 'Standard Cakes',
+      category: normalizeCategory(category),
       description: (description || '').trim(),
       tags: parsedTags,
-      isFeatured: Boolean(isFeatured),
+      isFeatured: isFeatured === true || isFeatured === 'true',
+      imageUrl,
+      publicId,
     });
 
     res.status(201).json({
       success: true,
-      message: 'Cake photo published to gallery successfully!',
-      data: newItem,
-      item: newItem,
+      message: 'Image uploaded to Cloudinary and saved to gallery!',
+      image: newImage,
+      data: newImage,
     });
   } catch (error) {
-    console.error('Error creating gallery item:', error);
+    console.error('[GalleryController] Error uploading gallery image:', error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Server error saving gallery item.',
+      message: error.message || 'Server error while uploading gallery image.',
     });
   }
 }
 
-export async function updateGalleryItem(req, res) {
+/**
+ * Retrieves paginated gallery images from MongoDB, optionally filtered by category.
+ * Sorted descending by createdAt (latest first).
+ * GET /api/gallery?page=1&limit=8&category=Wedding
+ */
+export async function getGallery(req, res) {
   try {
-    const { id } = req.params;
-    const updates = req.body;
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.max(1, parseInt(req.query.limit, 10) || 12);
+    const { category } = req.query;
 
-    if (typeof updates.tags === 'string') {
-      updates.tags = updates.tags.split(',').map((t) => t.trim()).filter(Boolean);
+    const filter = {};
+    if (category && category !== 'All') {
+      const lower = category.trim().toLowerCase();
+      if (lower.includes('wedding')) {
+        filter.category = new RegExp('^(Wedding Cake|Wedding)$', 'i');
+      } else if (lower.includes('cupcake')) {
+        filter.category = new RegExp('^(Cupcake|Cupcakes)$', 'i');
+      } else if (lower.includes('standard')) {
+        filter.category = new RegExp('^(Standard|Standard Cakes)$', 'i');
+      } else {
+        filter.category = new RegExp(`^${category}$`, 'i');
+      }
     }
 
-    const updated = await Gallery.findByIdAndUpdate(id, updates, { new: true });
-    if (!updated) {
-      return res.status(404).json({ success: false, message: 'Gallery item not found.' });
-    }
+    const totalImages = await Gallery.countDocuments(filter);
+    const totalPages = Math.ceil(totalImages / limit) || 1;
+    const skip = (page - 1) * limit;
+
+    const images = await Gallery.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     res.status(200).json({
       success: true,
-      message: 'Gallery item updated successfully!',
-      data: updated,
-      item: updated,
+      images,
+      data: images, // backward compatibility
+      items: images, // backward compatibility
+      currentPage: page,
+      totalPages,
+      totalImages,
+      count: images.length,
     });
   } catch (error) {
-    console.error('Error updating gallery item:', error);
+    console.error('[GalleryController] Error fetching gallery:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Server error fetching gallery images.',
+    });
+  }
+}
+
+/**
+ * Retrieves random gallery images for the Home Page hero slider.
+ * Uses MongoDB $sample aggregation to pick random images from uploaded gallery items.
+ * GET /api/gallery/random?count=6
+ */
+export async function getRandomGalleryImages(req, res) {
+  try {
+    const count = Math.max(1, parseInt(req.query.count || req.query.limit, 10) || 6);
+
+    const randomDocs = await Gallery.aggregate([
+      { $sample: { size: count } },
+    ]);
+
+    const normalized = randomDocs.map((doc) => ({
+      _id: doc._id,
+      id: doc._id,
+      title: doc.title,
+      category: doc.category,
+      imageUrl: doc.imageUrl,
+      image: doc.imageUrl,
+      description: doc.description || '',
+      tags: doc.tags || [],
+      isFeatured: doc.isFeatured || false,
+      createdAt: doc.createdAt,
+    }));
+
+    res.status(200).json({
+      success: true,
+      images: normalized,
+      data: normalized,
+      count: normalized.length,
+    });
+  } catch (error) {
+    console.error('[GalleryController] Error fetching random gallery:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Server error fetching random gallery images.',
+      images: [],
+    });
+  }
+}
+
+/**
+ * Updates a gallery image record in MongoDB (e.g. toggle isFeatured, title, description, category, tags).
+ * PATCH /api/gallery/:id
+ */
+export async function updateGalleryImage(req, res) {
+  try {
+    const { id } = req.params;
+    const { title, category, description, tags, isFeatured } = req.body;
+
+    const item = await Gallery.findById(id);
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: 'Image not found.',
+      });
+    }
+
+    if (title !== undefined) item.title = title.trim();
+    if (category !== undefined) item.category = normalizeCategory(category);
+    if (description !== undefined) item.description = description.trim();
+    if (isFeatured !== undefined) item.isFeatured = isFeatured === true || isFeatured === 'true';
+    if (tags !== undefined) {
+      if (Array.isArray(tags)) {
+        item.tags = tags.map((t) => String(t).trim()).filter(Boolean);
+      } else if (typeof tags === 'string') {
+        item.tags = tags.split(',').map((t) => t.trim()).filter(Boolean);
+      }
+    }
+
+    await item.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Gallery item updated successfully.',
+      image: item,
+      data: item,
+    });
+  } catch (error) {
+    console.error('[GalleryController] Error updating gallery item:', error);
     res.status(500).json({
       success: false,
       message: error.message || 'Server error updating gallery item.',
@@ -149,25 +227,43 @@ export async function updateGalleryItem(req, res) {
   }
 }
 
-export async function deleteGalleryItem(req, res) {
+/**
+ * Deletes an image document from MongoDB and destroys its physical asset on Cloudinary.
+ * DELETE /api/gallery/:id
+ */
+export async function deleteGalleryImage(req, res) {
   try {
     const { id } = req.params;
-    const deleted = await Gallery.findByIdAndDelete(id);
+    const item = await Gallery.findById(id);
 
-    if (!deleted) {
-      return res.status(404).json({ success: false, message: 'Gallery item not found.' });
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: 'Image not found.',
+      });
     }
+
+    // Delete physical asset from Cloudinary
+    if (item.publicId) {
+      try {
+        await cloudinary.uploader.destroy(item.publicId);
+      } catch (cloudErr) {
+        console.warn(`[GalleryController] Cloudinary asset destruction failed for ${item.publicId}:`, cloudErr.message);
+      }
+    }
+
+    // Delete document from MongoDB
+    await item.deleteOne();
 
     res.status(200).json({
       success: true,
-      message: 'Cake design removed from gallery successfully.',
+      message: 'Image deleted successfully',
     });
   } catch (error) {
-    console.error('Error deleting gallery item:', error);
+    console.error('[GalleryController] Error deleting gallery image:', error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Server error deleting gallery item.',
+      message: error.message || 'Server error deleting gallery image.',
     });
   }
 }
-

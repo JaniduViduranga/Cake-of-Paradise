@@ -16,7 +16,7 @@ export default function GalleryCard({ item, onOpen }) {
       aria-label={`View ${item.title}`}
     >
       <img
-        src={item.image}
+        src={item.imageUrl || item.image}
         alt={item.title}
         className={`w-full h-auto block transition-transform duration-500 ${
           hovered ? 'scale-110' : 'scale-100'
