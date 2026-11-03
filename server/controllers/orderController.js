@@ -20,6 +20,7 @@ export async function createOrder(req, res) {
       email,
       firstName,
       lastName,
+      phone,
       address,
       city,
       state,
@@ -31,11 +32,16 @@ export async function createOrder(req, res) {
       email,
       firstName,
       lastName,
+      phone: phone || '',
       address: address || '',
       city: city || '',
       state: state || '',
       zip: zip || '',
     };
+
+    if (customerDetails && phone && !customerDetails.phone) {
+      resolvedCustomer.phone = phone;
+    }
 
     if (!resolvedCustomer.email || !resolvedCustomer.firstName || !resolvedCustomer.lastName) {
       return res.status(400).json({
@@ -150,5 +156,88 @@ export async function getAllOrders(req, res) {
       message: error.message || 'Server error while fetching orders.',
       error: error.message,
     });
+  }
+}
+
+// Update order status in real time
+export async function updateOrderStatus(req, res) {
+  try {
+    const { id } = req.params;
+    const { orderStatus } = req.body;
+
+    const validStatuses = [
+      'Received',
+      'Baking',
+      'Decorating',
+      'Ready for Delivery/Pickup',
+      'Completed',
+      'Cancelled',
+    ];
+
+    if (!validStatuses.includes(orderStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid order status. Allowed statuses: ${validStatuses.join(', ')}`,
+      });
+    }
+
+    // Try finding by _id or by orderNumber
+    let updatedOrder = null;
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      updatedOrder = await Order.findByIdAndUpdate(
+        id,
+        { orderStatus },
+        { new: true }
+      );
+    } else {
+      updatedOrder = await Order.findOneAndUpdate(
+        { orderNumber: id },
+        { orderStatus },
+        { new: true }
+      );
+    }
+
+    if (!updatedOrder) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found.',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Order status updated to "${orderStatus}" successfully.`,
+      order: updatedOrder,
+      data: updatedOrder,
+    });
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Server error while updating order status.',
+      error: error.message,
+    });
+  }
+}
+
+// Delete an order (Admin management)
+export async function deleteOrder(req, res) {
+  try {
+    const { id } = req.params;
+    let deleted = null;
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      deleted = await Order.findByIdAndDelete(id);
+    } else {
+      deleted = await Order.findOneAndDelete({ orderNumber: id });
+    }
+
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: 'Order not found.' });
+    }
+
+    res.status(200).json({ success: true, message: 'Order deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({ success: false, message: 'Server error while deleting order.' });
   }
 }

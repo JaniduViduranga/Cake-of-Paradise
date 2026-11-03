@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './views/components/layout/Navbar';
@@ -11,36 +11,19 @@ import About from './views/pages/About';
 import Checkout from './views/pages/Checkout';
 import Profile from './views/pages/Profile';
 
-function AppLayout() {
+// Admin imports
+import AdminLayout from './views/admin/layouts/AdminLayout';
+import AdminDashboard from './views/admin/pages/AdminDashboard';
+import AdminOrders from './views/admin/pages/AdminOrders';
+import AdminGallery from './views/admin/pages/AdminGallery';
+import AdminPricing from './views/admin/pages/AdminPricing';
+
+function PublicStoreLayout() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/custom-order" element={<CustomOrder />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<About />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/profile" element={<Profile />} />
-          {/* 404 Fallback */}
-          <Route
-            path="*"
-            element={
-              <div className="min-h-screen flex flex-col items-center justify-center bg-cream-50 px-6 text-center">
-                <div className="text-8xl mb-6">🎂</div>
-                <h1 className="font-playfair font-bold text-5xl text-chocolate-900 mb-4">404</h1>
-                <p className="font-montserrat text-lg text-chocolate-800/60 mb-8">
-                  Oops! This page seems to have crumbled away.
-                </p>
-                <a href="/" className="btn-primary">
-                  Back to Home
-                </a>
-              </div>
-            }
-          />
-        </Routes>
+        <Outlet />
       </main>
       <Footer />
       <LoginModal />
@@ -53,7 +36,44 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
-          <AppLayout />
+          <Routes>
+            {/* Public Storefront Routes */}
+            <Route element={<PublicStoreLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/custom-order" element={<CustomOrder />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<About />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+
+            {/* Admin Portal Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="gallery" element={<AdminGallery />} />
+              <Route path="pricing" element={<AdminPricing />} />
+            </Route>
+
+            {/* 404 Fallback */}
+            <Route
+              path="*"
+              element={
+                <div className="min-h-screen flex flex-col items-center justify-center bg-cream-50 px-6 text-center">
+                  <div className="text-8xl mb-6">🎂</div>
+                  <h1 className="font-playfair font-bold text-5xl text-chocolate-900 mb-4">404</h1>
+                  <p className="font-montserrat text-lg text-chocolate-800/60 mb-8">
+                    Oops! This page seems to have crumbled away.
+                  </p>
+                  <a href="/" className="btn-primary">
+                    Back to Home
+                  </a>
+                </div>
+              }
+            />
+          </Routes>
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>

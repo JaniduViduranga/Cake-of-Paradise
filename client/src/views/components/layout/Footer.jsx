@@ -11,10 +11,10 @@ const FOOTER_LINKS = {
     { label: 'Wholesale', href: '#' },
   ],
   'Quick Links': [
-    { label: 'Menu', to: '/menu' },
     { label: 'Gallery', to: '/gallery' },
     { label: 'Custom Order', to: '/custom-order' },
     { label: 'About & Contact', to: '/about' },
+    { label: 'Admin Portal', to: '/admin' },
   ],
 };
 
@@ -48,23 +48,13 @@ export default function Footer() {
                 123 Artisanal Avenue, Pastry District<br />Sweetville, CA 90210
               </p>
             </div>
-            {/* WhatsApp CTA */}
-            <a
-              href="https://wa.me/15551234567"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-montserrat font-semibold text-xs tracking-wide px-4 py-2.5 rounded-lg transition-all duration-200 hover:shadow-md"
-            >
-              <MessageCircle size={15} />
-              Chat on WhatsApp
-            </a>
           </div>
 
-          {/* Link Columns */}
-          {Object.entries(FOOTER_LINKS).map(([title, links]) => (
-            <div key={title}>
-              <h4 className="font-montserrat font-semibold text-xs tracking-widest uppercase text-cream-50 mb-4">
-                {title}
+          {/* Links Columns */}
+          {Object.entries(FOOTER_LINKS).map(([heading, links]) => (
+            <div key={heading}>
+              <h4 className="font-playfair font-semibold text-cream-50 text-base mb-4">
+                {heading}
               </h4>
               <ul className="space-y-2.5">
                 {links.map((link) => (
@@ -72,14 +62,17 @@ export default function Footer() {
                     {link.to ? (
                       <Link
                         to={link.to}
-                        className="font-montserrat text-sm text-cream-200/70 hover:text-cream-200 transition-colors"
+                        className="font-montserrat text-xs text-cream-200/70 hover:text-white transition-colors flex items-center gap-1.5"
                       >
                         {link.label}
+                        {link.label === 'Admin Portal' && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-caramel-600 text-white">Chef</span>
+                        )}
                       </Link>
                     ) : (
                       <a
                         href={link.href}
-                        className="font-montserrat text-sm text-cream-200/70 hover:text-cream-200 transition-colors"
+                        className="font-montserrat text-xs text-cream-200/70 hover:text-white transition-colors"
                       >
                         {link.label}
                       </a>
@@ -91,28 +84,17 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-cream-50/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-montserrat text-xs text-cream-200/50 text-center sm:text-left">
-            © 2024 Cake of Paradise. Artisanally Crafted.
-          </p>
-          {/* Social Icons */}
+        {/* Bottom bar */}
+        <div className="pt-6 border-t border-cream-200/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-montserrat text-cream-200/50">
+          <p>© {new Date().getFullYear()} Cake of Paradise. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <span className="font-montserrat text-xs text-cream-200/50 uppercase tracking-widest">Follow Us</span>
-            {[
-              { Icon: Camera, label: 'Instagram', href: '#' },
-              { Icon: ThumbsUp, label: 'Facebook', href: '#' },
-              { Icon: Play, label: 'YouTube', href: '#' },
-            ].map(({ Icon, label, href }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                className="text-cream-200/50 hover:text-cream-200 transition-colors"
-              >
-                <Icon size={18} strokeWidth={1.5} />
-              </a>
-            ))}
+            <Link to="/admin" className="hover:text-cream-200 text-caramel-400 font-semibold">
+              Admin Portal
+            </Link>
+            <span>•</span>
+            <a href="#" className="hover:text-cream-200">Terms & Conditions</a>
+            <span>•</span>
+            <a href="#" className="hover:text-cream-200">Privacy Policy</a>
           </div>
         </div>
       </div>
