@@ -1,4 +1,5 @@
 import Order from '../models/Order.js';
+import paymentService from '../services/payment/index.js';
 
 // Create new order with payment confirmation and customer details
 export async function createOrder(req, res) {
@@ -10,6 +11,8 @@ export async function createOrder(req, res) {
       financials,
       paymentInfo,
       paymentIntentId,
+      transactionId: directTransactionId,
+      paymentProvider,
       paymentStatus,
       paymentMethod,
       subtotal,
@@ -75,19 +78,48 @@ export async function createOrder(req, res) {
       finalTotal: Number(finalTotal || totalPrice || 0),
     };
 
-    // Resolve payment info
-    const resolvedPaymentInfo = paymentInfo || {
-      paymentMethod: paymentMethod || 'credit',
-      paymentStatus: paymentStatus || 'Paid',
-      paymentIntentId: paymentIntentId || req.body.paymentIntent?.id,
-    };
+    // Extract transaction / payment confirmation identifier
+    const targetTransactionId =
+      directTransactionId ||
+      paymentIntentId ||
+      paymentInfo?.transactionId ||
+      paymentInfo?.paymentIntentId ||
+      req.body.paymentIntent?.id;
 
-    if (!resolvedPaymentInfo.paymentIntentId) {
+    const requestedProvider =
+      paymentProvider ||
+      paymentInfo?.paymentProvider ||
+      paymentService.getProviderName();
+
+    if (!targetTransactionId) {
       return res.status(400).json({
         success: false,
-        message: 'A verified Stripe paymentIntentId is required.',
+        message: 'A verified payment transaction ID is required to complete the order.',
       });
     }
+
+    // Verify transaction with the decoupled PaymentService gateway adapter
+    const verification = await paymentService.confirmPayment(targetTransactionId);
+
+    if (!verification || !verification.success) {
+      return res.status(400).json({
+        success: false,
+        message: 'Payment verification failed with the gateway. Order could not be created.',
+        error: verification?.error || 'Unconfirmed payment transaction.',
+        transactionId: targetTransactionId,
+        provider: verification?.provider || requestedProvider,
+      });
+    }
+
+    // Build verified paymentInfo attached to order
+    const resolvedPaymentInfo = {
+      paymentMethod: paymentMethod || paymentInfo?.paymentMethod || 'credit',
+      paymentStatus: verification.status || 'PAID',
+      transactionId: verification.transactionId || targetTransactionId,
+      paymentIntentId: verification.transactionId || targetTransactionId, // backward compatibility
+      paymentProvider: verification.provider || requestedProvider,
+      providerMetadata: verification.providerMetadata || null,
+    };
 
     // Generate unique order number: ORD-<timestamp-slice>-<random>
     let orderNumber = req.body.orderNumber;
@@ -126,7 +158,7 @@ export async function createOrder(req, res) {
 
     res.status(201).json({
       success: true,
-      message: 'Order created and persisted successfully!',
+      message: 'Order verified and persisted successfully!',
       order: newOrder,
     });
   } catch (error) {
