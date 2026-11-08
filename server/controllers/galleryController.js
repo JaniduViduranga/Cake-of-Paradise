@@ -267,3 +267,9 @@ export async function deleteGalleryImage(req, res) {
     });
   }
 }
+
+// Backward-compatibility aliases
+export const createGalleryItem = uploadGalleryImage;
+export const getAllGallery = getGallery;
+export const updateGalleryItem = updateGalleryImage;
+export const deleteGalleryItem = deleteGalleryImage;
