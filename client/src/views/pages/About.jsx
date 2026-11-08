@@ -242,7 +242,7 @@ export default function About() {
                   <div>
                     <h4 className="font-montserrat font-bold text-sm text-chocolate-900 mb-1">Our Bakery</h4>
                     <p className="font-montserrat text-sm text-chocolate-800/60 leading-relaxed">
-                      123 Artisanal Avenue<br />Pastry District<br />Sweetville, CA 90210
+                      Rathaba para, Abagasdoowa,<br />Welimada, Sri Lanka
                     </p>
                   </div>
                 </div>
@@ -273,7 +273,7 @@ export default function About() {
                 <div className="rounded-xl overflow-hidden h-36 bg-brand-bg-hero relative">
                   <iframe
                     title="Bakery Map"
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=-118.2711%2C34.0522%2C-118.2311%2C34.0722&layer=mapnik"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=80.8800%2C6.8850%2C80.9200%2C6.9200&layer=mapnik&marker=6.9038%2C80.8986"
                     className="w-full h-full border-0"
                     loading="lazy"
                   />
