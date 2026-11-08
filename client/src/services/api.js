@@ -39,7 +39,9 @@ export const getCategories = () => api.get('/categories');
 
 // ── Gallery ────────────────────────────────────────────────────────
 export const getGallery = (params) => api.get('/gallery', { params });
-export const createGalleryItem = (payload) => api.post('/gallery', payload);
+export const getRandomGallery = (params) => api.get('/gallery/random', { params });
+export const uploadGalleryImage = (formData) => api.post('/gallery/upload', formData);
+export const createGalleryItem = (payload) => api.post('/gallery/upload', payload);
 export const updateGalleryItem = (id, payload) => api.patch(`/gallery/${id}`, payload);
 export const deleteGalleryItem = (id) => api.delete(`/gallery/${id}`);
 

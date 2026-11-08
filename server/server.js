@@ -50,5 +50,23 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Catch-all 404 for unhandled API routes (ensures JSON response, never HTML)
+app.use('/api', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `API route not found: ${req.method} ${req.originalUrl}`,
+  });
+});
+
+// Global error handling middleware (ensures JSON response, never HTML)
+app.use((err, req, res, next) => {
+  console.error('[ServerError] Global error handler caught:', err);
+  const status = err.status || err.statusCode || 500;
+  res.status(status).json({
+    success: false,
+    message: err.message || 'Internal Server Error',
+  });
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on http://127.0.0.1:${PORT}`));

@@ -2,68 +2,90 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import SectionHeading from '../components/common/SectionHeading';
-import { CAKES, BAKER_VALUES } from '../../models/cakes';
-import HomePageImage from '../../assets/HomePageImage.jpg';
-
-// Gallery images for the slide bar
-const HERO_SLIDES = [
-  {
-    id: 'slide-masterpiece',
-    name: 'Grand Celebration Showpiece',
-    category: 'Featured Masterpiece',
-    image: HomePageImage,
-  },
-  {
-    id: 'slide-001',
-    name: CAKES[0]?.name || 'Midnight Chocolate Truffle',
-    category: CAKES[0]?.category || 'Birthday Cakes',
-    image: CAKES[0]?.image,
-  },
-  {
-    id: 'slide-002',
-    name: CAKES[1]?.name || 'Classic Vanilla Bean Rose',
-    category: CAKES[1]?.category || 'Tiered Wedding',
-    image: CAKES[1]?.image,
-  },
-  {
-    id: 'slide-003',
-    name: CAKES[2]?.name || 'Summer Berry Chantilly',
-    category: CAKES[2]?.category || 'Signature Cakes',
-    image: CAKES[2]?.image,
-  },
-  {
-    id: 'slide-004',
-    name: CAKES[3]?.name || 'Red Velvet Dream',
-    category: CAKES[3]?.category || 'Celebration Cakes',
-    image: CAKES[3]?.image,
-  },
-  {
-    id: 'slide-005',
-    name: CAKES[4]?.name || 'Lemon Citrus Delight',
-    category: CAKES[4]?.category || 'Artisanal Flavors',
-    image: CAKES[4]?.image,
-  },
-];
+import { BAKER_VALUES } from '../../models/cakes';
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [heroSlides, setHeroSlides] = useState([]);
+  const [sliderLoading, setSliderLoading] = useState(true);
+  const [latestGallery, setLatestGallery] = useState([]);
+  const [galleryLoading, setGalleryLoading] = useState(true);
 
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+  // 1. Fetch Randomly Picked Gallery Images for Home Page Hero Slider
   useEffect(() => {
-    if (isPaused) return;
+    let isCancelled = false;
+    const fetchHeroSlides = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/gallery/random?count=6`);
+        const data = await res.json();
+        if (!isCancelled && data.success && data.images && data.images.length > 0) {
+          setHeroSlides(
+            data.images.map((item) => ({
+              id: item._id || item.id,
+              name: item.title,
+              category: item.category || 'Artisanal',
+              image: item.imageUrl || item.image,
+            }))
+          );
+        }
+      } catch (err) {
+        console.warn('Could not load random hero slider images:', err);
+      } finally {
+        if (!isCancelled) setSliderLoading(false);
+      }
+    };
+    fetchHeroSlides();
+    return () => {
+      isCancelled = true;
+    };
+  }, [apiUrl]);
+
+  // 2. Fetch Latest 8 Gallery Images for Home Page Inspiration Gallery
+  useEffect(() => {
+    let isCancelled = false;
+    const fetchLatestGallery = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/gallery?limit=8`);
+        const data = await res.json();
+        if (!isCancelled && data.success && data.images) {
+          setLatestGallery(data.images);
+        }
+      } catch (err) {
+        console.warn('Could not load latest gallery creations:', err);
+      } finally {
+        if (!isCancelled) setGalleryLoading(false);
+      }
+    };
+    fetchLatestGallery();
+    return () => {
+      isCancelled = true;
+    };
+  }, [apiUrl]);
+
+  // Autoplay hero slider
+  useEffect(() => {
+    if (isPaused || heroSlides.length <= 1) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 4500);
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [isPaused, heroSlides.length]);
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+    if (heroSlides.length === 0) return;
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    if (heroSlides.length === 0) return;
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
   };
+
+  const activeIndex = heroSlides.length > 0 ? currentSlide % heroSlides.length : 0;
+  const currentItem = heroSlides[activeIndex];
 
   return (
     <div className="min-h-screen bg-brand-bg-hero">
@@ -75,22 +97,29 @@ export default function Home() {
       >
         {/* ── Background Image Slider (Positioned on the Right Half with Feathered & Shaded Edge) ── */}
         <div className="absolute top-0 bottom-0 right-0 w-full md:w-[58%] lg:w-[54%] overflow-hidden pointer-events-none hero-slider-mask">
-          {HERO_SLIDES.map((slide, index) => {
-            const isActive = index === currentSlide;
-            return (
-              <div
-                key={slide.id}
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${isActive ? 'opacity-100' : 'opacity-0'
+          {heroSlides.length > 0 ? (
+            heroSlides.map((slide, index) => {
+              const isActive = index === activeIndex;
+              return (
+                <div
+                  key={slide.id || index}
+                  className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                    isActive ? 'opacity-100' : 'opacity-0'
                   }`}
-              >
-                <img
-                  src={slide.image}
-                  alt={slide.name}
-                  className="w-full h-full object-cover transform scale-105 transition-transform duration-[6000ms] ease-out"
-                />
-              </div>
-            );
-          })}
+                >
+                  <img
+                    src={slide.image}
+                    alt={slide.name}
+                    className="w-full h-full object-cover transform scale-105 transition-transform duration-[6000ms] ease-out"
+                  />
+                </div>
+              );
+            })
+          ) : (
+            /* Clean placeholder backdrop while loading or prior to first upload */
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-border/30 via-brand-bg-hero to-brand-border/20" />
+          )}
+
           {/* Smooth left/middle-edge gradient shade to seamlessly dissolve into the page background */}
           <div className="hidden md:block absolute inset-y-0 left-0 w-52 sm:w-72 lg:w-96 bg-gradient-to-r from-brand-bg-hero via-brand-bg-hero/75 to-transparent z-10" />
           {/* Subtle top & bottom edge blend */}
@@ -100,7 +129,7 @@ export default function Home() {
           <div className="md:hidden absolute inset-0 bg-brand-bg-hero/80 backdrop-blur-[1px] z-10" />
         </div>
 
-        {/* ── Text and Buttons Positioned in Middle (Unchanged Position) ── */}
+        {/* ── Text and Buttons Positioned in Middle ── */}
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
           {/* Main Headline */}
           <h1 className="font-playfair font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-brand-text-dark leading-[1.12] tracking-tight max-w-4xl mx-auto">
@@ -135,48 +164,53 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ── Slide Navigation & Indicator Bar on Right Side ── */}
-        <div className="absolute bottom-6 sm:bottom-8 right-6 sm:right-12 z-20 flex items-center gap-2.5 bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-lg">
-          <button
-            type="button"
-            onClick={prevSlide}
-            className="text-white/80 hover:text-white p-0.5 transition-colors"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <div className="flex items-center gap-1.5">
-            {HERO_SLIDES.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => setCurrentSlide(index)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${currentSlide === index ? 'w-6 bg-brand-accent' : 'w-2 bg-white/50 hover:bg-white'
+        {/* ── Slide Navigation & Indicator Bar on Right Side (rendered if multiple random slides exist) ── */}
+        {heroSlides.length > 1 && (
+          <div className="absolute bottom-6 sm:bottom-8 right-6 sm:right-12 z-20 flex items-center gap-2.5 bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-lg">
+            <button
+              type="button"
+              onClick={prevSlide}
+              className="text-white/80 hover:text-white p-0.5 transition-colors cursor-pointer"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <div className="flex items-center gap-1.5">
+              {heroSlides.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setCurrentSlide(index)}
+                  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    activeIndex === index ? 'w-6 bg-brand-accent' : 'w-2 bg-white/50 hover:bg-white'
                   }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={nextSlide}
+              className="text-white/80 hover:text-white p-0.5 transition-colors cursor-pointer"
+              aria-label="Next slide"
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={nextSlide}
-            className="text-white/80 hover:text-white p-0.5 transition-colors"
-            aria-label="Next slide"
-          >
-            <ChevronRight size={18} />
-          </button>
-        </div>
+        )}
 
         {/* ── Active Slide Info Tag on Right Side ── */}
-        <div className="hidden sm:flex items-center gap-2 absolute top-24 sm:top-28 right-6 sm:right-12 z-20 bg-black/40 backdrop-blur-md text-white/95 font-montserrat text-xs px-3.5 py-1.5 rounded-full border border-white/20 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
-          <span className="text-brand-accent font-semibold">{HERO_SLIDES[currentSlide]?.category}</span>
-          <span className="text-white/50">·</span>
-          <span className="truncate max-w-[150px]">{HERO_SLIDES[currentSlide]?.name}</span>
-        </div>
+        {currentItem && (
+          <div className="hidden sm:flex items-center gap-2 absolute top-24 sm:top-28 right-6 sm:right-12 z-20 bg-black/40 backdrop-blur-md text-white/95 font-montserrat text-xs px-3.5 py-1.5 rounded-full border border-white/20 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
+            <span className="text-brand-accent font-semibold">{currentItem.category}</span>
+            <span className="text-white/50">·</span>
+            <span className="truncate max-w-[150px]">{currentItem.name}</span>
+          </div>
+        )}
       </section>
 
-      {/* ── Gallery Teaser Section (Square Boxes matching Figma design) ── */}
+      {/* ── Gallery Teaser Section (Latest 8 Gallery Images from Cloudinary / MongoDB) ── */}
       <section className="py-14 sm:py-20 bg-brand-surface border-b border-brand-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 sm:mb-10">
@@ -193,30 +227,63 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Square Grid Boxes according to Figma Wireframe Design */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {CAKES.slice(0, 8).map((cake) => (
-              <Link
-                key={cake.id}
-                to="/gallery"
-                className="relative overflow-hidden rounded-2xl group aspect-square block border border-brand-border shadow-sm hover:shadow-md hover:border-brand-accent transition-all bg-brand-surface"
-              >
-                <img
-                  src={cake.image}
-                  alt={cake.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
+          {/* Square Grid Boxes showing Latest 8 Gallery Images */}
+          {galleryLoading && latestGallery.length === 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {[...Array(8)].map((_, idx) => (
+                <div
+                  key={idx}
+                  className="aspect-square rounded-2xl bg-brand-bg-hero/50 border border-brand-border animate-pulse"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent flex flex-col justify-end p-3.5 sm:p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <span className="text-[10px] uppercase font-montserrat tracking-wider text-brand-bg-hero font-medium">{cake.category}</span>
-                  <p className="font-playfair text-sm sm:text-base text-white font-semibold leading-tight mt-0.5">{cake.name}</p>
-                  <p className="text-xs text-brand-accent font-semibold mt-1 flex items-center gap-1">
-                    Explore Design <ArrowRight size={12} />
-                  </p>
-                </div>
+              ))}
+            </div>
+          ) : latestGallery.length === 0 ? (
+            <div className="py-12 text-center bg-brand-bg-hero/40 rounded-2xl border border-brand-border p-8">
+              <p className="font-playfair font-bold text-lg text-brand-text-dark">
+                No gallery creations published yet
+              </p>
+              <p className="font-montserrat text-xs text-brand-text-muted mt-1 mb-4">
+                Photos uploaded from the Admin Gallery will appear here automatically.
+              </p>
+              <Link
+                to="/gallery"
+                className="btn-primary text-xs px-5 py-2.5 rounded-xl font-semibold inline-flex items-center gap-2"
+              >
+                Go to Gallery
               </Link>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {latestGallery.map((item) => {
+                const imgUrl = item.imageUrl || item.image;
+                return (
+                  <Link
+                    key={item._id || item.id}
+                    to="/gallery"
+                    className="relative overflow-hidden rounded-2xl group aspect-square block border border-brand-border shadow-sm hover:shadow-md hover:border-brand-accent transition-all bg-brand-surface"
+                  >
+                    <img
+                      src={imgUrl}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent flex flex-col justify-end p-3.5 sm:p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="text-[10px] uppercase font-montserrat tracking-wider text-brand-bg-hero font-medium">
+                        {item.category}
+                      </span>
+                      <p className="font-playfair text-sm sm:text-base text-white font-semibold leading-tight mt-0.5 line-clamp-1">
+                        {item.title}
+                      </p>
+                      <p className="text-xs text-brand-accent font-semibold mt-1 flex items-center gap-1">
+                        Explore Design <ArrowRight size={12} />
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
 
           {/* Mobile view all */}
           <div className="text-center mt-8 sm:hidden">

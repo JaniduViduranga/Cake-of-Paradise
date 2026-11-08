@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { paymentService } from '../services/paymentService';
 
 /**
- * Controller managing checkout process, delivery options, payment selection, and order placement
+ * Controller managing checkout process, delivery options, payment selection, and order placement.
+ * Delegates order finalization to the decoupled paymentService.
  */
 export function useCheckoutController() {
   const { items, subtotal, shipping, tax, total, clearCart } = useCart();
@@ -29,10 +31,10 @@ export function useCheckoutController() {
 
   const finalTotal = total - (deliveryMethod === 'pickup' ? shipping : 0);
 
-  const placeOrder = async (paymentDetails = {}) => {
-    if (paymentDetails && typeof paymentDetails.preventDefault === 'function') {
-      paymentDetails.preventDefault();
-      paymentDetails = {};
+  const placeOrder = async (paymentResult = {}) => {
+    if (paymentResult && typeof paymentResult.preventDefault === 'function') {
+      paymentResult.preventDefault();
+      paymentResult = {};
     }
 
     // Validation
@@ -58,8 +60,7 @@ export function useCheckoutController() {
     setOrderError('');
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const payload = {
+      const orderPayload = {
         customerDetails: {
           email: form.email.trim(),
           firstName: form.firstName.trim(),
@@ -77,33 +78,18 @@ export function useCheckoutController() {
           tax,
           finalTotal,
         },
-        paymentInfo: {
-          paymentMethod: paymentMethod || 'credit',
-          paymentStatus: paymentDetails.paymentStatus || 'Paid',
-          paymentIntentId: paymentDetails.paymentIntentId || `pi_sim_${Date.now()}`,
-        },
+        paymentMethod: paymentMethod || 'credit',
       };
 
-      const response = await fetch(`${apiUrl}/orders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      // Decoupled persistence through paymentService
+      const savedOrder = await paymentService.processOrderCompletion(orderPayload, paymentResult);
 
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || 'Failed to place order in database.');
-      }
-
-      setCreatedOrder(data.order);
+      setCreatedOrder(savedOrder);
       clearCart();
       setPlaced(true);
-      return data.order;
+      return savedOrder;
     } catch (err) {
-      console.error('Order placement error:', err);
+      console.error('[useCheckoutController] Order placement error:', err);
       setOrderError(err.message || 'Failed to place order.');
       throw err;
     } finally {
