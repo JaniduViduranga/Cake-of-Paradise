@@ -68,13 +68,12 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          mobileOpen
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${mobileOpen
             ? 'bg-white border-b border-brand-border shadow-md'
             : scrolled
-            ? 'navbar-glass shadow-sm'
-            : 'navbar-glass'
-        }`}
+              ? 'navbar-glass shadow-sm'
+              : 'navbar-glass'
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           {/* Logo */}
@@ -97,11 +96,10 @@ export default function Navbar() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`nav-link text-xs uppercase tracking-wider py-2 transition-colors ${
-                  isActive(link.path)
+                className={`nav-link text-xs uppercase tracking-wider py-2 transition-colors ${isActive(link.path)
                     ? 'nav-link-active border-b-2 border-brand-accent text-brand-accent font-bold'
                     : 'text-chocolate-800/80 hover:text-brand-accent'
-                }`}
+                  }`}
               >
                 {link.label}
               </Link>
@@ -136,9 +134,8 @@ export default function Navbar() {
                   <User size={20} strokeWidth={1.8} />
                   <ChevronDown
                     size={14}
-                    className={`transition-transform duration-200 ${
-                      userMenuOpen ? 'rotate-180' : ''
-                    }`}
+                    className={`transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''
+                      }`}
                   />
                 </button>
                 {userMenuOpen && (
@@ -266,19 +263,17 @@ export default function Navbar() {
                         key={link.path}
                         to={link.path}
                         onClick={() => setMobileOpen(false)}
-                        className={`flex items-center justify-between px-3.5 py-3 rounded-2xl font-montserrat font-medium text-base transition-all ${
-                          active
+                        className={`flex items-center justify-between px-3.5 py-3 rounded-2xl font-montserrat font-medium text-base transition-all ${active
                             ? 'bg-brand-bg-hero text-brand-accent font-bold border border-brand-border shadow-xs'
                             : 'text-brand-text-dark hover:bg-cream-50 hover:text-brand-accent border border-transparent'
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-3">
                           <div
-                            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
-                              active
+                            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${active
                                 ? 'bg-brand-primary text-white shadow-xs'
                                 : 'bg-brand-bg-hero text-brand-text-dark'
-                            }`}
+                              }`}
                           >
                             <Icon size={18} />
                           </div>
@@ -369,18 +364,6 @@ export default function Navbar() {
                       <span>Sign In / Sign Up</span>
                     </button>
                   )}
-                </div>
-
-                {/* Quick Bakery Info */}
-                <div className="pt-2 border-t border-brand-border/60 flex items-center justify-between text-[11px] font-montserrat text-brand-text-muted px-2">
-                  <div className="flex items-center gap-1.5">
-                    <MapPin size={13} className="text-brand-accent shrink-0" />
-                    <span>Welimada, Sri Lanka</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Clock size={13} className="text-brand-accent shrink-0" />
-                    <span>8 AM – 8 PM</span>
-                  </div>
                 </div>
               </div>
             </div>
