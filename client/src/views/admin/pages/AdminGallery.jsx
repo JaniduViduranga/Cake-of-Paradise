@@ -163,8 +163,13 @@ export default function AdminGallery() {
       }
 
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const token = localStorage.getItem('auth_token');
+      const headers = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       const res = await fetch(`${apiUrl}/gallery/upload`, {
         method: 'POST',
+        headers,
         body: formData,
       });
 

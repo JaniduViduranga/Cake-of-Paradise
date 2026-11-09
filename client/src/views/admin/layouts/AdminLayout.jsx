@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useLocation, Link } from 'react-router-dom';
+import { Outlet, useLocation, Link, useNavigate } from 'react-router-dom';
 import {
   Menu,
   Clock,
   Calendar,
   ExternalLink,
+  LogOut,
 } from 'lucide-react';
 import AdminSidebar from '../components/AdminSidebar';
 import { getAllOrders } from '../../../services/api';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeOrdersCount, setActiveOrdersCount] = useState(0);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   // Keep live time ticking
   useEffect(() => {
@@ -37,6 +41,20 @@ export default function AdminLayout() {
     };
     loadActiveCount();
   }, [location.pathname]);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin/login', { replace: true });
+  };
+
+  const initials = user?.fullName
+    ? user.fullName
+        .split(' ')
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join('')
+        .toUpperCase()
+    : 'CP';
 
   return (
     <div className="min-h-screen bg-brand-bg-hero/50 flex font-montserrat antialiased text-brand-text-dark">
@@ -80,7 +98,7 @@ export default function AdminLayout() {
             </div>
           </div>
 
-          {/* Right Header Utilities: View Store + Profile */}
+          {/* Right Header Utilities: View Store + Profile + Logout */}
           <div className="flex items-center gap-3 sm:gap-4">
             {/* View public store shortcut */}
             <Link
@@ -96,12 +114,27 @@ export default function AdminLayout() {
             {/* Profile Avatar / Badge */}
             <div className="flex items-center gap-2.5 pl-3 border-l border-brand-border">
               <div className="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-xs shadow-sm">
-                CP
+                {initials}
               </div>
               <div className="hidden sm:block text-left text-xs leading-tight">
-                <p className="font-bold text-brand-text-dark">Head Baker</p>
-                <p className="text-[10px] text-brand-text-muted">Admin</p>
+                <p className="font-bold text-brand-text-dark truncate max-w-[120px]">
+                  {user?.fullName || 'Head Baker'}
+                </p>
+                <p className="text-[10px] text-brand-text-muted capitalize">
+                  {user?.role || 'Admin'}
+                </p>
               </div>
+
+              {/* Explicit Sign Out Button */}
+              <button
+                type="button"
+                onClick={handleLogout}
+                title="Sign out of Admin Portal"
+                className="p-1.5 text-brand-text-muted hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ml-1"
+                aria-label="Sign out"
+              >
+                <LogOut size={16} />
+              </button>
             </div>
           </div>
         </header>

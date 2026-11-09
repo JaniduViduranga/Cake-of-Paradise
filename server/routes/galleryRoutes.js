@@ -7,6 +7,7 @@ import {
   updateGalleryImage,
   deleteGalleryImage,
 } from '../controllers/galleryController.js';
+import { protect, authorizeAdmin } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
@@ -24,21 +25,21 @@ const handleUpload = (req, res, next) => {
   });
 };
 
-// Upload image to Cloudinary and save to MongoDB
-router.post('/upload', handleUpload, uploadGalleryImage);
-router.post('/', handleUpload, uploadGalleryImage);
-
-// Random gallery images for Home Page Hero Slider
+// Public: Random gallery images for Home Page Hero Slider
 router.get('/random', getRandomGalleryImages);
 
-// Fetch paginated gallery images (e.g. GET /api/gallery?limit=8 for latest 8)
+// Public: Fetch paginated gallery images (e.g. GET /api/gallery?limit=8 for latest 8)
 router.get('/', getGallery);
 
-// Update gallery image (e.g. toggle isFeatured, title, description, category, tags)
-router.patch('/:id', updateGalleryImage);
-router.put('/:id', updateGalleryImage);
+// Admin Protected: Upload image to Cloudinary and save to MongoDB
+router.post('/upload', protect, authorizeAdmin, handleUpload, uploadGalleryImage);
+router.post('/', protect, authorizeAdmin, handleUpload, uploadGalleryImage);
 
-// Delete image from MongoDB and Cloudinary
-router.delete('/:id', deleteGalleryImage);
+// Admin Protected: Update gallery image (e.g. toggle isFeatured, title, description, category, tags)
+router.patch('/:id', protect, authorizeAdmin, updateGalleryImage);
+router.put('/:id', protect, authorizeAdmin, updateGalleryImage);
+
+// Admin Protected: Delete image from MongoDB and Cloudinary
+router.delete('/:id', protect, authorizeAdmin, deleteGalleryImage);
 
 export default router;

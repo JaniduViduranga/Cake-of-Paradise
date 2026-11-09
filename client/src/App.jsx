@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './views/components/layout/Navbar';
 import Footer from './views/components/layout/Footer';
 import LoginModal from './views/components/common/LoginModal';
+import ProtectedRoute from './views/components/common/ProtectedRoute';
 import Home from './views/pages/Home';
 import Gallery from './views/pages/Gallery';
 import CustomOrder from './views/pages/CustomOrder';
@@ -17,6 +18,7 @@ import AdminDashboard from './views/admin/pages/AdminDashboard';
 import AdminOrders from './views/admin/pages/AdminOrders';
 import AdminGallery from './views/admin/pages/AdminGallery';
 import AdminPricing from './views/admin/pages/AdminPricing';
+import AdminLoginPage from './views/admin/AdminLoginPage';
 
 function PublicStoreLayout() {
   return (
@@ -48,13 +50,18 @@ export default function App() {
               <Route path="/profile" element={<Profile />} />
             </Route>
 
-            {/* Admin Portal Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="orders" element={<AdminOrders />} />
-              <Route path="gallery" element={<AdminGallery />} />
-              <Route path="pricing" element={<AdminPricing />} />
+            {/* Dedicated Admin Login Route (Unprotected) */}
+            <Route path="/admin/login" element={<AdminLoginPage />} />
+
+            {/* Admin Portal Routes (Protected by Role: Admin) */}
+            <Route element={<ProtectedRoute requireAdmin={true} />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="gallery" element={<AdminGallery />} />
+                <Route path="pricing" element={<AdminPricing />} />
+              </Route>
             </Route>
 
             {/* 404 Fallback */}

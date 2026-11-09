@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
+/**
+ * Protect routes: verifies JWT in Bearer Authorization header and attaches User to req.user
+ */
 export const protect = async (req, res, next) => {
   let token;
 
@@ -41,3 +44,16 @@ export const protect = async (req, res, next) => {
   }
 };
 
+/**
+ * Role-based authorization middleware: restricts route access to users with role === 'admin'
+ */
+export const authorizeAdmin = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    return next();
+  }
+
+  return res.status(403).json({
+    success: false,
+    message: 'Forbidden: Admin access required',
+  });
+};

@@ -90,8 +90,13 @@ export default function GalleryUploadModal({ isOpen, onClose, onSuccess }) {
       formData.append('image', file);
 
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const token = localStorage.getItem('auth_token');
+      const headers = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       const response = await fetch(`${apiUrl}/gallery/upload`, {
         method: 'POST',
+        headers,
         // Do NOT manually set Content-Type header so the browser sets boundary
         body: formData,
       });
