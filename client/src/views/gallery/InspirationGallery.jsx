@@ -100,7 +100,7 @@ export default function InspirationGallery() {
   return (
     <div className="min-h-screen bg-brand-bg-hero pt-16">
       {/* Header & Filter Controls */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 py-12 sm:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
         <SectionHeading
           title="Inspiration Gallery"
           subtitle="Explore our live portfolio of artisanal creations. Each masterpiece is custom-crafted to bring warmth and celebration to your sweetest moments."
@@ -108,7 +108,7 @@ export default function InspirationGallery() {
         />
 
         {/* Category Filter Buttons */}
-        <div className="flex flex-wrap gap-2.5 mt-8">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 px-1 justify-start md:justify-center mt-6 sm:mt-8 w-full">
           {CATEGORIES.map((cat) => {
             const active = category === cat;
             return (
@@ -117,7 +117,7 @@ export default function InspirationGallery() {
                 type="button"
                 id={`gallery-filter-${cat.toLowerCase()}`}
                 onClick={() => handleCategoryChange(cat)}
-                className={`px-5 py-2.5 rounded-full font-montserrat text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer shadow-xs ${
+                className={`px-5 py-2.5 rounded-full font-montserrat text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer shadow-xs shrink-0 whitespace-nowrap min-h-[44px] flex items-center justify-center ${
                   active
                     ? 'bg-brand-primary text-white shadow-md shadow-brand-primary/20 scale-105'
                     : 'bg-brand-surface text-brand-text-body border border-brand-border hover:border-brand-accent hover:text-brand-accent'
@@ -131,10 +131,10 @@ export default function InspirationGallery() {
       </div>
 
       {/* Gallery Showcase Grid */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         {/* Loading Skeleton on initial fetch */}
         {loading && images.length === 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 py-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 py-8 sm:py-12">
             {[...Array(8)].map((_, idx) => (
               <div
                 key={idx}
@@ -184,7 +184,7 @@ export default function InspirationGallery() {
           </div>
         ) : (
           /* Grid of Cloudinary dynamic images */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {images.map((item) => {
               const imageSrc = item.imageUrl || item.image;
               return (
@@ -301,12 +301,13 @@ export default function InspirationGallery() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative bg-brand-surface border border-brand-border rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl cursor-default"
+            className="relative bg-brand-surface border border-brand-border rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl cursor-default"
           >
             <button
               type="button"
               onClick={() => setLightboxItem(null)}
-              className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black transition-colors"
+              className="absolute top-3 right-3 z-10 min-w-[44px] min-h-[44px] rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black transition-colors"
+              aria-label="Close image preview"
             >
               <X size={18} />
             </button>

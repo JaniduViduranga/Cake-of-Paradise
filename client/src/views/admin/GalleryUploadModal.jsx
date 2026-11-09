@@ -157,7 +157,8 @@ export default function GalleryUploadModal({ isOpen, onClose, onSuccess }) {
             type="button"
             onClick={handleClose}
             disabled={loading}
-            className="p-1.5 rounded-lg text-brand-text-muted hover:text-brand-text-dark hover:bg-brand-bg-hero transition-colors disabled:opacity-50"
+            className="min-w-[44px] min-h-[44px] rounded-lg text-brand-text-muted hover:text-brand-text-dark hover:bg-brand-bg-hero transition-colors disabled:opacity-50 flex items-center justify-center"
+            aria-label="Close modal"
           >
             <X size={18} />
           </button>
@@ -184,7 +185,7 @@ export default function GalleryUploadModal({ isOpen, onClose, onSuccess }) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. 3-Tier Floral Ribbon Wedding Cake"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-white text-brand-text-dark text-sm placeholder:text-brand-text-muted focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition disabled:opacity-60"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-white text-brand-text-dark text-base md:text-sm placeholder:text-brand-text-muted focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition disabled:opacity-60"
             />
           </div>
 
@@ -197,7 +198,7 @@ export default function GalleryUploadModal({ isOpen, onClose, onSuccess }) {
               value={category}
               disabled={loading}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-white text-brand-text-dark text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition disabled:opacity-60"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-white text-brand-text-dark text-base md:text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition disabled:opacity-60"
             >
               {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -218,7 +219,7 @@ export default function GalleryUploadModal({ isOpen, onClose, onSuccess }) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe the artisan techniques, layers, or styling inspiration..."
-              className="w-full px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-text-dark text-sm placeholder:text-brand-text-muted focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition disabled:opacity-60 resize-none"
+              className="w-full px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-text-dark text-base md:text-sm placeholder:text-brand-text-muted focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition disabled:opacity-60 resize-none"
             />
           </div>
 
@@ -284,14 +285,14 @@ export default function GalleryUploadModal({ isOpen, onClose, onSuccess }) {
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="px-4 py-2.5 rounded-xl border border-brand-border-btn text-brand-accent hover:bg-brand-bg-hero text-sm font-semibold transition disabled:opacity-50"
+              className="min-h-[44px] px-4 py-2.5 rounded-xl border border-brand-border-btn text-brand-accent hover:bg-brand-bg-hero text-sm font-semibold transition disabled:opacity-50 flex items-center justify-center"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary flex items-center justify-center gap-2 text-sm px-6 py-2.5 rounded-xl disabled:opacity-50 shadow-sm"
+              className="min-h-[44px] btn-primary flex items-center justify-center gap-2 text-sm px-6 py-2.5 rounded-xl disabled:opacity-50 shadow-sm"
             >
               {loading ? (
                 <>

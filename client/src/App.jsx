@@ -22,9 +22,9 @@ import AdminLoginPage from './views/admin/AdminLoginPage';
 
 function PublicStoreLayout() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 w-full overflow-x-hidden">
         <Outlet />
       </main>
       <Footer />

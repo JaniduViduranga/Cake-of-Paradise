@@ -45,7 +45,7 @@ export default function About() {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-chocolate-900/50 via-chocolate-900/30 to-cream-50 flex items-center justify-center">
-          <div className="text-center px-6">
+          <div className="text-center px-4 sm:px-6">
             <h1 className="font-playfair font-bold text-4xl lg:text-5xl text-white mb-3 drop-shadow-sm">
               Baking Memories with Passion
             </h1>
@@ -58,7 +58,7 @@ export default function About() {
 
       {/* Our Story (Centered) */}
       <section className="py-16 lg:py-20 bg-white border-b border-brand-border/50">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="font-montserrat font-semibold text-xs tracking-widest text-brand-accent uppercase mb-2 block">
             Our Journey
           </span>
@@ -102,7 +102,7 @@ export default function About() {
 
       {/* Contact Section */}
       <section id="contact-section" className="py-16 lg:py-20 scroll-mt-20">
-        <div className="max-w-7xl mx-auto px-6 lg:px-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="Get in Touch"
             subtitle="Whether you have a question about our flavors, need a custom consultation, or want to plan your event, we'd love to hear from you."
@@ -110,7 +110,7 @@ export default function About() {
 
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
             {/* ── Contact Form ── */}
-            <div className="lg:col-span-3 bg-white rounded-2xl shadow-sm border border-gray-100 p-7 lg:p-9">
+            <div className="lg:col-span-3 bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-7 lg:p-9">
               {submitted ? (
                 <div className="flex flex-col items-center justify-center h-full py-12 text-center gap-4">
                   <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center">
@@ -223,7 +223,7 @@ export default function About() {
                     id="contact-submit-btn"
                     type="submit"
                     disabled={loading}
-                    className="flex items-center gap-2 btn-primary py-3.5 disabled:opacity-60"
+                    className="w-full sm:w-auto min-h-[44px] flex items-center justify-center gap-2 btn-primary py-3.5 disabled:opacity-60 cursor-pointer"
                   >
                     <Send size={15} />
                     {loading ? 'Sending...' : 'Send Message'}

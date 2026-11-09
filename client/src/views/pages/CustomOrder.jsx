@@ -54,10 +54,10 @@ export default function CustomOrder() {
 
   return (
     <div className="min-h-screen bg-cream-50 pt-16">
-      <div className="max-w-3xl mx-auto px-6 lg:px-8 py-10">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
 
         {/* Customizer Form */}
-        <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-sm border border-divider space-y-8">
+        <div className="bg-white rounded-2xl p-4 sm:p-8 lg:p-10 shadow-sm border border-divider space-y-6 sm:space-y-8">
           {/* Header */}
           <div className="text-center pb-6 border-b border-divider">
             <h1 className="font-playfair font-bold text-3xl md:text-4xl text-brand-text-dark">Custom Order</h1>

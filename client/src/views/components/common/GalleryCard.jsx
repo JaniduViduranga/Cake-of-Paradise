@@ -6,7 +6,7 @@ export default function GalleryCard({ item, onOpen }) {
 
   return (
     <div
-      className="masonry-item relative overflow-hidden rounded-2xl cursor-pointer group"
+      className="masonry-item relative overflow-hidden rounded-2xl cursor-pointer group aspect-square bg-brand-bg-hero/50"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => onOpen(item)}
@@ -18,7 +18,7 @@ export default function GalleryCard({ item, onOpen }) {
       <img
         src={item.imageUrl || item.image}
         alt={item.title}
-        className={`w-full h-auto block transition-transform duration-500 ${
+        className={`w-full h-full object-cover block transition-transform duration-500 ${
           hovered ? 'scale-110' : 'scale-100'
         }`}
         loading="lazy"

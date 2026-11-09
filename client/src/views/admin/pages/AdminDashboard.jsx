@@ -262,17 +262,17 @@ export default function AdminDashboard() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="w-full overflow-x-auto rounded-xl border border-brand-border">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-brand-border bg-brand-bg-hero/60 text-[11px] font-montserrat font-bold text-brand-text-muted uppercase tracking-wider">
-                    <th className="py-3.5 px-4 sm:px-6">Order ID</th>
-                    <th className="py-3.5 px-4">Customer</th>
-                    <th className="py-3.5 px-4">Cake Design</th>
-                    <th className="py-3.5 px-4">Target Date</th>
-                    <th className="py-3.5 px-4">Status Indicator</th>
-                    <th className="py-3.5 px-4">Quick Selector</th>
-                    <th className="py-3.5 px-4 sm:px-6 text-right">Details</th>
+                    <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap">Order ID</th>
+                    <th className="py-3.5 px-4 whitespace-nowrap">Customer</th>
+                    <th className="py-3.5 px-4 whitespace-nowrap">Cake Design</th>
+                    <th className="py-3.5 px-4 whitespace-nowrap">Target Date</th>
+                    <th className="py-3.5 px-4 whitespace-nowrap">Status Indicator</th>
+                    <th className="py-3.5 px-4 whitespace-nowrap">Quick Selector</th>
+                    <th className="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap">Details</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-brand-border/60 text-xs font-montserrat text-brand-text-body">
@@ -286,31 +286,31 @@ export default function AdminDashboard() {
                         key={order._id || order.orderNumber}
                         className="hover:bg-brand-bg-hero/30 transition-colors"
                       >
-                        <td className="py-3.5 px-4 sm:px-6 font-bold text-brand-text-dark">
+                        <td className="py-3.5 px-4 sm:px-6 font-bold text-brand-text-dark whitespace-nowrap">
                           {order.orderNumber}
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-3.5 px-4 whitespace-nowrap">
                           <div className="font-semibold text-brand-text-dark">{customer.firstName} {customer.lastName}</div>
                           <div className="text-[10px] text-brand-text-muted capitalize">
                             {order.deliveryMethod === 'delivery' ? 'Local Delivery' : 'Pickup'}
                           </div>
                         </td>
-                        <td className="py-3.5 px-4 max-w-[180px] truncate">
+                        <td className="py-3.5 px-4 max-w-[180px] truncate whitespace-nowrap">
                           <span className="font-medium text-brand-text-dark">{primaryItem.name}</span>
                           <span className="text-[10px] text-brand-text-muted block">
                             {primaryItem.flavor || primaryItem.orderType}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-3.5 px-4 whitespace-nowrap">
                           <span className="inline-flex items-center gap-1 font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">
                             <Clock size={11} />
                             {targetDate}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-3.5 px-4 whitespace-nowrap">
                           <StatusBadge status={order.orderStatus} size="sm" />
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-3.5 px-4 whitespace-nowrap">
                           <select
                             value={order.orderStatus}
                             onChange={(e) =>
@@ -325,7 +325,7 @@ export default function AdminDashboard() {
                             <option value="Completed">Completed</option>
                           </select>
                         </td>
-                        <td className="py-3.5 px-4 sm:px-6 text-right">
+                        <td className="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap">
                           <button
                             onClick={() => setSelectedOrder(order)}
                             className="inline-flex items-center gap-1 text-xs text-brand-accent hover:text-brand-primary-hover font-semibold px-2 py-1 rounded hover:bg-brand-bg-hero transition-colors"

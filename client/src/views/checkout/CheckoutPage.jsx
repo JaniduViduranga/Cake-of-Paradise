@@ -178,7 +178,7 @@ function CheckoutContent() {
 
   return (
     <div className="min-h-screen bg-brand-bg-hero pt-16">
-      <div className="max-w-6xl mx-auto px-6 lg:px-16 py-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <h1 className="font-playfair font-bold text-4xl text-brand-text-dark mb-10 text-center">Checkout</h1>
 
         <form onSubmit={handleFormSubmit}>
@@ -191,7 +191,7 @@ function CheckoutContent() {
                   <Truck size={22} className="text-brand-accent" />
                   Delivery Method
                 </h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
                     { id: 'delivery', label: 'Local Delivery', Icon: Truck },
                     { id: 'pickup', label: 'Store Pickup', Icon: Store },
@@ -236,7 +236,7 @@ function CheckoutContent() {
                         className="input-field"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block font-montserrat text-xs font-semibold text-brand-text-muted mb-1.5 uppercase tracking-wide">
                           First Name
@@ -280,7 +280,7 @@ function CheckoutContent() {
                         className="input-field"
                       />
                     </div>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div className="col-span-1">
                         <label className="block font-montserrat text-xs font-semibold text-brand-text-muted mb-1.5 uppercase tracking-wide">
                           City

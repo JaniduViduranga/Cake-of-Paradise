@@ -53,7 +53,7 @@ export default function MetricCards({
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {[1, 2, 3].map((i) => (
           <div
             key={i}
@@ -69,7 +69,7 @@ export default function MetricCards({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
       {metrics.map((m) => {
         const Icon = m.icon;
         return (

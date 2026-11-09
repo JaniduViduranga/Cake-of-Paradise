@@ -30,14 +30,14 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
       <div className="absolute inset-0 bg-chocolate-900/60 backdrop-blur-sm animate-fade-in" />
 
       {/* Panel */}
-      <div className={`relative z-10 bg-white rounded-2xl shadow-2xl w-full ${maxWidth} animate-scale-in`}>
+      <div className={`relative z-10 bg-white rounded-2xl shadow-2xl w-full max-h-[90vh] flex flex-col ${maxWidth} animate-scale-in`}>
         {/* Header */}
         {title && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
             <h3 className="font-playfair font-bold text-xl text-chocolate-900">{title}</h3>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-full hover:bg-cream-100 text-chocolate-800/50 hover:text-chocolate-900 transition-colors"
+              className="min-w-[44px] min-h-[44px] rounded-full hover:bg-cream-100 text-chocolate-800/50 hover:text-chocolate-900 transition-colors flex items-center justify-center"
               aria-label="Close modal"
             >
               <X size={18} />
@@ -47,14 +47,14 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
         {!title && (
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-20 p-1.5 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-chocolate-800/50 hover:text-chocolate-900 transition-colors shadow"
+            className="absolute top-3 right-3 z-20 min-w-[44px] min-h-[44px] rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-chocolate-800/70 hover:text-chocolate-900 transition-colors shadow-sm flex items-center justify-center"
             aria-label="Close modal"
           >
             <X size={18} />
           </button>
         )}
         {/* Content */}
-        <div className="overflow-y-auto max-h-[80vh]">{children}</div>
+        <div className="overflow-y-auto max-h-[90vh]">{children}</div>
       </div>
     </div>
   );

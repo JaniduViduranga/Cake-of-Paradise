@@ -74,8 +74,9 @@ export default function AdminLayout() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden p-2 text-brand-text-dark hover:text-brand-accent hover:bg-brand-bg-hero rounded-xl transition-colors"
-              aria-label="Open sidebar"
+              className="lg:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-brand-text-dark hover:text-brand-accent hover:bg-brand-bg-hero rounded-xl transition-colors"
+              aria-label="Open sidebar menu"
+              aria-expanded={mobileOpen}
             >
               <Menu size={22} />
             </button>

@@ -132,23 +132,23 @@ export default function Home() {
         {/* ── Text and Buttons Positioned in Middle ── */}
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
           {/* Main Headline */}
-          <h1 className="font-playfair font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-brand-text-dark leading-[1.12] tracking-tight max-w-4xl mx-auto">
+          <h1 className="font-playfair font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-brand-text-dark leading-[1.15] tracking-tight max-w-4xl mx-auto">
             Handcrafted Cakes for Your{' '}
             <span className="italic font-serif">Sweetest</span> Moments
           </h1>
 
           {/* Subtitle Paragraph */}
-          <p className="font-montserrat text-sm sm:text-base md:text-lg text-brand-text-body leading-relaxed max-w-2xl mx-auto mt-5 sm:mt-6">
+          <p className="font-montserrat text-sm sm:text-base max-w-xl mx-auto px-2 text-brand-text-body leading-relaxed mt-4 sm:mt-6">
             Experience artisanal quality with every bite. We blend traditional techniques
             with modern high-end pastry design to create masterpieces for your special occasions.
           </p>
 
           {/* Centered Action Buttons */}
-          <div className="flex flex-wrap justify-center items-center gap-4 mt-8 sm:mt-10">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center w-full max-w-md sm:max-w-none mt-6 sm:mt-8">
             <Link
               to="/custom-order"
               id="hero-cta-custom"
-              className="btn-primary bg-brand-primary hover:bg-brand-primary-hover text-white flex items-center justify-center gap-2 text-sm sm:text-base px-7 sm:px-8 py-3.5 sm:py-4 rounded-xl shadow-lg shadow-brand-primary/25 font-sans font-semibold transition-all duration-200 active:scale-95"
+              className="w-full sm:w-auto min-h-[44px] btn-primary bg-brand-primary hover:bg-brand-primary-hover text-white flex items-center justify-center gap-2 text-sm sm:text-base px-7 sm:px-8 py-3.5 rounded-xl shadow-lg shadow-brand-primary/25 font-sans font-semibold transition-all duration-200 active:scale-95"
             >
               <Plus size={18} />
               Order Custom Cake
@@ -156,7 +156,7 @@ export default function Home() {
             <Link
               to="/gallery"
               id="hero-cta-gallery"
-              className="btn-secondary border-2 border-brand-border-btn text-brand-accent bg-brand-surface hover:bg-brand-bg-hero flex items-center justify-center gap-2 text-sm sm:text-base px-7 sm:px-8 py-3.5 sm:py-4 rounded-xl font-sans font-semibold transition-all duration-200 active:scale-95 shadow-sm"
+              className="w-full sm:w-auto min-h-[44px] btn-secondary border-2 border-brand-border-btn text-brand-accent bg-brand-surface hover:bg-brand-bg-hero flex items-center justify-center gap-2 text-sm sm:text-base px-7 sm:px-8 py-3.5 rounded-xl font-sans font-semibold transition-all duration-200 active:scale-95 shadow-sm"
             >
               <Plus size={18} />
               View Gallery
@@ -166,11 +166,11 @@ export default function Home() {
 
         {/* ── Slide Navigation & Indicator Bar on Right Side (rendered if multiple random slides exist) ── */}
         {heroSlides.length > 1 && (
-          <div className="absolute bottom-6 sm:bottom-8 right-6 sm:right-12 z-20 flex items-center gap-2.5 bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-lg">
+          <div className="absolute bottom-4 sm:bottom-8 right-4 sm:right-12 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-white/20 shadow-lg">
             <button
               type="button"
               onClick={prevSlide}
-              className="text-white/80 hover:text-white p-0.5 transition-colors cursor-pointer"
+              className="text-white/80 hover:text-white min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center transition-colors cursor-pointer"
               aria-label="Previous slide"
             >
               <ChevronLeft size={18} />
@@ -191,7 +191,7 @@ export default function Home() {
             <button
               type="button"
               onClick={nextSlide}
-              className="text-white/80 hover:text-white p-0.5 transition-colors cursor-pointer"
+              className="text-white/80 hover:text-white min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center transition-colors cursor-pointer"
               aria-label="Next slide"
             >
               <ChevronRight size={18} />
@@ -212,7 +212,7 @@ export default function Home() {
 
       {/* ── Gallery Teaser Section (Latest 8 Gallery Images from Cloudinary / MongoDB) ── */}
       <section className="py-14 sm:py-20 bg-brand-surface border-b border-brand-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 sm:mb-10">
             <SectionHeading
               title="Inspiration Gallery"
@@ -229,7 +229,7 @@ export default function Home() {
 
           {/* Square Grid Boxes showing Latest 8 Gallery Images */}
           {galleryLoading && latestGallery.length === 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {[...Array(8)].map((_, idx) => (
                 <div
                   key={idx}
@@ -253,7 +253,7 @@ export default function Home() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {latestGallery.map((item) => {
                 const imgUrl = item.imageUrl || item.image;
                 return (
@@ -299,7 +299,7 @@ export default function Home() {
 
       {/* ── Baker Values Section (Why Choose Us) ── */}
       <section className="py-14 sm:py-20 bg-brand-bg-hero">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading title="Why Choose Us?" subtitle="Our commitment to artisanal excellence" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-8 mt-4">
             {BAKER_VALUES.map((val) => (

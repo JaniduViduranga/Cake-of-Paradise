@@ -21,7 +21,16 @@ const app = express();
 
 connectDB();
 
-app.use(cors({ origin: ['http://localhost:5173', 'http://127.0.0.1:5173'] }));
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
+      'https://your-frontend-project.vercel.app'
+    ],
+    credentials: true,
+  }));
+
 app.use(json({ limit: '20mb' }));
 app.use(urlencoded({ extended: true, limit: '20mb' }));
 

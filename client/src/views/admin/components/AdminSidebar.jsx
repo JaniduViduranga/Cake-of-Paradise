@@ -83,7 +83,8 @@ export default function AdminSidebar({
           {/* Mobile close */}
           <button
             onClick={onCloseMobile}
-            className="lg:hidden p-1.5 rounded-lg text-brand-text-muted hover:text-brand-text-dark hover:bg-brand-bg-hero"
+            className="lg:hidden min-w-[44px] min-h-[44px] rounded-lg text-brand-text-muted hover:text-brand-text-dark hover:bg-brand-bg-hero flex items-center justify-center"
+            aria-label="Close sidebar menu"
           >
             <X size={20} />
           </button>
@@ -100,7 +101,7 @@ export default function AdminSidebar({
                 key={item.path}
                 to={item.path}
                 onClick={onCloseMobile}
-                className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 text-sm ${active
+                className={`group min-h-[44px] flex items-center justify-between px-4 py-2.5 rounded-xl transition-all duration-200 text-sm ${active
                   ? 'bg-brand-primary text-white font-semibold shadow-md shadow-brand-primary/25 translate-x-1'
                   : 'text-brand-text-body font-medium hover:bg-brand-bg-hero hover:text-brand-accent'
                   }`}

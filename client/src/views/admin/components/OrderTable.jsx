@@ -71,17 +71,17 @@ export default function OrderTable({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
+    <div className="w-full overflow-x-auto rounded-xl border border-brand-border bg-white shadow-xs">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-gray-100 bg-cream-50/70 text-[11px] font-montserrat font-bold text-chocolate-800/70 uppercase tracking-wider">
-              <th className="py-4 px-4 sm:px-6">Order ID & Date</th>
-              <th className="py-4 px-4">Customer</th>
-              <th className="py-4 px-4">Cake Summary</th>
-              <th className="py-4 px-4">Total & Payment</th>
-              <th className="py-4 px-4">Status Selector</th>
-              <th className="py-4 px-4 sm:px-6 text-right">Actions</th>
+            <tr className="border-b border-brand-border bg-cream-50/70 text-[11px] font-montserrat font-bold text-chocolate-800/70 uppercase tracking-wider">
+              <th className="py-4 px-4 sm:px-6 whitespace-nowrap">Order ID & Date</th>
+              <th className="py-4 px-4 whitespace-nowrap">Customer</th>
+              <th className="py-4 px-4 whitespace-nowrap">Cake Summary</th>
+              <th className="py-4 px-4 whitespace-nowrap">Total & Payment</th>
+              <th className="py-4 px-4 whitespace-nowrap">Status Selector</th>
+              <th className="py-4 px-4 sm:px-6 text-right whitespace-nowrap">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 text-xs font-montserrat text-chocolate-900">
@@ -98,7 +98,7 @@ export default function OrderTable({
                   className="hover:bg-cream-50/40 transition-colors group"
                 >
                   {/* Column 1: Order ID & Date */}
-                  <td className="py-4 px-4 sm:px-6">
+                  <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                     <div className="flex flex-col">
                       <button
                         type="button"
@@ -120,7 +120,7 @@ export default function OrderTable({
                   </td>
 
                   {/* Column 2: Customer */}
-                  <td className="py-4 px-4">
+                  <td className="py-4 px-4 whitespace-nowrap">
                     <div className="flex flex-col space-y-1">
                       <span className="font-semibold text-chocolate-900">
                         {customer.firstName} {customer.lastName}
@@ -140,7 +140,7 @@ export default function OrderTable({
                       )}
 
                       <span
-                        className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit ${
+                        className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit whitespace-nowrap ${
                           isDelivery
                             ? 'bg-amber-50 text-amber-800 border border-amber-200'
                             : 'bg-blue-50 text-blue-800 border border-blue-200'
@@ -160,7 +160,7 @@ export default function OrderTable({
                   </td>
 
                   {/* Column 3: Cake Summary */}
-                  <td className="py-4 px-4">
+                  <td className="py-4 px-4 whitespace-nowrap">
                     <div className="flex flex-col space-y-0.5 max-w-[200px]">
                       <span className="font-semibold text-chocolate-900 truncate">
                         {primaryItem.name || 'Custom Cake'}
@@ -184,7 +184,7 @@ export default function OrderTable({
                   </td>
 
                   {/* Column 4: Total & Payment */}
-                  <td className="py-4 px-4">
+                  <td className="py-4 px-4 whitespace-nowrap">
                     <div className="flex flex-col space-y-1">
                       <span className="font-playfair font-bold text-sm text-chocolate-900">
                         Rs. {finalAmount.toLocaleString()}
@@ -197,7 +197,7 @@ export default function OrderTable({
                   </td>
 
                   {/* Column 5: Status Selector (One-click Dropdown) */}
-                  <td className="py-4 px-4">
+                  <td className="py-4 px-4 whitespace-nowrap">
                     <div className="relative inline-block w-full max-w-[170px]">
                       <select
                         value={order.orderStatus || 'Received'}
@@ -228,7 +228,7 @@ export default function OrderTable({
                   </td>
 
                   {/* Column 6: Actions */}
-                  <td className="py-4 px-4 sm:px-6 text-right">
+                  <td className="py-4 px-4 sm:px-6 text-right whitespace-nowrap">
                     <button
                       type="button"
                       onClick={() => onViewOrder(order)}

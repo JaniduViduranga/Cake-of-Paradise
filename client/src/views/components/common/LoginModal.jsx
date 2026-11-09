@@ -93,7 +93,7 @@ export default function LoginModal() {
 
   return (
     <Modal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} maxWidth="max-w-md">
-      <div className="px-8 py-8">
+      <div className="p-4 sm:p-8">
         {/* Header */}
         <div className="text-center mb-7">
           <p className="font-playfair text-caramel-600 text-lg mb-1">Cake of Paradise</p>
