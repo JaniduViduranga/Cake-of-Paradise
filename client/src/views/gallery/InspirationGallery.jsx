@@ -10,6 +10,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import SectionHeading from '../components/common/SectionHeading';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 
 const CATEGORIES = ['All', 'Standard', 'Birthday', 'Wedding Cake', 'Cupcake', 'Custom'];
 
@@ -199,7 +200,12 @@ export default function InspirationGallery() {
                 >
                   <div className="aspect-square overflow-hidden bg-brand-bg-hero/50 relative">
                     <img
-                      src={imageSrc}
+                      src={getOptimizedImageUrl(imageSrc, 600)}
+                      decoding="async"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = '/placeholder-cake.png';
+                      }}
                       alt={item.title}
                       loading="lazy"
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
@@ -314,7 +320,12 @@ export default function InspirationGallery() {
 
             <div className="aspect-4/3 w-full bg-black/10 overflow-hidden">
               <img
-                src={lightboxItem.imageUrl || lightboxItem.image}
+                src={getOptimizedImageUrl(lightboxItem.imageUrl || lightboxItem.image, 1200)}
+                decoding="async"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/placeholder-cake.png';
+                }}
                 alt={lightboxItem.title}
                 className="w-full h-full object-contain bg-black/5"
               />

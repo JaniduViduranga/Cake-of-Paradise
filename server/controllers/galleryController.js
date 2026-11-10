@@ -27,7 +27,7 @@ export async function uploadGalleryImage(req, res) {
     let imageUrl = req.file?.path || req.file?.secure_url || req.file?.url;
     let publicId = req.file?.filename || req.file?.public_id;
 
-    // Fallback if imageUrl is provided directly
+    // Fallback if imageUrl is provided directly in request body
     if (!imageUrl && req.body.imageUrl) {
       imageUrl = req.body.imageUrl.trim();
       publicId = `external_${Date.now()}`;
@@ -89,10 +89,14 @@ export async function uploadGalleryImage(req, res) {
 /**
  * Retrieves paginated gallery images from MongoDB, optionally filtered by category.
  * Sorted descending by createdAt (latest first).
+ * Edge Cached for 60s with 300s stale-while-revalidate.
  * GET /api/gallery?page=1&limit=8&category=Wedding
  */
 export async function getGallery(req, res) {
   try {
+    // Edge Cache Header on read-only public gallery listing
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
+
     const page = Math.max(1, parseInt(req.query.page, 10) || 1);
     const limit = Math.max(1, parseInt(req.query.limit, 10) || 12);
     const { category } = req.query;
@@ -115,10 +119,12 @@ export async function getGallery(req, res) {
     const totalPages = Math.ceil(totalImages / limit) || 1;
     const skip = (page - 1) * limit;
 
+    // Use .lean() for faster execution and lower memory usage
     const images = await Gallery.find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .lean();
 
     res.status(200).json({
       success: true,
@@ -142,10 +148,14 @@ export async function getGallery(req, res) {
 /**
  * Retrieves random gallery images for the Home Page hero slider.
  * Uses MongoDB $sample aggregation to pick random images from uploaded gallery items.
+ * Edge Cached for 60s with 300s stale-while-revalidate.
  * GET /api/gallery/random?count=6
  */
 export async function getRandomGalleryImages(req, res) {
   try {
+    // Edge Cache Header on read-only random showcase
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
+
     const count = Math.max(1, parseInt(req.query.count || req.query.limit, 10) || 6);
 
     const randomDocs = await Gallery.aggregate([

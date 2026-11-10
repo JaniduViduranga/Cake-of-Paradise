@@ -2,6 +2,7 @@ import { Star, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
 import { useState } from 'react';
+import { getOptimizedImageUrl } from '../../../utils/imageOptimizer';
 
 export default function CakeCard({ cake }) {
   const navigate = useNavigate();
@@ -63,7 +64,12 @@ export default function CakeCard({ cake }) {
       {/* Image Container */}
       <div className="relative overflow-hidden h-52 sm:h-60 bg-cream-100">
         <img
-          src={image}
+          src={getOptimizedImageUrl(image, 600)}
+          decoding="async"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = '/placeholder-cake.png';
+          }}
           alt={name}
           className="w-full h-full object-cover img-zoom"
           loading="lazy"

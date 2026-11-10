@@ -6,6 +6,7 @@ import { Elements, useStripe, useElements, CardElement } from '@stripe/react-str
 import { useCheckoutController } from '../../controllers/useCheckoutController';
 import paymentService from '../../services/paymentService';
 import CardPaymentSection from './components/CardPaymentSection';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 
 const stripeKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY?.trim();
 const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
@@ -383,7 +384,13 @@ function CheckoutContent() {
                   {items.map((item) => (
                     <div key={item.cartItemId || item.id} className="flex gap-3">
                       <img
-                        src={item.image || item.referenceImage || '/placeholder-cake.png'}
+                        src={getOptimizedImageUrl(item.image || item.referenceImage, 300) || '/placeholder-cake.png'}
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = '/placeholder-cake.png';
+                        }}
                         alt={item.name}
                         className="w-16 h-16 object-cover rounded-lg shrink-0 border border-brand-border"
                       />

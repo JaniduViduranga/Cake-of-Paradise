@@ -43,6 +43,9 @@ export default function About() {
           src={AboutUs1}
           alt="Our bakery kitchen"
           className="w-full h-full object-cover"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-chocolate-900/50 via-chocolate-900/30 to-cream-50 flex items-center justify-center">
           <div className="text-center px-4 sm:px-6">

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ZoomIn } from 'lucide-react';
+import { getOptimizedImageUrl } from '../../../utils/imageOptimizer';
 
 export default function GalleryCard({ item, onOpen }) {
   const [hovered, setHovered] = useState(false);
@@ -16,7 +17,12 @@ export default function GalleryCard({ item, onOpen }) {
       aria-label={`View ${item.title}`}
     >
       <img
-        src={item.imageUrl || item.image}
+        src={getOptimizedImageUrl(item.imageUrl || item.image, 600)}
+        decoding="async"
+        onError={(e) => {
+          e.currentTarget.onerror = null;
+          e.currentTarget.src = '/placeholder-cake.png';
+        }}
         alt={item.title}
         className={`w-full h-full object-cover block transition-transform duration-500 ${
           hovered ? 'scale-110' : 'scale-100'

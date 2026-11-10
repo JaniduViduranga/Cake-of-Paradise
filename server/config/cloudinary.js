@@ -25,9 +25,9 @@ const storage = new CloudinaryStorage({
     folder: 'cake-of-paradise/gallery',
     allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
     transformation: [
-      { width: 1200, crop: 'limit' },
-      { quality: 'auto' },
-      { fetch_format: 'auto' },
+      { quality: 'auto', fetch_format: 'auto' },
+
+
     ],
   },
 });

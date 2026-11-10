@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import SectionHeading from '../components/common/SectionHeading';
 import { BAKER_VALUES } from '../../models/cakes';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -108,7 +109,14 @@ export default function Home() {
                   }`}
                 >
                   <img
-                    src={slide.image}
+                    src={getOptimizedImageUrl(slide.image, 1200)}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    {...(index === 0 ? { fetchpriority: 'high' } : {})}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = '/placeholder-cake.png';
+                    }}
                     alt={slide.name}
                     className="w-full h-full object-cover transform scale-105 transition-transform duration-[6000ms] ease-out"
                   />
@@ -263,7 +271,12 @@ export default function Home() {
                     className="relative overflow-hidden rounded-2xl group aspect-square block border border-brand-border shadow-sm hover:shadow-md hover:border-brand-accent transition-all bg-brand-surface"
                   >
                     <img
-                      src={imgUrl}
+                      src={getOptimizedImageUrl(imgUrl, 600)}
+                      decoding="async"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = '/placeholder-cake.png';
+                      }}
                       alt={item.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"

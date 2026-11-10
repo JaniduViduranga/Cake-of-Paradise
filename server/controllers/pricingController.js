@@ -71,7 +71,8 @@ export const DEFAULT_PRICINGS = [
  */
 export async function getPricing(req, res) {
   try {
-    let docs = await Pricing.find({});
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
+    let docs = await Pricing.find({}).lean();
     // If database is empty, seed defaults
     if (!docs || docs.length === 0) {
       try {
