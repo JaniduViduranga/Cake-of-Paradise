@@ -37,3 +37,4 @@ export const getCardImageUrl = (url) => getOptimizedImageUrl(url, IMAGE_PRESETS.
 export const getHeroImageUrl = (url) => getOptimizedImageUrl(url, IMAGE_PRESETS.HERO);
 
 export default getOptimizedImageUrl;
+
